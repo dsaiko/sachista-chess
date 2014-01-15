@@ -1,0 +1,93 @@
+#include <CppUTest/CommandLineTestRunner.h>
+#include "bitboard.h"
+
+TEST_GROUP(BitBoardTest)
+{
+};
+
+TEST(BitBoardTest, Test64BitLong)
+{
+    bitboard b = 1;
+
+    int size = 0;
+    while (b != 0) {
+        size++;
+        b <<= 1;
+    }
+
+    LONGS_EQUAL(64, size);
+}
+
+
+TEST(BitBoardTest, TestLeastSignificantBit)
+{
+    const int i = bitScan(BITMASK_H2);
+    char notation[3];
+
+    getFieldNotation(i, notation, sizeof(notation)/sizeof(char));
+
+    STRCMP_EQUAL("h2", notation);
+}
+
+
+TEST(BitBoardTest, TestBitCount)
+{
+    LONGS_EQUAL(28, getPopCount(BITMASK_FRAME));
+    LONGS_EQUAL(64, getPopCount(BITMASK_UNIVERSE));
+    LONGS_EQUAL(0, getPopCount(~BITMASK_UNIVERSE));
+
+    LONGS_EQUAL(BITMASK_FILE_A, BITMASK_FILE[0]);
+    LONGS_EQUAL(BITMASK_FILE_H, BITMASK_FILE[7]);
+
+    LONGS_EQUAL(BITMASK_RANK_1, BITMASK_RANK[0]);
+    LONGS_EQUAL(BITMASK_RANK_8, BITMASK_RANK[7]);
+
+    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_FILE[0] | BITMASK_FILE[1] | BITMASK_FILE[2] | BITMASK_FILE[3] | BITMASK_FILE[4] | BITMASK_FILE[5] | BITMASK_FILE[6] | BITMASK_FILE[7] );
+    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_RANK[0] | BITMASK_RANK[1] | BITMASK_RANK[2] | BITMASK_RANK[3] | BITMASK_RANK[4] | BITMASK_RANK[5] | BITMASK_RANK[6] | BITMASK_RANK[7] );
+
+    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_A1H8[0] | BITMASK_A1H8[1] | BITMASK_A1H8[2] | BITMASK_A1H8[3] | BITMASK_A1H8[4] | BITMASK_A1H8[5] | BITMASK_A1H8[6] | BITMASK_A1H8[7] | BITMASK_A1H8[8] | BITMASK_A1H8[9] | BITMASK_A1H8[10] | BITMASK_A1H8[11] | BITMASK_A1H8[12] | BITMASK_A1H8[13] | BITMASK_A1H8[14]);
+    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_A8H1[0] | BITMASK_A8H1[1] | BITMASK_A8H1[2] | BITMASK_A8H1[3] | BITMASK_A8H1[4] | BITMASK_A8H1[5] | BITMASK_A8H1[6] | BITMASK_A8H1[7] | BITMASK_A8H1[8] | BITMASK_A8H1[9] | BITMASK_A8H1[10] | BITMASK_A8H1[11] | BITMASK_A8H1[12] | BITMASK_A8H1[13] | BITMASK_A8H1[14]);
+
+}
+
+
+
+
+TEST(BitBoardTest, TestIndexes)
+{
+    for(int i=0; i<64; i++) {
+        bitboard b = BITMASK_SQUARE[i];
+
+        LONGS_EQUAL((1ULL << i), b);
+        LONGS_EQUAL(1, getPopCount(b));
+    }
+}
+
+TEST(BitBoardTest, TestBasicOperations)
+{
+    LONGS_EQUAL(13, getPopCount(oneNorthEast(BITMASK_FRAME)));
+    LONGS_EQUAL(13, getPopCount(oneSouthWest(BITMASK_FRAME)));
+
+    bitboard b = flipDiagA1H8(BITMASK_A1 | BITMASK_H1 | BITMASK_H8);
+    LONGS_EQUAL(BITMASK_A1 | BITMASK_A8 | BITMASK_H8, b);
+    LONGS_EQUAL(BITMASK_FILE[1], mirrorHorizontal(BITMASK_FILE[6]));
+
+    LONGS_EQUAL(BITMASK_A8, oneNorth(BITMASK_A7));
+    LONGS_EQUAL(BITMASK_A7, oneSouth(BITMASK_A8));
+    LONGS_EQUAL(BITMASK_B7, oneEast(BITMASK_A7));
+    LONGS_EQUAL(BITMASK_B7, oneWest(BITMASK_C7));
+
+    LONGS_EQUAL(BITMASK_A3, oneNorthWest(BITMASK_B2));
+    LONGS_EQUAL(BITMASK_C3, oneNorthEast(BITMASK_B2));
+    LONGS_EQUAL(BITMASK_C1, oneSouthEast(BITMASK_B2));
+    LONGS_EQUAL(BITMASK_A1, oneSouthWest(BITMASK_B2));
+
+    LONGS_EQUAL(0, oneNorth(BITMASK_A8));
+    LONGS_EQUAL(0, oneNorthWest(BITMASK_A8));
+    LONGS_EQUAL(0, oneWest(BITMASK_A8));
+
+    LONGS_EQUAL(0, oneNorth(BITMASK_H8));
+    LONGS_EQUAL(0, oneNorthEast(BITMASK_H8));
+    LONGS_EQUAL(0, oneEast(BITMASK_H8));
+}
+
