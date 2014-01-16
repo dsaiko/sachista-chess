@@ -17,4 +17,4 @@ cat > movegenerator/version.h <<EOF
 EOF
 
 
-
+echo "${VER} (${DATE})"
