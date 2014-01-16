@@ -15,16 +15,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
-#include "utils.h"
+#ifndef SACHISTA_CHESS_PIECE_H
+#define SACHISTA_CHESS_PIECE_H
 
-void outputstr(char *buffer, int bufferSize, int *position, char *str)
-{
-    int len = strlen(str);
-    if(*position + len < bufferSize) {
-        strncpy(buffer + *position, str, len);
-        *position += len;
-    }
+enum chessPiece {
+    NO_PIECE        = '-',
+    WHITE_KING      = 'K',
+    WHITE_QUEEN     = 'Q',
+    WHITE_BISHOP    = 'B',
+    WHITE_KNIGHT    = 'N',
+    WHITE_PAWN      = 'P',
+    WHITE_ROOK      = 'R',
+    BLACK_KING      = 'k',
+    BLACK_QUEEN     = 'q',
+    BLACK_BISHOP    = 'b',
+    BLACK_KNIGHT    = 'n',
+    BLACK_PAWN      = 'p',
+    BLACK_ROOK      = 'r'
+};
 
-}
+enum pieceColor {
+    WHITE           = 'w',
+    BLACK           = 'b'
+};
+
+
+#endif //SACHISTA_CHESS_PIECE_H
 

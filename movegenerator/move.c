@@ -15,16 +15,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
 #include "utils.h"
+#include "bitboard.h"
+#include "move.h"
 
-void outputstr(char *buffer, int bufferSize, int *position, char *str)
-{
-    int len = strlen(str);
-    if(*position + len < bufferSize) {
-        strncpy(buffer + *position, str, len);
-        *position += len;
+
+char *move2String(struct move *m, char *buffer, int bufferSize) {
+    int position = 0;
+
+    char notation[3];
+
+    getFieldNotation(m->sourceIndex, notation, sizeof(notation) / sizeof(char));
+    outputstr(buffer, bufferSize, &position, notation);
+
+    getFieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
+    outputstr(buffer, bufferSize, &position, notation);
+
+    if(m->promotion) {
+        notation[0] = m->promotionPiece;
+        notation[1] = '\0';
+        outputstr(buffer, bufferSize, &position, notation);
     }
 
+    return buffer;
 }
+
 

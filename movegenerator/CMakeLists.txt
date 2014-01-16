@@ -1,2 +1,2 @@
-add_library         (movegenerator bitboard utils)
+add_library         (movegenerator utils bitboard chesspiece move)
 

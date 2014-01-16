@@ -68,20 +68,6 @@ bitboard mirrorHorizontal(bitboard b) {
     return b;
 }
 
-int getPopCount (bitboard b) {
-#if defined(_MSC_VER) && defined(__INTEL_COMPILER)
-  return _mm_popcnt_u64(b);
-#elif defined(_MSC_VER)
-  return (int)__popcnt64(b);
-#else
-  __asm__("popcnt %1, %0" : "=r" (b) : "r" (b));
-  return b;
-#endif
-}
-
-int bitScan(bitboard b) {
-    asm ("bsfq %0, %0" : "=r" (b) : "0" (b)); return (int) b;
-}
 
 char *bitboard2String(bitboard b, char *buffer, int bufferSize)
 {

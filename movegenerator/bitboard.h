@@ -219,17 +219,17 @@ typedef uint64_t bitboard;
 #define BITMASK_NOT_FILE_H  (~BITMASK_FILE_H)
 
 
-static inline bitboard  oneEast         (bitboard b)      { return (b << 1) & BITMASK_NOT_FILE_A; }
-static inline bitboard  oneNorthEast    (bitboard b)      { return (b << 9) & BITMASK_NOT_FILE_A; }
-static inline bitboard  oneSouthEast    (bitboard b)      { return (b >> 7) & BITMASK_NOT_FILE_A; }
-static inline bitboard  oneWest         (bitboard b)      { return (b >> 1) & BITMASK_NOT_FILE_H;}
-static inline bitboard  oneSouthWest    (bitboard b)      { return (b >> 9) & BITMASK_NOT_FILE_H;}
-static inline bitboard  oneNorthWest    (bitboard b)      { return (b << 7) & BITMASK_NOT_FILE_H;}
-static inline bitboard  oneNorth        (bitboard b)      { return (b << 8); }
-static inline bitboard  oneSouth        (bitboard b)      { return (b >> 8); }
+extern inline bitboard  oneEast         (bitboard b)      { return (b << 1) & BITMASK_NOT_FILE_A; }
+extern inline bitboard  oneNorthEast    (bitboard b)      { return (b << 9) & BITMASK_NOT_FILE_A; }
+extern inline bitboard  oneSouthEast    (bitboard b)      { return (b >> 7) & BITMASK_NOT_FILE_A; }
+extern inline bitboard  oneWest         (bitboard b)      { return (b >> 1) & BITMASK_NOT_FILE_H;}
+extern inline bitboard  oneSouthWest    (bitboard b)      { return (b >> 9) & BITMASK_NOT_FILE_H;}
+extern inline bitboard  oneNorthWest    (bitboard b)      { return (b << 7) & BITMASK_NOT_FILE_H;}
+extern inline bitboard  oneNorth        (bitboard b)      { return (b << 8); }
+extern inline bitboard  oneSouth        (bitboard b)      { return (b >> 8); }
 
-static inline int       getFileIndex    (int squareIndex) { return squareIndex % 8; }
-static inline int       getRankIndex    (int squareIndex) { return squareIndex / 8; }
+extern inline int       getFileIndex    (int squareIndex) { return squareIndex % 8; }
+extern inline int       getRankIndex    (int squareIndex) { return squareIndex / 8; }
 
 
 /**
@@ -237,35 +237,23 @@ static inline int       getRankIndex    (int squareIndex) { return squareIndex /
  * @param b
  * @return Transformed bitboard
  */
-extern inline bitboard  reverseRanks    (bitboard b);
+extern bitboard  reverseRanks    (bitboard b);
 
 /**
  * @brief Flips around A1H8 diagonal
  * @param b
  * @return Transformed bitboard
  */
-extern inline bitboard  flipDiagA1H8    (bitboard b);
+extern bitboard  flipDiagA1H8    (bitboard b);
 
 /**
  * @brief Mirrors the bitboard horizontally
  * @param b
  * @return Transformed bitboard
  */
-extern inline bitboard  mirrorHorizontal(bitboard b);
+extern bitboard  mirrorHorizontal(bitboard b);
 
-/**
- * @brief getPopCount
- * @param b
- * @return Number of bits set in a bitboard
- */
-extern inline int       getPopCount     (bitboard b);
 
-/**
- * @brief bitScan
- * @param b
- * @return Index of first bit which is set in a bitboard
- */
-extern inline int       bitScan         (bitboard b);
 
 extern const bitboard   BITMASK_SQUARE[64];
 extern const bitboard   BITMASK_RANK[8];
@@ -290,6 +278,34 @@ extern char *bitboard2String(bitboard b, char *buffer, int bufferSize);
  * @return Notation of a chessboard field
  */
 extern char *getFieldNotation(int index, char *buffer, int bufferSize);
+
+
+/**
+ * @brief bitScan
+ * @param b
+ * @return Index of first bit which is set in a bitboard
+ */
+extern inline int       bitScan         (bitboard b) {
+    asm ("bsfq %0, %0" : "=r" (b) : "0" (b)); return (int) b;
+}
+
+
+/**
+ * @brief getPopCount
+ * @param b
+ * @return Number of bits set in a bitboard
+ */
+extern inline int       getPopCount     (bitboard b) {
+#if defined(_MSC_VER) && defined(__INTEL_COMPILER)
+  return _mm_popcnt_u64(b);
+#elif defined(_MSC_VER)
+  return (int)__popcnt64(b);
+#else
+  __asm__("popcnt %1, %0" : "=r" (b) : "r" (b));
+  return b;
+#endif
+}
+
 
 
 #ifdef __cplusplus
