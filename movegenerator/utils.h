@@ -30,7 +30,8 @@
  * @param position
  * @param str
  */
-extern void outputstr(char *buffer, int bufferSize, int *position, char *str);
+extern void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
+extern void outputchar(char *buffer, const int bufferSize, int *position, const char c);
 
 
 #endif

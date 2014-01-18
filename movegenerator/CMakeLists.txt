@@ -1,1 +1,1 @@
-add_library         (movegenerator version utils bitboard chesspiece move)
+add_library         (movegenerator version utils bitboard chesspiece move chessboard)

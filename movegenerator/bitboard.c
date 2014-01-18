@@ -110,21 +110,22 @@ char *bitboard2String(bitboard b, char *buffer, int bufferSize)
     outputstr(buffer, bufferSize, &position, header);
 
     //end string
-    buffer[position] = '\0';
+    if(position < bufferSize)
+        buffer[position] = '\0';
     return buffer;
 }
 
-char *getFieldNotation(int index, char *buffer, int bufferSize) {
-    char notation[3];
-    int position = 0;
+char *fieldNotation(int index, char *buffer, int bufferSize) {
+    if(bufferSize < 3) return buffer;
 
-    notation[0] = 'a' + (index % 8);
-    notation[1] = '1' + (index / 8);
-    notation[2] = '\0';
-
-    outputstr(buffer, bufferSize, &position, notation);
-    buffer[position] = '\0';
+    buffer[0] = 'a' + (index % 8);
+    buffer[1] = '1' + (index / 8);
+    buffer[2] = '\0';
 
     return buffer;
 }
 
+bitboard bitmaskFromNotation(const char *notation) {
+    if(strlen(notation) != 2) return 0;
+    return BITMASK_SQUARE[(notation[0] - 'a') + ((notation[1] - '1') << 3)];
+}

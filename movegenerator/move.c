@@ -25,10 +25,10 @@ char *move2String(struct move *m, char *buffer, int bufferSize) {
 
     char notation[3];
 
-    getFieldNotation(m->sourceIndex, notation, sizeof(notation) / sizeof(char));
+    fieldNotation(m->sourceIndex, notation, sizeof(notation) / sizeof(char));
     outputstr(buffer, bufferSize, &position, notation);
 
-    getFieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
+    fieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
     outputstr(buffer, bufferSize, &position, notation);
 
     if(m->promotion) {

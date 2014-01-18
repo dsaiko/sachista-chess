@@ -24,7 +24,7 @@ TEST(BitBoardTest, TestLeastSignificantBit)
     const int i = bitScan(BITMASK_H2);
     char notation[3];
 
-    getFieldNotation(i, notation, sizeof(notation)/sizeof(char));
+    fieldNotation(i, notation, sizeof(notation)/sizeof(char));
 
     STRCMP_EQUAL("h2", notation);
 }
@@ -32,9 +32,9 @@ TEST(BitBoardTest, TestLeastSignificantBit)
 
 TEST(BitBoardTest, TestBitCount)
 {
-    LONGS_EQUAL(28, getPopCount(BITMASK_FRAME));
-    LONGS_EQUAL(64, getPopCount(BITMASK_UNIVERSE));
-    LONGS_EQUAL(0, getPopCount(~BITMASK_UNIVERSE));
+    LONGS_EQUAL(28, popCount(BITMASK_FRAME));
+    LONGS_EQUAL(64, popCount(BITMASK_UNIVERSE));
+    LONGS_EQUAL(0, popCount(~BITMASK_UNIVERSE));
 
     LONGS_EQUAL(BITMASK_FILE_A, BITMASK_FILE[0]);
     LONGS_EQUAL(BITMASK_FILE_H, BITMASK_FILE[7]);
@@ -59,14 +59,14 @@ TEST(BitBoardTest, TestIndexes)
         bitboard b = BITMASK_SQUARE[i];
 
         LONGS_EQUAL((1ULL << i), b);
-        LONGS_EQUAL(1, getPopCount(b));
+        LONGS_EQUAL(1, popCount(b));
     }
 }
 
 TEST(BitBoardTest, TestBasicOperations)
 {
-    LONGS_EQUAL(13, getPopCount(oneNorthEast(BITMASK_FRAME)));
-    LONGS_EQUAL(13, getPopCount(oneSouthWest(BITMASK_FRAME)));
+    LONGS_EQUAL(13, popCount(oneNorthEast(BITMASK_FRAME)));
+    LONGS_EQUAL(13, popCount(oneSouthWest(BITMASK_FRAME)));
 
     bitboard b = flipDiagA1H8(BITMASK_A1 | BITMASK_H1 | BITMASK_H8);
     LONGS_EQUAL(BITMASK_A1 | BITMASK_A8 | BITMASK_H8, b);

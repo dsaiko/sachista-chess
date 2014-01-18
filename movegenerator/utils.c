@@ -18,13 +18,20 @@
 #include <stdio.h>
 #include "utils.h"
 
-void outputstr(char *buffer, int bufferSize, int *position, char *str)
+void outputstr(char *buffer, const int bufferSize, int *position, const char *str)
 {
     int len = strlen(str);
     if(*position + len < bufferSize) {
         strncpy(buffer + *position, str, len);
         *position += len;
     }
+}
 
+void outputchar(char *buffer, const int bufferSize, int *position, const char c)
+{
+      if(*position + 1 < bufferSize) {
+          buffer[*position] = c;
+          *position += 1;
+      }
 }
 

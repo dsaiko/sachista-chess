@@ -253,6 +253,7 @@ extern bitboard  flipDiagA1H8    (bitboard b);
  */
 extern bitboard  mirrorHorizontal(bitboard b);
 
+extern bitboard bitmaskFromNotation(const char *notation);
 
 
 extern const bitboard   BITMASK_SQUARE[64];
@@ -277,7 +278,7 @@ extern char *bitboard2String(bitboard b, char *buffer, int bufferSize);
  * @param bufferSize
  * @return Notation of a chessboard field
  */
-extern char *getFieldNotation(int index, char *buffer, int bufferSize);
+extern char *fieldNotation(int index, char *buffer, int bufferSize);
 
 
 /**
@@ -295,7 +296,7 @@ extern inline int       bitScan         (bitboard b) {
  * @param b
  * @return Number of bits set in a bitboard
  */
-extern inline int       getPopCount     (bitboard b) {
+extern inline int       popCount     (bitboard b) {
 #if defined(_MSC_VER) && defined(__INTEL_COMPILER)
   return _mm_popcnt_u64(b);
 #elif defined(_MSC_VER)
