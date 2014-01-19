@@ -61,8 +61,8 @@ struct chessBoard {
 extern struct chessBoard emptyBoard;
 extern struct chessBoard standardBoard;
 
-#define WHITE_PIECES(b)     (b.whiteKing | b.whiteQueen | b.whiteRook | b.whiteKnight | b.whiteBishop | b.whitePawn)
-#define BLACK_PIECES(b)     (b.blackKing | b.blackQueen | b.blackRook | b.blackKnight | b.blackBishop | b.blackPawn)
+#define WHITE_PIECES(b)     ((b)->whiteKing | (b)->whiteQueen | (b)->whiteRook | (b)->whiteKnight | (b)->whiteBishop | (b)->whitePawn)
+#define BLACK_PIECES(b)     ((b)->blackKing | (b)->blackQueen | (b)->blackRook | (b)->blackKnight | (b)->blackBishop | (b)->blackPawn)
 #define ALL_PIECES(b)       (WHITE_PIECES(b) | BLACK_PIECES(b))
 
 extern int               boardCmp(const struct chessBoard *board1, const struct chessBoard *board2);
@@ -72,7 +72,9 @@ extern struct chessBoard boardFromString(const char *buffer);
 extern char*             board2FEN(const struct chessBoard *board, char *buffer, const int bufferSize);
 extern struct chessBoard boardFromFEN(const char *fen);
 
-extern void generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize);
+
+extern void initMovesGenerator();
+extern int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize);
 extern struct chessBoard makeMove(const struct chessBoard *board, const struct move *m);
 
 #ifdef __cplusplus

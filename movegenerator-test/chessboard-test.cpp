@@ -45,9 +45,9 @@ TEST(ChessBoardTest, TestStandardLayout)
     LONGS_EQUAL(2, popCount(board.blackKnight));
     LONGS_EQUAL(8, popCount(board.blackPawn));
 
-    LONGS_EQUAL(16, popCount(WHITE_PIECES(board)));
-    LONGS_EQUAL(16, popCount(BLACK_PIECES(board)));
-    LONGS_EQUAL(32, popCount(ALL_PIECES(board)));
+    LONGS_EQUAL(16, popCount(WHITE_PIECES(&board)));
+    LONGS_EQUAL(16, popCount(BLACK_PIECES(&board)));
+    LONGS_EQUAL(32, popCount(ALL_PIECES(&board)));
 
 }
 
@@ -57,7 +57,7 @@ TEST(ChessBoardTest, TestFromFEN)
 {
     //incomplete FEN
     chessBoard board = boardFromFEN("8/1K6/1Q6/8/5r2/4rk2/8/8 w - -");
-    LONGS_EQUAL(5, popCount(ALL_PIECES(board)));
+    LONGS_EQUAL(5, popCount(ALL_PIECES(&board)));
     LONGS_EQUAL(WHITE, board.nextMove);
     LONGS_EQUAL(0, board.castlingWhite);
     LONGS_EQUAL(0, board.castlingBlack);
@@ -67,7 +67,7 @@ TEST(ChessBoardTest, TestFromFEN)
 
 
     board = boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQq a2 14 33");
-    LONGS_EQUAL(32, popCount(ALL_PIECES(board)));
+    LONGS_EQUAL(32, popCount(ALL_PIECES(&board)));
     LONGS_EQUAL(BLACK, board.nextMove);
     LONGS_EQUAL(BOTH_SIDES, board.castlingWhite);
     LONGS_EQUAL(QUEEN_SIDE, board.castlingBlack);
@@ -79,7 +79,7 @@ TEST(ChessBoardTest, TestFromFEN)
     LONGS_EQUAL(0, boardCmp(&board, &standardBoard));
 
     board = boardFromFEN("7B/6B1/5B2/4B3/3B4/2B5/1B6/B7 w - - 0 1");
-    LONGS_EQUAL(BITMASK_A1H8[7], ALL_PIECES(board));
+    LONGS_EQUAL(BITMASK_A1H8[7], ALL_PIECES(&board));
 
     board = boardFromFEN("INVALID");
     board = boardFromFEN("");
