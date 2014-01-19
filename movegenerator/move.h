@@ -47,7 +47,7 @@ struct move {
 extern "C"{
 #endif
 
-extern char *move2String(struct move *m, char *buffer, int bufferSize);
+extern char *move2str(struct move *m, char *buffer, int bufferSize);
 
 #ifdef __cplusplus
 }

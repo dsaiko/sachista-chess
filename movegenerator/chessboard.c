@@ -342,42 +342,35 @@ struct chessBoard boardFromString(const char *buffer) {
 
     }
 
-
-    char * token;
-    token = strtok (str,"\n");
-    while (token != NULL)
-    {
-        //create FEN string from board pieces
-        int i=0;
-        int len = strlen(token);
-        for (i = 0; i < len; i++) {
-            char c = token[i];
-            switch (c) {
-                case 'k':
-                case 'q':
-                case 'r':
-                case 'n':
-                case 'b':
-                case 'p':
-                case 'K':
-                case 'Q':
-                case 'R':
-                case 'N':
-                case 'B':
-                case 'P':
-                    outputchar(fen, BUFFERSIZE, &fenPos, c);
-                    break;
-                case '-':
-                    outputchar(fen, BUFFERSIZE, &fenPos, '1');
-                    break;
-            }
-
+    //create FEN string from board pieces
+    int i=0;
+    int len = strlen(str);
+    for (i = 0; i < len; i++) {
+        char c = str[i];
+        switch (c) {
+            case 'k':
+            case 'q':
+            case 'r':
+            case 'n':
+            case 'b':
+            case 'p':
+            case 'K':
+            case 'Q':
+            case 'R':
+            case 'N':
+            case 'B':
+            case 'P':
+                outputchar(fen, BUFFERSIZE, &fenPos, c);
+                break;
+            case '-':
+                outputchar(fen, BUFFERSIZE, &fenPos, '1');
+                break;
         }
-        if(fenPos > 0 && fenPos < 64)
-            outputchar(fen, BUFFERSIZE, &fenPos, '/');
 
-        token = strtok (NULL, "\n");
     }
+    if(fenPos > 0 && fenPos < 64)
+        outputchar(fen, BUFFERSIZE, &fenPos, '/');
+
     outputstr(fen, BUFFERSIZE, &fenPos, " w KQkq - 0 1");
     fen[fenPos] = '\0';
 
@@ -496,4 +489,29 @@ char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSi
 
     buffer[fenPos] = 0;
     return buffer;
+}
+
+
+unsigned long long perft(struct chessBoard *board, int depth)
+{
+    unsigned long long count = 0;
+
+    if (depth <= 0) {
+        return 1;
+    }
+
+    //compute directly
+    struct move moves[256];
+    int size = generateMoves(board, moves, 256);
+
+    int i;
+    for(i=0; i<size; i++) {
+        struct chessBoard nextBoard = *board;
+        nextBoard = makeMove(nextBoard, &moves[i]);
+        if(isLegal(&nextBoard)) {
+            count += perft(&nextBoard, depth -1);
+        }
+    }
+
+    return count;
 }

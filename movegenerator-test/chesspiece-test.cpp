@@ -34,7 +34,7 @@ TEST(ChessPieceTest, TestPieces)
     LONGS_EQUAL(BLACK_PAWN, m.piece);
 
     char moveNotation[16];
-    STRCMP_EQUAL("a1h8K", move2String(&m, moveNotation, sizeof(moveNotation) / sizeof(char)));
+    STRCMP_EQUAL("a1h8K", move2str(&m, moveNotation, sizeof(moveNotation) / sizeof(char)));
 
 
 }

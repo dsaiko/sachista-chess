@@ -75,7 +75,12 @@ extern struct chessBoard boardFromFEN(const char *fen);
 
 extern void initMovesGenerator();
 extern int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize);
-extern struct chessBoard makeMove(const struct chessBoard *board, const struct move *m);
+
+
+extern struct chessBoard makeMove(struct chessBoard board, const struct move *m);
+extern int isLegal(const struct chessBoard *board);
+
+extern unsigned long long perft(struct chessBoard *board, int depth);
 
 #ifdef __cplusplus
 }

@@ -19,7 +19,7 @@
 #include "move.h"
 
 
-char *move2String(struct move *m, char *buffer, int bufferSize) {
+char *move2str(struct move *m, char *buffer, int bufferSize) {
     int position = 0;
 
     char notation[3];
@@ -36,6 +36,8 @@ char *move2String(struct move *m, char *buffer, int bufferSize) {
         outputstr(buffer, bufferSize, &position, notation);
     }
 
+    if(position < bufferSize)
+        buffer[position] = 0;
     return buffer;
 }
 

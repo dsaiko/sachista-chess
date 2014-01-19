@@ -124,7 +124,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             bitboard movesBoard = oneSouth(source) & emptyBoard;
 
             //if one step forward was sucessful and we are on base rank, try double move
-            if ((movesBoard) && (sourceIndex < 16)) {
+            if ((movesBoard) && (sourceIndex > 47)) {
                 movesBoard |=  oneSouth(movesBoard) & emptyBoard;
             }
 
@@ -140,10 +140,10 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
 
                 //white promotion?
                 if (targetIndex < 8) {
-                    ADD_MOVE(BLACK_PAWN, WHITE_BISHOP, 0, 0);
-                    ADD_MOVE(BLACK_PAWN, WHITE_KNIGHT, 0, 0);
-                    ADD_MOVE(BLACK_PAWN, WHITE_QUEEN, 0, 0);
-                    ADD_MOVE(BLACK_PAWN, WHITE_ROOK, 0, 0);
+                    ADD_MOVE(BLACK_PAWN, BLACK_BISHOP, 0, 0);
+                    ADD_MOVE(BLACK_PAWN, BLACK_KNIGHT, 0, 0);
+                    ADD_MOVE(BLACK_PAWN, BLACK_QUEEN, 0, 0);
+                    ADD_MOVE(BLACK_PAWN, BLACK_ROOK, 0, 0);
                 } else {
                     //normal move/capture
                     ADD_MOVE(BLACK_PAWN, NO_PIECE, 0, 0);

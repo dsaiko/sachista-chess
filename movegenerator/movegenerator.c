@@ -62,7 +62,3 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right) {
     }
     return b;
 }
-
-struct chessBoard makeMove(const struct chessBoard *board, const struct move *m) {
-    return standardBoard;
-}
