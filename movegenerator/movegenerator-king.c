@@ -53,9 +53,7 @@ bitboard generateAttacksKing(const struct chessBoard *board, enum pieceColor col
 
 int isUnderAttack(const struct chessBoard *board, char color, bitboard allPieces, bitboard bitmask) {
 
-    bitboard attacks =  generateAttacksQueen(board, color, allPieces);
-    if(attacks & bitmask) return 1;
-    attacks  =  generateAttacksRook(board, color, allPieces);
+    bitboard attacks = generateAttacksRook(board, color, allPieces);
     if(attacks & bitmask) return 1;
     attacks  =  generateAttacksBishop(board, color, allPieces);
     if(attacks & bitmask) return 1;

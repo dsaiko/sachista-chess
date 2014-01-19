@@ -133,7 +133,7 @@ void initMovesGeneratorRook() {
 
 bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
 {
-    bitboard rook = (color == WHITE) ? board->whiteRook : board->blackRook;
+    bitboard rook = (color == WHITE) ? (board->whiteRook | board->whiteQueen) : (board->blackRook | board->blackQueen);
 
     bitboard attacks = 0;
 
@@ -160,16 +160,13 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
 
 void generateMovesRook(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
 {
-     enum chessPiece movingPiece;
      bitboard rook;
 
       //configure color
       if (board->nextMove == WHITE) {
-          movingPiece = WHITE_ROOK;
-          rook = board->whiteRook;
+          rook = board->whiteRook | board->whiteQueen;
       } else {
-          movingPiece = BLACK_ROOK;
-          rook = board->blackRook;
+          rook = board->blackRook | board->blackQueen;
       }
 
       //for all rooks
@@ -196,6 +193,20 @@ void generateMovesRook(const struct chessBoard *board, struct move *moves, const
               const bitboard target = BITMASK_SQUARE(targetIndex);
 
 
+              enum chessPiece movingPiece;
+              if(board->nextMove == WHITE) {
+                if(board->whiteRook & source) {
+                    movingPiece = WHITE_ROOK;
+                } else {
+                    movingPiece = WHITE_QUEEN;
+                }
+              } else {
+                  if(board->blackRook & source) {
+                      movingPiece = BLACK_ROOK;
+                  } else {
+                      movingPiece = BLACK_QUEEN;
+                  }
+              }
               ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
 
               //remove move

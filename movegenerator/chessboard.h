@@ -78,7 +78,7 @@ extern void initMovesGenerator();
 extern int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize);
 
 
-extern struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m);
+extern void makeMove(struct chessBoard *board0, const struct move *m);
 extern int isLegal(const struct chessBoard *board);
 
 extern unsigned long long perft(const struct chessBoard *board, const int depth);

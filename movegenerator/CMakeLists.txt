@@ -11,7 +11,6 @@ add_library (
     movegenerator-king
     movegenerator-pawn
     movegenerator-rook
-    movegenerator-queen
     movegenerator-knight
     makemove
 )

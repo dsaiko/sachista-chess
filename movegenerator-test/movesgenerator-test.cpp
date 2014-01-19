@@ -26,7 +26,8 @@ void testValidMoves(const int expectedCount, const char *boardString)
     int validCount = 0;
     int i;
     for(i=0; i<size; i++) {
-        struct chessBoard nextBoard = makeMove(&board, &moves[i]);
+        struct chessBoard nextBoard = board;
+        makeMove(&nextBoard, &moves[i]);
         if(isLegal(&nextBoard)) {
             validCount ++;
         }

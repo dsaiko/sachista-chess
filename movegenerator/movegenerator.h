@@ -27,7 +27,6 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right);
     }
 
 void initMovesGeneratorKing();
-void initMovesGeneratorQueen();
 void initMovesGeneratorRook();
 void initMovesGeneratorKnight();
 void initMovesGeneratorBishop();
@@ -36,8 +35,7 @@ void initMovesGeneratorPawn();
 bitboard generateAttacksKing(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
 bitboard generateAttacksPawn(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
 bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
-bitboard generateAttacksQueen(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
-extern bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
+bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
 bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
 
 void generateMovesKing(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);

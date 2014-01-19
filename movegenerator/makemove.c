@@ -20,12 +20,10 @@
 #include "move.h"
 
 
-struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m) {
-
-    struct chessBoard board = *board0;
+void makeMove(struct chessBoard *board, const struct move *m) {
 
     //en passant target
-    board.enPassant = 0;
+    board->enPassant = 0;
 
     const bitboard source = BITMASK_SQUARE(m->sourceIndex);
     const bitboard target = BITMASK_SQUARE(m->targetIndex);
@@ -34,110 +32,110 @@ struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m
     //APPLY MOVE
     switch (m->piece) {
         case WHITE_KNIGHT:
-            board.halfMoveClock++;
-            board.whiteKnight ^= source | target;
+            board->halfMoveClock++;
+            board->whiteKnight ^= source | target;
             break;
         case WHITE_BISHOP:
-            board.halfMoveClock++;
-            board.whiteBishop ^= source | target;
+            board->halfMoveClock++;
+            board->whiteBishop ^= source | target;
             break;
         case WHITE_ROOK:
-            board.halfMoveClock++;
-            board.whiteRook ^= source | target;
+            board->halfMoveClock++;
+            board->whiteRook ^= source | target;
             if (m->sourceIndex == INDEX_A1) {
-                board.castlingWhite &= ~QUEEN_SIDE;
+                board->castlingWhite &= ~QUEEN_SIDE;
             }
             if (m->sourceIndex == INDEX_H1) {
-                board.castlingWhite &= ~KING_SIDE;
+                board->castlingWhite &= ~KING_SIDE;
             }
             break;
         case WHITE_QUEEN:
-            board.halfMoveClock++;
-            board.whiteQueen ^= source | target;
+            board->halfMoveClock++;
+            board->whiteQueen ^= source | target;
             break;
         case WHITE_KING:
-            board.halfMoveClock++;
-            board.whiteKing ^= source | target;
-            board.castlingWhite = 0;
+            board->halfMoveClock++;
+            board->whiteKing ^= source | target;
+            board->castlingWhite = 0;
             if (m->castling) {
                 if (m->targetIndex == INDEX_C1) {
-                    board.whiteRook ^= BITMASK_A1 | BITMASK_D1;
+                    board->whiteRook ^= BITMASK_A1 | BITMASK_D1;
                 }
                 if (m->targetIndex == INDEX_G1) {
-                    board.whiteRook ^= BITMASK_H1 | BITMASK_F1;
+                    board->whiteRook ^= BITMASK_H1 | BITMASK_F1;
                 }
             }
             break;
         case WHITE_PAWN:
-            board.halfMoveClock = 0;
-            board.whitePawn ^= source | target;
+            board->halfMoveClock = 0;
+            board->whitePawn ^= source | target;
             if ((m->targetIndex - m->sourceIndex) > 10) {
-                board.enPassant = ONE_NORTH(source);
+                board->enPassant = ONE_NORTH(source);
             }
             if (m->promotionPiece != NO_PIECE) {
-                board.whitePawn ^= target;
+                board->whitePawn ^= target;
                 if (m->promotionPiece == WHITE_QUEEN) {
-                    board.whiteQueen |= target;
+                    board->whiteQueen |= target;
                 } else if (m->promotionPiece == WHITE_ROOK) {
-                    board.whiteRook |= target;
+                    board->whiteRook |= target;
                 } else if (m->promotionPiece == WHITE_BISHOP) {
-                    board.whiteBishop |= target;
+                    board->whiteBishop |= target;
                 } else if (m->promotionPiece == WHITE_KNIGHT) {
-                    board.whiteKnight |= target;
+                    board->whiteKnight |= target;
                 }
             }
             break;
         case BLACK_KNIGHT:
-            board.halfMoveClock++;
-            board.blackKnight ^= source | target;
+            board->halfMoveClock++;
+            board->blackKnight ^= source | target;
             break;
         case BLACK_BISHOP:
-            board.halfMoveClock++;
-            board.blackBishop ^= source | target;
+            board->halfMoveClock++;
+            board->blackBishop ^= source | target;
             break;
         case BLACK_ROOK:
-            board.halfMoveClock++;
-            board.blackRook ^= source | target;
+            board->halfMoveClock++;
+            board->blackRook ^= source | target;
             if (m->sourceIndex == INDEX_A8) {
-                board.castlingBlack &= ~QUEEN_SIDE;
+                board->castlingBlack &= ~QUEEN_SIDE;
             }
             if (m->sourceIndex == INDEX_H8) {
-                board.castlingBlack &= ~KING_SIDE;
+                board->castlingBlack &= ~KING_SIDE;
             }
             break;
         case BLACK_QUEEN:
-            board.halfMoveClock++;
-            board.blackQueen ^= source | target;
+            board->halfMoveClock++;
+            board->blackQueen ^= source | target;
             break;
         case BLACK_KING:
-            board.halfMoveClock++;
-            board.blackKing ^= source | target;
-            board.castlingBlack = 0;
+            board->halfMoveClock++;
+            board->blackKing ^= source | target;
+            board->castlingBlack = 0;
             if (m->castling) {
                 if (m->targetIndex == INDEX_C8) {
-                    board.blackRook ^= BITMASK_A8 | BITMASK_D8;
+                    board->blackRook ^= BITMASK_A8 | BITMASK_D8;
                 }
                 if (m->targetIndex == INDEX_G8) {
-                    board.blackRook ^= BITMASK_H8 | BITMASK_F8;
+                    board->blackRook ^= BITMASK_H8 | BITMASK_F8;
                 }
             }
             break;
         case BLACK_PAWN:
-            board.halfMoveClock = 0;
-            board.blackPawn ^= source | target;
+            board->halfMoveClock = 0;
+            board->blackPawn ^= source | target;
             if ((m->sourceIndex - m->targetIndex) > 10) { // double move
-                board.enPassant = ONE_SOUTH(source);
+                board->enPassant = ONE_SOUTH(source);
             }
             if (m->promotionPiece != NO_PIECE) {
-                board.blackPawn ^= target;
+                board->blackPawn ^= target;
                 if (m->promotionPiece == BLACK_QUEEN) {
-                    board.blackQueen |= target;
+                    board->blackQueen |= target;
                 } else if (m->promotionPiece == BLACK_ROOK) {
-                    board.blackRook |= target;
+                    board->blackRook |= target;
                 } else if (m->promotionPiece == BLACK_BISHOP) {
-                    board.blackBishop |= target;
+                    board->blackBishop |= target;
                 } else if (m->promotionPiece == BLACK_KNIGHT) {
-                    board.blackKnight |= target;
+                    board->blackKnight |= target;
                 }
             }
             break;
@@ -147,36 +145,36 @@ struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m
     //CHECK CAPTURES
     enum chessPiece capturedPiece = NO_PIECE;
 
-    if (board.nextMove == BLACK) {
+    if (board->nextMove == BLACK) {
         //check capture
-        if ((board.whiteBishop & target) != 0) {
+        if ((board->whiteBishop & target) != 0) {
             capturedPiece = WHITE_BISHOP;
-        } else if ((board.whiteKing & target) != 0) {
+        } else if ((board->whiteKing & target) != 0) {
             capturedPiece = WHITE_KING;
-        } else if ((board.whiteKnight & target) != 0) {
+        } else if ((board->whiteKnight & target) != 0) {
             capturedPiece = WHITE_KNIGHT;
-        } else if ((board.whitePawn & target) != 0) {
+        } else if ((board->whitePawn & target) != 0) {
             capturedPiece = WHITE_PAWN;
-        } else if ((board.whiteQueen & target) != 0) {
+        } else if ((board->whiteQueen & target) != 0) {
             capturedPiece = WHITE_QUEEN;
-        } else if ((board.whiteRook & target) != 0) {
+        } else if ((board->whiteRook & target) != 0) {
             capturedPiece = WHITE_ROOK;
         } else if (m->enPassant) {
             capturedPiece = WHITE_PAWN;
         }
     } else {
         //check capture
-        if ((board.blackBishop & target) != 0) {
+        if ((board->blackBishop & target) != 0) {
             capturedPiece = BLACK_BISHOP;
-        } else if ((board.blackKing & target) != 0) {
+        } else if ((board->blackKing & target) != 0) {
             capturedPiece = BLACK_KING;
-        } else if ((board.blackKnight & target) != 0) {
+        } else if ((board->blackKnight & target) != 0) {
             capturedPiece = BLACK_KNIGHT;
-        } else if ((board.blackPawn & target) != 0) {
+        } else if ((board->blackPawn & target) != 0) {
             capturedPiece = BLACK_PAWN;
-        } else if ((board.blackQueen & target) != 0) {
+        } else if ((board->blackQueen & target) != 0) {
             capturedPiece = BLACK_QUEEN;
-        } else if ((board.blackRook & target) != 0) {
+        } else if ((board->blackRook & target) != 0) {
             capturedPiece = BLACK_ROOK;
         } else if (m->enPassant) {
             capturedPiece = BLACK_PAWN;
@@ -186,79 +184,78 @@ struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m
 
     //reset halfmoveClock if piece was captured
     if (capturedPiece != NO_PIECE) {
-        board.halfMoveClock = 0;
+        board->halfMoveClock = 0;
     }
 
     //process capture
     if (m->enPassant) {
-        if (board.nextMove == BLACK) {
-            board.whitePawn ^= ONE_NORTH(target);
+        if (board->nextMove == BLACK) {
+            board->whitePawn ^= ONE_NORTH(target);
         } else {
-            board.blackPawn ^= ONE_SOUTH(target);
+            board->blackPawn ^= ONE_SOUTH(target);
         }
     } else {
         switch (capturedPiece) {
             case WHITE_BISHOP:
-                board.whiteBishop ^= target;
+                board->whiteBishop ^= target;
                 break;
             case BLACK_BISHOP:
-                board.blackBishop ^= target;
+                board->blackBishop ^= target;
                 break;
             case WHITE_KING:
-                board.whiteKing ^= target;
-                board.castlingWhite = 0;
+                board->whiteKing ^= target;
+                board->castlingWhite = 0;
                 break;
             case BLACK_KING:
-                board.blackKing ^= target;
-                board.castlingBlack = 0;
+                board->blackKing ^= target;
+                board->castlingBlack = 0;
                 break;
             case WHITE_KNIGHT:
-                board.whiteKnight ^= target;
+                board->whiteKnight ^= target;
                 break;
             case BLACK_KNIGHT:
-                board.blackKnight ^= target;
+                board->blackKnight ^= target;
                 break;
             case WHITE_PAWN:
-                board.whitePawn ^= target;
+                board->whitePawn ^= target;
                 break;
             case BLACK_PAWN:
-                board.blackPawn ^= target;
+                board->blackPawn ^= target;
                 break;
             case WHITE_QUEEN:
-                board.whiteQueen ^= target;
+                board->whiteQueen ^= target;
                 break;
             case BLACK_QUEEN:
-                board.blackQueen ^= target;
+                board->blackQueen ^= target;
                 break;
             case WHITE_ROOK:
-                board.whiteRook ^= target;
+                board->whiteRook ^= target;
                 if (m->targetIndex == INDEX_A1) {
-                    board.castlingWhite &= ~QUEEN_SIDE;
+                    board->castlingWhite &= ~QUEEN_SIDE;
                 }
                 if (m->targetIndex == INDEX_H1) {
-                    board.castlingWhite &= ~KING_SIDE;
+                    board->castlingWhite &= ~KING_SIDE;
                 }
                 break;
             case BLACK_ROOK:
-                board.blackRook ^= target;
+                board->blackRook ^= target;
                 if (m->targetIndex == INDEX_A8) {
-                    board.castlingBlack &= ~QUEEN_SIDE;
+                    board->castlingBlack &= ~QUEEN_SIDE;
                 }
                 if (m->targetIndex == INDEX_H8) {
-                    board.castlingBlack &= ~KING_SIDE;
+                    board->castlingBlack &= ~KING_SIDE;
                 }
                 break;
         }
     }
 
     //switch sides
-    if (board.nextMove == BLACK) {
-        board.fullMoveNumber++;
-        board.nextMove = WHITE;
+    if (board->nextMove == BLACK) {
+        board->fullMoveNumber++;
+        board->nextMove = WHITE;
     } else {
-        board.nextMove = BLACK;
+        board->nextMove = BLACK;
     }
-    return board;
 }
 
 

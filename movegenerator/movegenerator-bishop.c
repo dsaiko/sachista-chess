@@ -211,7 +211,7 @@ void initMovesGeneratorBishop()
 
 bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
 {
-    bitboard bishop = (color == WHITE) ? board->whiteBishop : board->blackBishop;
+    bitboard bishop = (color == WHITE) ? (board->whiteBishop | board->whiteQueen) : (board->blackBishop | board->blackQueen);
 
     bitboard attacks = 0;
 
@@ -238,16 +238,13 @@ bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor c
 
 void generateMovesBishop(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
 {
-    enum chessPiece movingPiece;
     bitboard bishop;
 
     //choose color
     if (board->nextMove == WHITE) {
-        movingPiece = WHITE_BISHOP;
-        bishop = board->whiteBishop;
+        bishop = board->whiteBishop | board->whiteQueen;
     } else {
-        movingPiece = BLACK_BISHOP;
-        bishop = board->blackBishop;
+        bishop = board->blackBishop | board->blackQueen;
     }
 
     //for all bishops
@@ -272,6 +269,21 @@ void generateMovesBishop(const struct chessBoard *board, struct move *moves, con
             //get next move
             const int targetIndex = bitScan(movesBoard);
             const bitboard target = BITMASK_SQUARE(targetIndex);
+
+            enum chessPiece movingPiece;
+            if(board->nextMove == WHITE) {
+              if(board->whiteBishop & source) {
+                  movingPiece = WHITE_BISHOP;
+              } else {
+                  movingPiece = WHITE_QUEEN;
+              }
+            } else {
+                if(board->blackBishop & source) {
+                    movingPiece = BLACK_BISHOP;
+                } else {
+                    movingPiece = BLACK_QUEEN;
+                }
+            }
 
             //add move to array
             ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
