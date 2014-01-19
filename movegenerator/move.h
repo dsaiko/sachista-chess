@@ -31,18 +31,6 @@ struct move {
     int             enPassant       ;
 };
 
-//struct move {
-//    enum chessPiece piece;
-//    enum chessPiece promotionPiece;
-
-//    int             sourceIndex;
-//    int             targetIndex;
-
-//    int             castling;
-//    int             enPassant;
-//};
-
-
 #ifdef __cplusplus
 extern "C"{
 #endif

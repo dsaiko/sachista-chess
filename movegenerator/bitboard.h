@@ -226,8 +226,8 @@ typedef uint64_t bitboard;
 #define ONE_NORTH(b)         (((b) << 8))
 #define ONE_SOUTH(b)         (((b) >> 8))
 
-#define FILE_INDEX(i)  ((i) % 8)
-#define RANK_INDEX(i)  ((i) / 8)
+#define FILE_INDEX(i)        ((i) % 8)
+#define RANK_INDEX(i)        ((i) / 8)
 
 /**
  * @brief Returns bitboard with ranks (rows) in reverse order
