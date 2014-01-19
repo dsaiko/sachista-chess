@@ -27,10 +27,8 @@ TEST(ChessPieceTest, TestPieces)
     m.piece = (chessPiece) 'p';
     m.sourceIndex = INDEX_A1;
     m.targetIndex = INDEX_H8;
-    m.promotion = 1;
     m.promotionPiece = (chessPiece) 'K';
 
-    CHECK(m.promotion)
     LONGS_EQUAL(INDEX_A1, m.sourceIndex);
     LONGS_EQUAL(INDEX_H8, m.targetIndex);
     LONGS_EQUAL(BLACK_PAWN, m.piece);

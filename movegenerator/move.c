@@ -15,7 +15,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "utils.h"
 #include "bitboard.h"
 #include "move.h"
 
@@ -31,7 +30,7 @@ char *move2String(struct move *m, char *buffer, int bufferSize) {
     fieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
     outputstr(buffer, bufferSize, &position, notation);
 
-    if(m->promotion) {
+    if(m->promotionPiece != NO_PIECE) {
         notation[0] = m->promotionPiece;
         notation[1] = '\0';
         outputstr(buffer, bufferSize, &position, notation);

@@ -67,9 +67,9 @@ extern struct chessBoard standardBoard;
 
 extern int               boardCmp(const struct chessBoard *board1, const struct chessBoard *board2);
 
-extern char*             board2String(const struct chessBoard *board, const int decorated, char *buffer, const int bufferSize);
+extern char*             board2str(const struct chessBoard *board, const int decorated, char *buffer, const int bufferSize);
 extern struct chessBoard boardFromString(const char *buffer);
-extern char*             board2FEN(const struct chessBoard *board, char *buffer, const int bufferSize);
+extern char*             board2fen(const struct chessBoard *board, char *buffer, const int bufferSize);
 extern struct chessBoard boardFromFEN(const char *fen);
 
 

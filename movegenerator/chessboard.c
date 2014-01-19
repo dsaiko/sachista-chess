@@ -16,9 +16,8 @@
 */
 
 #include "chessboard.h"
-#include "utils.h"
 
-#define BUFFERSIZE 255
+#define BUFFERSIZE 512
 
 struct chessBoard emptyBoard = {
       WHITE,
@@ -201,7 +200,7 @@ struct chessBoard boardFromFEN(const char *fen) {
         }
         pos++;
     }
-    if( n != 0)
+    if(n)
         board.halfMoveClock = n;
 
 
@@ -216,13 +215,13 @@ struct chessBoard boardFromFEN(const char *fen) {
         }
         pos++;
     }
-    if( n != 0)
+    if(n)
         board.fullMoveNumber = n;
 
     return board;
 }
 
-char*  board2String(const struct chessBoard *board, const int decorated, char *buffer, const int bufferSize)
+char*  board2str(const struct chessBoard *board, const int decorated, char *buffer, const int bufferSize)
 {
     char header[] = "  a b c d e f g h\n";
     int position = 0;
@@ -265,41 +264,41 @@ char*  board2String(const struct chessBoard *board, const int decorated, char *b
         char c = NO_PIECE;
         bitboard test = (1ULL << i);
 
-        if ((whiteKingReversed & test) != 0) {
+        if (whiteKingReversed & test) {
             c = WHITE_KING;
         }
-        if ((whiteQueenReversed & test) != 0) {
+        if (whiteQueenReversed & test) {
             c = WHITE_QUEEN;
         }
-        if ((whiteRookReversed & test) != 0) {
+        if (whiteRookReversed & test) {
             c = WHITE_ROOK;
         }
-        if ((whiteKnightReversed & test) != 0) {
+        if (whiteKnightReversed & test) {
             c = WHITE_KNIGHT;
         }
-        if ((whiteBishopReversed & test) != 0) {
+        if (whiteBishopReversed & test) {
             c = WHITE_BISHOP;
         }
-        if ((whitePawnReversed & test) != 0) {
+        if (whitePawnReversed & test) {
             c = WHITE_PAWN;
         }
 
-        if ((blackKingReversed & test) != 0) {
+        if (blackKingReversed & test) {
             c = BLACK_KING;
         }
-        if ((blackQueenReversed & test) != 0) {
+        if (blackQueenReversed & test) {
             c = BLACK_QUEEN;
         }
-        if ((blackRookReversed & test) != 0) {
+        if (blackRookReversed & test) {
             c = BLACK_ROOK;
         }
-        if ((blackKnightReversed & test) != 0) {
+        if (blackKnightReversed & test) {
             c = BLACK_KNIGHT;
         }
-        if ((blackBishopReversed & test) != 0) {
+        if (blackBishopReversed & test) {
             c = BLACK_BISHOP;
         }
-        if ((blackPawnReversed & test) != 0) {
+        if (blackPawnReversed & test) {
             c = BLACK_PAWN;
         }
 
@@ -329,37 +328,48 @@ struct chessBoard boardFromString(const char *buffer) {
     char fen[BUFFERSIZE];
     int  fenPos = 0;
 
+    const char header[] = "a b c d e f g h";
+
     strcpy(str, buffer);
+
+    //replace header in str
+    char *headerpos = 0;
+    while(headerpos = strstr(str, header)) {
+        int i;
+        int len = strlen(header);
+        for(i=0; i<len; i++)
+                headerpos[i] = ' ';
+
+    }
+
 
     char * token;
     token = strtok (str,"\n");
     while (token != NULL)
     {
-        if(strstr(token, "a b c d e f g h") == NULL) {
-            //create FEN string from board pieces
-            int i=0;
-            int len = strlen(token);
-            for (i = 0; i < len; i++) {
-                char c = token[i];
-                switch (c) {
-                    case 'k':
-                    case 'q':
-                    case 'r':
-                    case 'n':
-                    case 'b':
-                    case 'p':
-                    case 'K':
-                    case 'Q':
-                    case 'R':
-                    case 'N':
-                    case 'B':
-                    case 'P':
-                        outputchar(fen, BUFFERSIZE, &fenPos, c);
-                        break;
-                    case '-':
-                        outputchar(fen, BUFFERSIZE, &fenPos, '1');
-                        break;
-                }
+        //create FEN string from board pieces
+        int i=0;
+        int len = strlen(token);
+        for (i = 0; i < len; i++) {
+            char c = token[i];
+            switch (c) {
+                case 'k':
+                case 'q':
+                case 'r':
+                case 'n':
+                case 'b':
+                case 'p':
+                case 'K':
+                case 'Q':
+                case 'R':
+                case 'N':
+                case 'B':
+                case 'P':
+                    outputchar(fen, BUFFERSIZE, &fenPos, c);
+                    break;
+                case '-':
+                    outputchar(fen, BUFFERSIZE, &fenPos, '1');
+                    break;
             }
 
         }
@@ -368,7 +378,6 @@ struct chessBoard boardFromString(const char *buffer) {
 
         token = strtok (NULL, "\n");
     }
-
     outputstr(fen, BUFFERSIZE, &fenPos, " w KQkq - 0 1");
     fen[fenPos] = '\0';
 
@@ -402,10 +411,10 @@ struct chessBoard boardFromString(const char *buffer) {
     return board;
 }
 
-char* board2FEN(const struct chessBoard *board, char *buffer, const int bufferSize) {
+char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSize) {
     // get the pieces
     char data[BUFFERSIZE];
-    board2String(board, 0, data, BUFFERSIZE);
+    board2str(board, 0, data, BUFFERSIZE);
     int fenPos = 0;
 
     int i;
@@ -451,17 +460,17 @@ char* board2FEN(const struct chessBoard *board, char *buffer, const int bufferSi
 
 
     // castling
-    if ((board->castlingWhite != 0) || (board->castlingBlack != 0)) {
-        if ((board->castlingWhite & KING_SIDE) != 0) {
+    if ((board->castlingWhite) || (board->castlingBlack)) {
+        if (board->castlingWhite & KING_SIDE) {
             outputchar(buffer, bufferSize, &fenPos, 'K');
         }
-        if ((board->castlingWhite & QUEEN_SIDE) != 0) {
+        if (board->castlingWhite & QUEEN_SIDE) {
             outputchar(buffer, bufferSize, &fenPos, 'Q');
         }
-        if ((board->castlingBlack & KING_SIDE) != 0) {
+        if (board->castlingBlack & KING_SIDE) {
             outputchar(buffer, bufferSize, &fenPos, 'k');
         }
-        if ((board->castlingBlack & QUEEN_SIDE) != 0) {
+        if (board->castlingBlack & QUEEN_SIDE) {
             outputchar(buffer, bufferSize, &fenPos, 'q');
         }
     } else {

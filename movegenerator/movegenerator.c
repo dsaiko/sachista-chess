@@ -1,21 +1,13 @@
 #include "chessboard.h"
-
-bitboard RIGHT_SHIFTS[7];
-bitboard LEFT_SHIFTS[7];
+#include "movegenerator.h"
 
 void initMovesGenerator() {
-
-    RIGHT_SHIFTS[0] = BITMASK_NOT_FILE_A;
-    LEFT_SHIFTS[0] = BITMASK_NOT_FILE_H;
-
-    int i;
-
-    for(i=1; i<7; i++) {
-        RIGHT_SHIFTS[i] = oneEast(RIGHT_SHIFTS[i - 1]);
-        LEFT_SHIFTS[i] = oneWest(LEFT_SHIFTS[i - 1]);
-    }
-
     initMovesGeneratorKnight();
+    initMovesGeneratorPawn();
+    initMovesGeneratorKing();
+    initMovesGeneratorQueen();
+    initMovesGeneratorBishop();
+    initMovesGeneratorRook();
 }
 
 int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize)
@@ -26,39 +18,51 @@ int generateMoves(const struct chessBoard *board, struct move *m, const int buff
     int movesIndex = 0;
 
     generateMovesKnight(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
+    generateMovesPawn(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
+    generateMovesKing(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
+    generateMovesRook(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
+    generateMovesBishop(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
+    generateMovesQueen(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
 
     return movesIndex;
 }
 
-struct chessBoard makeMove(const struct chessBoard *board, const struct move *m) {
-    return standardBoard;
-}
-
 bitboard generateAttacks(struct chessBoard *board, enum pieceColor color, bitboard allPieces) {
-    long attacks = 0L;
+    bitboard attacks = 0;
 
-    attacks     |=  generateAttacksKnight(board, color);
+    attacks     |=  generateAttacksKnight(board, color, allPieces);
+    attacks     |=  generateAttacksPawn(board, color, allPieces);
+    attacks     |=  generateAttacksKing(board, color, allPieces);
+    attacks     |=  generateAttacksQueen(board, color, allPieces);
+    attacks     |=  generateAttacksRook(board, color, allPieces);
+    attacks     |=  generateAttacksBishop(board, color, allPieces);
+
 
     return attacks;
 }
 
-
-
-bitboard moveBitBoard(bitboard bitmask, const int up, const int right) {
-    if (bitmask == 0) return 0L;
-
+bitboard moveBitBoard0(bitboard b, const int up, const int right) {
     //move the piece up or down
+    int i;
     if (up > 0) {
-       bitmask <<= (long) (up << 3);
+        for(i=0; i < up; i++)
+            b = oneNorth(b);
     } else if(up < 0) {
-        bitmask >>= (long) ((-up) << 3);
+        for(i=0; i < -up; i++)
+            b = oneSouth(b);
     }
 
     //move the piece right or left
     if (right > 0) {
-        bitmask =  (bitmask << right) & RIGHT_SHIFTS[right - 1];
+        for(i=0; i < right; i++)
+            b = oneEast(b);
     } else if( right < 0){
-        bitmask = (bitmask >> -right) & LEFT_SHIFTS[-right - 1];
+        for(i=0; i < -right; i++)
+            b = oneWest(b);
     }
-    return bitmask;
+    return b;
+}
+
+struct chessBoard makeMove(const struct chessBoard *board, const struct move *m) {
+    return standardBoard;
 }

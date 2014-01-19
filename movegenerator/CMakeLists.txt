@@ -1,7 +1,7 @@
 add_library (
     movegenerator
-    version
     utils
+    version
     bitboard
     chesspiece
     move

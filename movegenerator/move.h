@@ -29,7 +29,6 @@ struct move {
 
     int             castling        :1;
     int             enPassant       :1;
-    int             promotion       :1;
 };
 
 //struct move {
@@ -41,7 +40,6 @@ struct move {
 
 //    int             castling;
 //    int             enPassant;
-//    int             promotion;
 //};
 
 

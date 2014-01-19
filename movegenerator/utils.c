@@ -16,7 +16,7 @@
 */
 
 #include <stdio.h>
-#include "utils.h"
+#include <string.h>
 
 void outputstr(char *buffer, const int bufferSize, int *position, const char *str)
 {

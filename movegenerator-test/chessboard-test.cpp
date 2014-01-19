@@ -91,31 +91,31 @@ TEST(ChessBoardTest, TestToString)
 {
     char buffer[256];
     chessBoard board = boardFromFEN("8/1K6/1Q6/8/5r2/4rk2/8/8 w - a2");
-    board2FEN(&board, buffer, sizeof(buffer) / sizeof(char));
+    board2fen(&board, buffer, sizeof(buffer) / sizeof(char));
     chessBoard board2 = boardFromFEN(buffer);
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
-    board2String(&board, 1, buffer, sizeof(buffer) / sizeof(char));
+    board2str(&board, 1, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
     board2.enPassant = BITMASK_A2;
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
-    board2String(&board, 0, buffer, sizeof(buffer) / sizeof(char));
+    board2str(&board, 0, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
     board2.enPassant = BITMASK_A2;
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
 
     board = standardBoard;
-    board2FEN(&board, buffer, sizeof(buffer) / sizeof(char));
+    board2fen(&board, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromFEN(buffer);
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
-    board2String(&board, 1, buffer, sizeof(buffer) / sizeof(char));
+    board2str(&board, 1, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
-    board2String(&board, 0, buffer, sizeof(buffer) / sizeof(char));
+    board2str(&board, 0, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 }

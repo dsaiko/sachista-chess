@@ -1,5 +1,5 @@
 #include "chessboard.h"
-
+#include "movegenerator.h"
 
 
 bitboard KNIGHT_MOVES[64];
@@ -10,31 +10,31 @@ void initMovesGeneratorKnight() {
     int i=0;
     for (i = 0; i < 64; i++) {
         //put the piece on the board
-        bitboard piece = 1ULL << i;
+        bitboard piece = BITMASK_SQUARE[i];
 
         //get moves
         KNIGHT_MOVES[i] =
-                      moveBitBoard(piece, 2, 1) |
-                      moveBitBoard(piece, 2, -1) |
-                      moveBitBoard(piece, 1, 2) |
-                      moveBitBoard(piece, -1, 2) |
-                      moveBitBoard(piece, -2, 1) |
-                      moveBitBoard(piece, -2, -1) |
-                      moveBitBoard(piece, -1, -2) |
-                      moveBitBoard(piece, 1, -2)
+                      moveBitBoard0(piece,  2,  1)       |
+                      moveBitBoard0(piece,  2, -1)       |
+                      moveBitBoard0(piece,  1,  2)       |
+                      moveBitBoard0(piece, -1,  2)       |
+                      moveBitBoard0(piece, -2,  1)       |
+                      moveBitBoard0(piece, -2, -1)       |
+                      moveBitBoard0(piece, -1, -2)       |
+                      moveBitBoard0(piece,  1, -2)
         ;
 
     }
 }
 
 
-bitboard generateAttacksKnight(struct chessBoard *board, enum pieceColor color)
+bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
 {
     bitboard pieces = color == WHITE ? board->whiteKnight : board->blackKnight;
     bitboard attacks = 0;
 
     // while there are knight pieces
-    while (pieces != 0) {
+    while (pieces) {
         int sourceIndex = bitScan(pieces);
 
         // get attacks
@@ -44,7 +44,6 @@ bitboard generateAttacksKnight(struct chessBoard *board, enum pieceColor color)
 
     return attacks;
 }
-
 
 void generateMovesKnight(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
 {
@@ -60,8 +59,7 @@ void generateMovesKnight(const struct chessBoard *board, struct move *moves, con
     }
 
     // while there are knight pieces
-    while (knight != 0) {
-
+    while (knight) {
          int sourceIndex = bitScan(knight);
          bitboard source = BITMASK_SQUARE[sourceIndex];
 
@@ -69,13 +67,11 @@ void generateMovesKnight(const struct chessBoard *board, struct move *moves, con
          bitboard movesBoard = KNIGHT_MOVES[sourceIndex] & boardAvailable;
 
          // for all moves
-         while (movesBoard != 0) {
+         while (movesBoard) {
              int targetIndex = bitScan(movesBoard);
              bitboard target = BITMASK_SQUARE[targetIndex];
 
-             moves[*movesIndex] =  (struct move){movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, 0, 0};
-
-             *movesIndex +=1;
+             ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
              movesBoard ^= target;
          }
 

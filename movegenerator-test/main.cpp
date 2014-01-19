@@ -2,9 +2,10 @@
 
 #include "stdio.h"
 #include "version.h"
+#include "chessboard.h"
+#include "movegenerator.h"
 
 int main(int ac, char** av) {
-
 
 #if defined(__i386__)
     char architecture[] = "x86";
@@ -19,6 +20,8 @@ int main(int ac, char** av) {
           IMPLEMENTATION_VERSION,
           IMPLEMENTATION_DATE
    );
+
+   initMovesGenerator();
 
    return CommandLineTestRunner::RunAllTests(ac, av);
 }

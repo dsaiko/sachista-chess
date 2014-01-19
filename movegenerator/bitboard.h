@@ -23,8 +23,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "utils.h"
-
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -228,9 +226,8 @@ extern inline bitboard  oneNorthWest    (bitboard b)      { return (b << 7) & BI
 extern inline bitboard  oneNorth        (bitboard b)      { return (b << 8); }
 extern inline bitboard  oneSouth        (bitboard b)      { return (b >> 8); }
 
-extern inline int       getFileIndex    (int squareIndex) { return squareIndex % 8; }
-extern inline int       getRankIndex    (int squareIndex) { return squareIndex / 8; }
-
+#define FILE_INDEX(i)  ((i) % 8)
+#define RANK_INDEX(i)  ((i) / 8)
 
 /**
  * @brief Returns bitboard with ranks (rows) in reverse order
@@ -269,7 +266,7 @@ extern const bitboard   BITMASK_A8H1[15];
  * @param bufferSize
  * @return Buffer with stored string representation of the bitboard
  */
-extern char *bitboard2String(bitboard b, char *buffer, int bufferSize);
+extern char *bitboard2str(bitboard b, char *buffer, int bufferSize);
 
 /**
  * @brief getFieldNotation
