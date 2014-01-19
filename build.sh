@@ -10,7 +10,6 @@ make
 find . -type f -executable | grep -v CMakeFiles | xargs strip -s
 cd ..
 
-
 mkdir BUILD-DEBUG
 cd BUILD-DEBUG
 cmake -DCMAKE_BUILD_TYPE=DEBUG ..

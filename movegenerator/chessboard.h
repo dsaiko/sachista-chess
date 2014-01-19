@@ -21,6 +21,7 @@
 #include "bitboard.h"
 #include "chesspiece.h"
 #include "move.h"
+#include "version.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -77,10 +78,10 @@ extern void initMovesGenerator();
 extern int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize);
 
 
-extern struct chessBoard makeMove(struct chessBoard board, const struct move *m);
+extern struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m);
 extern int isLegal(const struct chessBoard *board);
 
-extern unsigned long long perft(struct chessBoard *board, int depth);
+extern unsigned long long perft(const struct chessBoard *board, const int depth);
 
 #ifdef __cplusplus
 }

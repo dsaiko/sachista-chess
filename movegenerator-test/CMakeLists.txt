@@ -1,6 +1,6 @@
 include_directories     (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
-link_directories        (${HELLO_BINARY_DIR}/movegenerator)
+link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
 add_executable          (
     movegenerator-test

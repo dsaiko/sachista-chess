@@ -55,7 +55,7 @@ void initMovesGeneratorRook() {
 
               //move in one direction
               while (piece) {
-                  piece = oneWest(piece);
+                  piece = ONE_WEST(piece);
 
                   moves |= piece;
 
@@ -70,7 +70,7 @@ void initMovesGeneratorRook() {
 
               //move in other direction
               while (piece) {
-                  piece = oneEast(piece);
+                  piece = ONE_EAST(piece);
                   moves |= piece;
                   //end when there is another piece on the board (either color, own color will have to be stripped out)
                   if (piece & board) {
@@ -103,7 +103,7 @@ void initMovesGeneratorRook() {
 
               //move piece in one direction
               while (piece) {
-                  piece = oneNorth(piece);
+                  piece = ONE_NORTH(piece);
                   moves |= piece;
                   //end when there is another piece on the board (either color, own color will have to be stripped out)
                   if (piece & board) {
@@ -116,7 +116,7 @@ void initMovesGeneratorRook() {
 
               //move piece in other direction
               while (piece) {
-                  piece = oneSouth(piece);
+                  piece = ONE_SOUTH(piece);
                   moves |= piece;
                   //end when there is another piece on the board (either color, own color will have to be stripped out)
                   if (piece & board) {

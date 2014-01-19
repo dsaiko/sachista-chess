@@ -46,19 +46,19 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right) {
     int i;
     if (up > 0) {
         for(i=0; i < up; i++)
-            b = oneNorth(b);
+            b = ONE_NORTH(b);
     } else if(up < 0) {
         for(i=0; i < -up; i++)
-            b = oneSouth(b);
+            b = ONE_SOUTH(b);
     }
 
     //move the piece right or left
     if (right > 0) {
         for(i=0; i < right; i++)
-            b = oneEast(b);
+            b = ONE_EAST(b);
     } else if( right < 0){
         for(i=0; i < -right; i++)
-            b = oneWest(b);
+            b = ONE_WEST(b);
     }
     return b;
 }

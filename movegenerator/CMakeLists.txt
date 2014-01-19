@@ -15,3 +15,4 @@ add_library (
     movegenerator-knight
     makemove
 )
+

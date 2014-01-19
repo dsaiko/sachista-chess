@@ -43,9 +43,9 @@ void initMovesGeneratorPawn() {
 bitboard generateAttacksPawn(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
 {
     if(color == WHITE) {
-        return oneNorthEast(board->whitePawn) | oneNorthWest(board->whitePawn);
+        return ONE_NORTH_EAST(board->whitePawn) | ONE_NORTH_WEST(board->whitePawn);
     } else {
-        return oneSouthEast(board->blackPawn) | oneSouthWest(board->blackPawn);
+        return ONE_SOUTH_EAST(board->blackPawn) | ONE_SOUTH_WEST(board->blackPawn);
     }
 }
 
@@ -67,15 +67,15 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
 
             //get possible moves - moves minus my onw color
             //one step forward
-            bitboard movesBoard = oneNorth(source) & emptyBoard;
+            bitboard movesBoard = ONE_NORTH(source) & emptyBoard;
 
             //if one step forward was sucessful and we are on base rank, try double move
             if ((movesBoard) && (sourceIndex < 16)) {
-                movesBoard |=  oneNorth(movesBoard) & emptyBoard;
+                movesBoard |=  ONE_NORTH(movesBoard) & emptyBoard;
             }
 
             //get attacks, only against oponent pieces
-            const bitboard attacks = (oneNorthEast(source) | oneNorthWest(source));
+            const bitboard attacks = (ONE_NORTH_EAST(source) | ONE_NORTH_WEST(source));
             movesBoard |=  attacks & oponentPieces;
 
             //for all moves
@@ -121,15 +121,15 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
 
             //get possible moves - moves minus my onw color
             //one step forward
-            bitboard movesBoard = oneSouth(source) & emptyBoard;
+            bitboard movesBoard = ONE_SOUTH(source) & emptyBoard;
 
             //if one step forward was sucessful and we are on base rank, try double move
             if ((movesBoard) && (sourceIndex > 47)) {
-                movesBoard |=  oneSouth(movesBoard) & emptyBoard;
+                movesBoard |=  ONE_SOUTH(movesBoard) & emptyBoard;
             }
 
             //get attacks, only against oponent pieces
-            const bitboard attacks = (oneSouthEast(source) | oneSouthWest(source));
+            const bitboard attacks = (ONE_SOUTH_EAST(source) | ONE_SOUTH_WEST(source));
             movesBoard |=  attacks & oponentPieces;
 
             //for all moves

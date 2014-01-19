@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include "bitboard.h"
 
+void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
+void outputchar(char *buffer, const int bufferSize, int *position, const char c);
+
 /*
  * These constants were pregenerated
  */
@@ -128,3 +131,4 @@ bitboard bitmaskFromNotation(const char *notation) {
     if(strlen(notation) != 2) return 0;
     return BITMASK_SQUARE[(notation[0] - 'a') + ((notation[1] - '1') << 3)];
 }
+

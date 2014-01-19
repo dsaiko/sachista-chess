@@ -20,7 +20,9 @@
 #include "move.h"
 
 
-struct chessBoard makeMove(struct chessBoard board, const struct move *m) {
+struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m) {
+
+    struct chessBoard board = *board0;
 
     //en passant target
     board.enPassant = 0;
@@ -70,7 +72,7 @@ struct chessBoard makeMove(struct chessBoard board, const struct move *m) {
             board.halfMoveClock = 0;
             board.whitePawn ^= source | target;
             if ((m->targetIndex - m->sourceIndex) > 10) {
-                board.enPassant = oneNorth(source);
+                board.enPassant = ONE_NORTH(source);
             }
             if (m->promotionPiece != NO_PIECE) {
                 board.whitePawn ^= target;
@@ -124,7 +126,7 @@ struct chessBoard makeMove(struct chessBoard board, const struct move *m) {
             board.halfMoveClock = 0;
             board.blackPawn ^= source | target;
             if ((m->sourceIndex - m->targetIndex) > 10) { // double move
-                board.enPassant = oneSouth(source);
+                board.enPassant = ONE_SOUTH(source);
             }
             if (m->promotionPiece != NO_PIECE) {
                 board.blackPawn ^= target;
@@ -190,9 +192,9 @@ struct chessBoard makeMove(struct chessBoard board, const struct move *m) {
     //process capture
     if (m->enPassant) {
         if (board.nextMove == BLACK) {
-            board.whitePawn ^= oneNorth(target);
+            board.whitePawn ^= ONE_NORTH(target);
         } else {
-            board.blackPawn ^= oneSouth(target);
+            board.blackPawn ^= ONE_SOUTH(target);
         }
     } else {
         switch (capturedPiece) {

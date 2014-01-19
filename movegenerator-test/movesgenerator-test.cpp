@@ -1,6 +1,5 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include "chessboard.h"
-#include "movegenerator.h"
 
 
 void testMoves(const int expectedCount, const char *boardString)
@@ -27,7 +26,7 @@ void testValidMoves(const int expectedCount, const char *boardString)
     int validCount = 0;
     int i;
     for(i=0; i<size; i++) {
-        struct chessBoard nextBoard = makeMove(board, &moves[i]);
+        struct chessBoard nextBoard = makeMove(&board, &moves[i]);
         if(isLegal(&nextBoard)) {
             validCount ++;
         }

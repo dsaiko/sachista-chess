@@ -217,14 +217,14 @@ typedef uint64_t bitboard;
 #define BITMASK_NOT_FILE_H  (~BITMASK_FILE_H)
 
 
-extern inline bitboard  oneEast         (bitboard b)      { return (b << 1) & BITMASK_NOT_FILE_A; }
-extern inline bitboard  oneNorthEast    (bitboard b)      { return (b << 9) & BITMASK_NOT_FILE_A; }
-extern inline bitboard  oneSouthEast    (bitboard b)      { return (b >> 7) & BITMASK_NOT_FILE_A; }
-extern inline bitboard  oneWest         (bitboard b)      { return (b >> 1) & BITMASK_NOT_FILE_H;}
-extern inline bitboard  oneSouthWest    (bitboard b)      { return (b >> 9) & BITMASK_NOT_FILE_H;}
-extern inline bitboard  oneNorthWest    (bitboard b)      { return (b << 7) & BITMASK_NOT_FILE_H;}
-extern inline bitboard  oneNorth        (bitboard b)      { return (b << 8); }
-extern inline bitboard  oneSouth        (bitboard b)      { return (b >> 8); }
+#define ONE_EAST(b)          (((b) << 1) & BITMASK_NOT_FILE_A)
+#define ONE_NORTH_EAST(b)    (((b) << 9) & BITMASK_NOT_FILE_A)
+#define ONE_SOUTH_EAST(b)    (((b) >> 7) & BITMASK_NOT_FILE_A)
+#define ONE_WEST(b)          (((b) >> 1) & BITMASK_NOT_FILE_H)
+#define ONE_SOUTH_WEST(b)    (((b) >> 9) & BITMASK_NOT_FILE_H)
+#define ONE_NORTH_WEST(b)    (((b) << 7) & BITMASK_NOT_FILE_H)
+#define ONE_NORTH(b)         (((b) << 8))
+#define ONE_SOUTH(b)         (((b) >> 8))
 
 #define FILE_INDEX(i)  ((i) % 8)
 #define RANK_INDEX(i)  ((i) / 8)
@@ -278,31 +278,27 @@ extern char *bitboard2str(bitboard b, char *buffer, int bufferSize);
 extern char *fieldNotation(int index, char *buffer, int bufferSize);
 
 
-/**
- * @brief bitScan
- * @param b
- * @return Index of first bit which is set in a bitboard
- */
-extern inline int       bitScan         (bitboard b) {
-    asm ("bsfq %0, %0" : "=r" (b) : "0" (b)); return (int) b;
-}
+#define bitScan(b)                                  \
+({                                                  \
+    bitboard __res;                                 \
+    asm ("bsfq %0, %0" : "=r" (__res) : "0" (b));   \
+    (int) __res;                                    \
+})
 
 
-/**
- * @brief getPopCount
- * @param b
- * @return Number of bits set in a bitboard
- */
-extern inline int       popCount     (bitboard b) {
 #if defined(_MSC_VER) && defined(__INTEL_COMPILER)
-  return _mm_popcnt_u64(b);
+    #define popCount(b) _mm_popcnt_u64(b)
 #elif defined(_MSC_VER)
-  return (int)__popcnt64(b);
+    #define popCount(b) __popcnt64(b)
 #else
-  __asm__("popcnt %1, %0" : "=r" (b) : "r" (b));
-  return b;
+    #define popCount(b)                                     \
+    ({                                                      \
+        bitboard __res;                                     \
+        __asm__("popcnt %1, %0" : "=r" (__res) : "r" (b));  \
+        (int) __res;                                        \
+    })
 #endif
-}
+
 
 
 

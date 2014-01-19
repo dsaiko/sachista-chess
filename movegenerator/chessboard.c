@@ -80,6 +80,9 @@ int boardCmp(const struct chessBoard *board1, const struct chessBoard *board2)
     return 0;
 }
 
+void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
+void outputchar(char *buffer, const int bufferSize, int *position, const char c);
+
 struct chessBoard boardFromFEN(const char *fen) {
     struct chessBoard board = emptyBoard;
 
@@ -492,7 +495,7 @@ char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSi
 }
 
 
-unsigned long long perft(struct chessBoard *board, int depth)
+unsigned long long perft(const struct chessBoard *board, const int depth)
 {
     unsigned long long count = 0;
 
@@ -507,7 +510,7 @@ unsigned long long perft(struct chessBoard *board, int depth)
     int i;
     for(i=0; i<size; i++) {
         struct chessBoard nextBoard = *board;
-        nextBoard = makeMove(nextBoard, &moves[i]);
+        nextBoard = makeMove(&nextBoard, &moves[i]);
         if(isLegal(&nextBoard)) {
             count += perft(&nextBoard, depth -1);
         }

@@ -18,6 +18,8 @@
 #include "bitboard.h"
 #include "move.h"
 
+void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
+void outputchar(char *buffer, const int bufferSize, int *position, const char c);
 
 char *move2str(struct move *m, char *buffer, int bufferSize) {
     int position = 0;

@@ -87,7 +87,7 @@ void initMovesGeneratorBishop()
 
             //get the left/bottom bit - start of diagonal
             bitboard tmp;
-            while (tmp = oneSouthWest(diagonal)) {
+            while (tmp = ONE_SOUTH_WEST(diagonal)) {
                 diagonal = tmp;
             }
 
@@ -97,7 +97,7 @@ void initMovesGeneratorBishop()
             //traverse diagonal and set bits according to N
             while (diagonal) {
                 //shift up by one
-                diagonal = oneNorthEast(diagonal);
+                diagonal = ONE_NORTH_EAST(diagonal);
                 if (m & 1) {
                     board |= diagonal;
                 }
@@ -115,7 +115,7 @@ void initMovesGeneratorBishop()
 
             //move in one direction
             while (piece) {
-                piece = oneNorthEast(piece);
+                piece = ONE_NORTH_EAST(piece);
                 moves |= piece;
 
                 //end when there is another piece (either color, own color will have to be stripped out)
@@ -129,7 +129,7 @@ void initMovesGeneratorBishop()
 
             //move in the other direction
             while (piece) {
-                piece = oneSouthWest(piece);
+                piece = ONE_SOUTH_WEST(piece);
                 moves |= piece;
 
                 //end when there is another piece (either color, own color will have to be stripped out)
@@ -157,7 +157,7 @@ void initMovesGeneratorBishop()
 
             //get the left/top bit - start of the diagonal
             bitboard tmp;
-            while (tmp = oneNorthWest(diagonal)) {
+            while (tmp = ONE_NORTH_WEST(diagonal)) {
                 diagonal = tmp;
             }
 
@@ -167,7 +167,7 @@ void initMovesGeneratorBishop()
             int m = n;
             while (diagonal) {
                 //shift down by one
-                diagonal = oneSouthEast(diagonal);
+                diagonal = ONE_SOUTH_EAST(diagonal);
                 if (m & 1) {
                     board |= diagonal;
                 }
@@ -185,7 +185,7 @@ void initMovesGeneratorBishop()
 
             //move one direction
             while (piece) {
-                piece = oneNorthWest(piece);
+                piece = ONE_NORTH_WEST(piece);
                 moves |= piece;
                 //end when there is another piece (either color, own color will have to be stripped out)
                 if (piece & board) {
@@ -197,7 +197,7 @@ void initMovesGeneratorBishop()
             piece = BITMASK_SQUARE[i];
             //move the other direction
             while (piece) {
-                piece = oneSouthEast(piece);
+                piece = ONE_SOUTH_EAST(piece);
                 moves |= piece;
                 //end when there is another piece (either color, own color will have to be stripped out)
                 if (piece & board) {

@@ -21,14 +21,14 @@
 #include "chesspiece.h"
 
 struct move {
-    enum chessPiece piece           :7;
-    enum chessPiece promotionPiece  :7;
+    enum chessPiece piece           ;
+    enum chessPiece promotionPiece  ;
 
-    unsigned int    sourceIndex     :6;
-    unsigned int    targetIndex     :6;
+    unsigned int    sourceIndex     ;
+    unsigned int    targetIndex     ;
 
-    int             castling        :1;
-    int             enPassant       :1;
+    int             castling        ;
+    int             enPassant       ;
 };
 
 //struct move {

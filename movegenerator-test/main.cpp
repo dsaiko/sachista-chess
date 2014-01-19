@@ -1,9 +1,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 
 #include "stdio.h"
-#include "version.h"
 #include "chessboard.h"
-#include "movegenerator.h"
 
 int main(int ac, char** av) {
 
