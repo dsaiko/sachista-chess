@@ -229,6 +229,9 @@ typedef uint64_t bitboard;
 #define FILE_INDEX(i)        ((i) % 8)
 #define RANK_INDEX(i)        ((i) / 8)
 
+#define BITMASK_SQUARE(i)    (1ULL << (i))
+
+
 /**
  * @brief Returns bitboard with ranks (rows) in reverse order
  * @param b
@@ -253,7 +256,6 @@ extern bitboard  mirrorHorizontal(bitboard b);
 extern bitboard bitmaskFromNotation(const char *notation);
 
 
-extern const bitboard   BITMASK_SQUARE[64];
 extern const bitboard   BITMASK_RANK[8];
 extern const bitboard   BITMASK_FILE[8];
 extern const bitboard   BITMASK_A1H8[15];

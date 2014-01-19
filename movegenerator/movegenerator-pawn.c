@@ -15,7 +15,7 @@ void initMovesGeneratorPawn() {
     int i=0;
     for (i = 0; i < 64; i++) {
      //put the piece on the board
-     bitboard piece = BITMASK_SQUARE[i];
+     bitboard piece = BITMASK_SQUARE(i);
 
      //generate move
      WHITE_PAWN_MOVES[i]         = moveBitBoard0(piece, 1, 0);
@@ -63,7 +63,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
         while (pieces) {
             //get next piece
             const int sourceIndex = bitScan(pieces);
-            const bitboard source = BITMASK_SQUARE[sourceIndex];
+            const bitboard source = BITMASK_SQUARE(sourceIndex);
 
             //get possible moves - moves minus my onw color
             //one step forward
@@ -82,7 +82,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             while (movesBoard) {
                 //get next move
                 const int targetIndex = bitScan(movesBoard);
-                const bitboard target = BITMASK_SQUARE[targetIndex];
+                const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 //white promotion?
                 if (targetIndex > 55) {
@@ -117,7 +117,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
         while (pieces) {
             //get next piece
             const int sourceIndex = bitScan(pieces);
-            const bitboard source = BITMASK_SQUARE[sourceIndex];
+            const bitboard source = BITMASK_SQUARE(sourceIndex);
 
             //get possible moves - moves minus my onw color
             //one step forward
@@ -136,7 +136,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             while (movesBoard) {
                 //get next move
                 const int targetIndex = bitScan(movesBoard);
-                const bitboard target = BITMASK_SQUARE[targetIndex];
+                const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 //white promotion?
                 if (targetIndex < 8) {

@@ -41,7 +41,7 @@ bitboard generateAttacksQueen(const struct chessBoard *board, enum pieceColor co
     while (queen) {
          //get next queen
          const int sourceIndex = bitScan(queen);
-         const bitboard source = BITMASK_SQUARE[sourceIndex];
+         const bitboard source = BITMASK_SQUARE(sourceIndex);
 
          //use bishop and rook for move generation
          //use magic multipliers to get occupancy state index for rank/file/diagonal
@@ -84,7 +84,7 @@ void generateMovesQueen(const struct chessBoard *board, struct move *moves, cons
      while (queen != 0) {
          //get next queen
          const int sourceIndex = bitScan(queen);
-         const bitboard source = BITMASK_SQUARE[sourceIndex];
+         const bitboard source = BITMASK_SQUARE(sourceIndex);
 
          //use bishop and rook for move generation
          //use magic multipliers to get occupancy state index for rank/file/diagonal
@@ -106,7 +106,7 @@ void generateMovesQueen(const struct chessBoard *board, struct move *moves, cons
          while (movesBoard != 0) {
              //get next move
              const int targetIndex = bitScan(movesBoard);
-             const bitboard target = BITMASK_SQUARE[targetIndex];
+             const bitboard target = BITMASK_SQUARE(targetIndex);
 
              ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
 

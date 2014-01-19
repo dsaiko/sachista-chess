@@ -27,8 +27,8 @@ struct chessBoard makeMove(const struct chessBoard *board0, const struct move *m
     //en passant target
     board.enPassant = 0;
 
-    const bitboard source = BITMASK_SQUARE[m->sourceIndex];
-    const bitboard target = BITMASK_SQUARE[m->targetIndex];
+    const bitboard source = BITMASK_SQUARE(m->sourceIndex);
+    const bitboard target = BITMASK_SQUARE(m->targetIndex);
 
 
     //APPLY MOVE

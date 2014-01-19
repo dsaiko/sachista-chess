@@ -10,7 +10,7 @@ void initMovesGeneratorKnight() {
     int i=0;
     for (i = 0; i < 64; i++) {
         //put the piece on the board
-        bitboard piece = BITMASK_SQUARE[i];
+        bitboard piece = BITMASK_SQUARE(i);
 
         //get moves
         KNIGHT_MOVES[i] =
@@ -39,7 +39,7 @@ bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor c
 
         // get attacks
         attacks |= KNIGHT_MOVES[sourceIndex];
-        pieces ^= BITMASK_SQUARE[sourceIndex];
+        pieces ^= BITMASK_SQUARE(sourceIndex);
     }
 
     return attacks;
@@ -61,7 +61,7 @@ void generateMovesKnight(const struct chessBoard *board, struct move *moves, con
     // while there are knight pieces
     while (knight) {
          int sourceIndex = bitScan(knight);
-         bitboard source = BITMASK_SQUARE[sourceIndex];
+         bitboard source = BITMASK_SQUARE(sourceIndex);
 
          // get possible moves - moves minus my onw color
          bitboard movesBoard = KNIGHT_MOVES[sourceIndex] & boardAvailable;
@@ -69,7 +69,7 @@ void generateMovesKnight(const struct chessBoard *board, struct move *moves, con
          // for all moves
          while (movesBoard) {
              int targetIndex = bitScan(movesBoard);
-             bitboard target = BITMASK_SQUARE[targetIndex];
+             bitboard target = BITMASK_SQUARE(targetIndex);
 
              ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
              movesBoard ^= target;

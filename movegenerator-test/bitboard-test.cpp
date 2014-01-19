@@ -50,13 +50,10 @@ TEST(BitBoardTest, TestBitCount)
 
 }
 
-
-
-
 TEST(BitBoardTest, TestIndexes)
 {
     for(int i=0; i<64; i++) {
-        bitboard b = BITMASK_SQUARE[i];
+        bitboard b = BITMASK_SQUARE(i);
 
         LONGS_EQUAL((1ULL << i), b);
         LONGS_EQUAL(1, popCount(b));

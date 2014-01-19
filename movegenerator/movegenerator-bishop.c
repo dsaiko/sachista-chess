@@ -111,7 +111,7 @@ void initMovesGeneratorBishop()
             bitboard moves = 0;
 
             //set piece to Ith index
-            bitboard piece = BITMASK_SQUARE[i];
+            bitboard piece = BITMASK_SQUARE(i);
 
             //move in one direction
             while (piece) {
@@ -125,7 +125,7 @@ void initMovesGeneratorBishop()
             }
 
             //set piece back to Ith index
-            piece = BITMASK_SQUARE[i];
+            piece = BITMASK_SQUARE(i);
 
             //move in the other direction
             while (piece) {
@@ -181,7 +181,7 @@ void initMovesGeneratorBishop()
             bitboard moves = 0;
 
             //set the piece to Ith position
-            bitboard piece = BITMASK_SQUARE[i];
+            bitboard piece = BITMASK_SQUARE(i);
 
             //move one direction
             while (piece) {
@@ -194,7 +194,7 @@ void initMovesGeneratorBishop()
             }
 
             //set the piece back to Ith position
-            piece = BITMASK_SQUARE[i];
+            piece = BITMASK_SQUARE(i);
             //move the other direction
             while (piece) {
                 piece = ONE_SOUTH_EAST(piece);
@@ -219,7 +219,7 @@ bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor c
        while (bishop) {
            //get index of next piece
            const int sourceIndex = bitScan(bishop);
-           const bitboard source =  BITMASK_SQUARE[sourceIndex];
+           const bitboard source =  BITMASK_SQUARE(sourceIndex);
 
            //get states of diagonals using magic number multiplication
            const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
@@ -254,7 +254,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move *moves, con
     while (bishop) {
         //get next piece index
         const int sourceIndex = bitScan(bishop);
-        const bitboard source = BITMASK_SQUARE[sourceIndex];
+        const bitboard source = BITMASK_SQUARE(sourceIndex);
 
         //get states of diagonals using magic number multiplication
         const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
@@ -271,7 +271,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move *moves, con
         while (movesBoard) {
             //get next move
             const int targetIndex = bitScan(movesBoard);
-            const bitboard target = BITMASK_SQUARE[targetIndex];
+            const bitboard target = BITMASK_SQUARE(targetIndex);
 
             //add move to array
             ADD_MOVE(movingPiece, NO_PIECE, 0, 0);

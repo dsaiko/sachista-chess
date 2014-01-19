@@ -19,7 +19,7 @@ void initMovesGeneratorKing() {
    int i;
    for (i = 0; i < 64; i++) {
        //put the piece on the board
-       bitboard piece = BITMASK_SQUARE[i];
+       bitboard piece = BITMASK_SQUARE(i);
 
        //move all directions
        KING_MOVES[i] =
@@ -87,7 +87,7 @@ void generateMovesKing(const struct chessBoard *board, struct move *moves, const
 
                 //get next move
                 const int targetIndex = bitScan(movesBoard);
-                const bitboard target = BITMASK_SQUARE[targetIndex];
+                const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 ADD_MOVE(WHITE_KING, NO_PIECE, 0, 0);
 
@@ -124,7 +124,7 @@ void generateMovesKing(const struct chessBoard *board, struct move *moves, const
             while (movesBoard) {
                 //get next move
                 const int targetIndex = bitScan(movesBoard);
-                const bitboard target = BITMASK_SQUARE[targetIndex];
+                const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 ADD_MOVE(BLACK_KING, NO_PIECE, 0, 0);
 

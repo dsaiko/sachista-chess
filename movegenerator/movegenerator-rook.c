@@ -51,7 +51,7 @@ void initMovesGeneratorRook() {
               bitboard moves = 0;
 
               //set piece in Ith position
-              bitboard piece = BITMASK_SQUARE[i];
+              bitboard piece = BITMASK_SQUARE(i);
 
               //move in one direction
               while (piece) {
@@ -66,7 +66,7 @@ void initMovesGeneratorRook() {
               }
 
               //set piece back in Ith position
-              piece = BITMASK_SQUARE[i];
+              piece = BITMASK_SQUARE(i);
 
               //move in other direction
               while (piece) {
@@ -99,7 +99,7 @@ void initMovesGeneratorRook() {
               bitboard moves = 0;
 
               //set piece to original Ith index
-              bitboard piece = BITMASK_SQUARE[i];
+              bitboard piece = BITMASK_SQUARE(i);
 
               //move piece in one direction
               while (piece) {
@@ -112,7 +112,7 @@ void initMovesGeneratorRook() {
               }
 
               //set piece back to original Ith index
-              piece = BITMASK_SQUARE[i];
+              piece = BITMASK_SQUARE(i);
 
               //move piece in other direction
               while (piece) {
@@ -141,7 +141,7 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
     while (rook) {
         //get next rook
         const int sourceIndex = bitScan(rook);
-        const bitboard source = BITMASK_SQUARE[sourceIndex];
+        const bitboard source = BITMASK_SQUARE(sourceIndex);
 
         //use magic multipliers to get occupancy state index
         const int stateIndexRank = (int) ((allPieces & MOVE_RANK_MASK[sourceIndex]) >> MOVE_RANK_SHIFT[sourceIndex]);
@@ -176,7 +176,7 @@ void generateMovesRook(const struct chessBoard *board, struct move *moves, const
       while (rook) {
           //get next rook
           const int sourceIndex = bitScan(rook);
-          const bitboard source = BITMASK_SQUARE[sourceIndex];
+          const bitboard source = BITMASK_SQUARE(sourceIndex);
 
           //use magic multipliers to get occupancy state index
           const int stateIndexRank = (int) ((allPieces & MOVE_RANK_MASK[sourceIndex]) >> MOVE_RANK_SHIFT[sourceIndex]);
@@ -193,7 +193,7 @@ void generateMovesRook(const struct chessBoard *board, struct move *moves, const
           while (movesBoard) {
               //get current move
               const int targetIndex = bitScan(movesBoard);
-              const bitboard target = BITMASK_SQUARE[targetIndex];
+              const bitboard target = BITMASK_SQUARE(targetIndex);
 
 
               ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
