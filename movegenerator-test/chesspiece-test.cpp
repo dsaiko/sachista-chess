@@ -12,7 +12,7 @@ TEST(ChessPieceTest, TestPieces)
 
     char pieces[] = {"-KQBNPRkqbnpr\0"};
 
-    for(int i=0; i< strlen(pieces); i++) {
+    for(int i=0; i< (int) strlen(pieces); i++) {
         move m;
 
         m.piece = (chessPiece) pieces[i];

@@ -12,8 +12,7 @@ bitboard BLACK_PAWN_ATTACKS[64];
 
 void initMovesGeneratorPawn() {
     //for all fields
-    int i=0;
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
      //put the piece on the board
      bitboard piece = BITMASK_SQUARE(i);
 

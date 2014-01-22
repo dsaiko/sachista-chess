@@ -23,8 +23,7 @@ void initMovesGeneratorRook() {
 
     const bitboard FILE_A_MASK = BITMASK_A2 | BITMASK_A3 | BITMASK_A4 | BITMASK_A5 | BITMASK_A6 | BITMASK_A7;
 
-    int i;
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
           //get 6-bit mask for a rank
           MOVE_RANK_MASK[i] = (0b01111110ULL) << (RANK_INDEX(i) << 3);
 
@@ -40,10 +39,9 @@ void initMovesGeneratorRook() {
 
       //precompute rank moves
       //for all pieces
-      for (i = 0; i < 64; i++) {
+      for (int i = 0; i < 64; i++) {
           //for all occupancy states
-          int n;
-          for (n = 0; n < 64; n++) {
+          for (int n = 0; n < 64; n++) {
               //reconstruct occupancy state
               const bitboard board = moveBitBoard0((bitboard) n, RANK_INDEX(i), 1);
 
@@ -85,10 +83,9 @@ void initMovesGeneratorRook() {
 
       //precompute file moves
       //for all pieces
-      for (i = 0; i < 64; i++) {
-          int n;
+      for (int i = 0; i < 64; i++) {
           //for all occupancy state indexes
-          for (n = 0; n < 64; n++) {
+          for (int n = 0; n < 64; n++) {
               //reconstuct the occupancy into file
               const bitboard board = moveBitBoard0(
                       flipDiagA1H8(mirrorHorizontal(moveBitBoard0((bitboard) n, 0, 1))),

@@ -16,8 +16,7 @@ const bitboard BLACK_CASTLE_OOO_ATTACKS = BITMASK_C8 | BITMASK_D8 | BITMASK_E8;
 
 void initMovesGeneratorKing() {
    //for all fields
-   int i;
-   for (i = 0; i < 64; i++) {
+   for (int i = 0; i < 64; i++) {
        //put the piece on the board
        bitboard piece = BITMASK_SQUARE(i);
 

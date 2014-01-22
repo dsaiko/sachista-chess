@@ -54,8 +54,7 @@ const bitboard MAGIC_A1H8[] = {
 void initMovesGeneratorBishop()
 {
     //for all fields
-    int i;
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
         //compute index of diagonal for the field
         A8H1_INDEX[i] = FILE_INDEX(i) + RANK_INDEX(i) % 8;
         A1H8_INDEX[i] = FILE_INDEX(i) + 7 - RANK_INDEX(i) % 8;
@@ -75,10 +74,9 @@ void initMovesGeneratorBishop()
     // n is 6 bit configuration
 
     //for all fields
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
         //for all possible diagonal states
-        int n;
-        for (n = 0; n < 64; n++) {
+        for (int n = 0; n < 64; n++) {
 
             //get the diagonal
             bitboard diagonal = BITMASK_A1H8[A1H8_INDEX[i]];
@@ -87,7 +85,7 @@ void initMovesGeneratorBishop()
 
             //get the left/bottom bit - start of diagonal
             bitboard tmp;
-            while (tmp = ONE_SOUTH_WEST(diagonal)) {
+            while ((tmp = ONE_SOUTH_WEST(diagonal))) {
                 diagonal = tmp;
             }
 
@@ -147,17 +145,16 @@ void initMovesGeneratorBishop()
     // i is field index
     // n is 6 bit configuration
     //for all fields
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
         //for all possible diagonal states
-        int n;
-        for (n = 0; n < 64; n++) {
+        for (int n = 0; n < 64; n++) {
 
             //get the diagonal
             bitboard diagonal = BITMASK_A8H1[A8H1_INDEX[i]];
 
             //get the left/top bit - start of the diagonal
             bitboard tmp;
-            while (tmp = ONE_NORTH_WEST(diagonal)) {
+            while ((tmp = ONE_NORTH_WEST(diagonal))) {
                 diagonal = tmp;
             }
 

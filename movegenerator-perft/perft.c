@@ -75,10 +75,10 @@ int main() {
 
         unsigned long long t = timeval_diff(&start, &end) / 1000;
 
-        printf("Generated %d plies. Performance: %fs, %d nodes / seconds. Total combinations: %llu\n",
+        printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
                 i,
                 ((double) t / 1000.0),
-                (long) ((double) n / ((double) t / 1000.0)),
+                (unsigned long long) ((double) n / ((double) t / 1000.0)),
                 n
         );
 

@@ -81,10 +81,9 @@ char *bitboard2str(bitboard b, char *buffer, int bufferSize)
     //header
     outputstr(buffer, bufferSize, &position, header);
 
-    int i;
     char c[] = "\0\0";
 
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
         if ((i % 8) == 0) {
             if (i > 0) {
                 //print right column digit
@@ -130,4 +129,54 @@ bitboard bitmaskFromNotation(const char *notation) {
     if(strlen(notation) != 2) return 0;
     return BITMASK_SQUARE((notation[0] - 'a') + ((notation[1] - '1') << 3));
 }
+
+
+#ifdef __EXTERN_BITSCAN__
+
+const int lsb_64_table[64] =
+{
+   63, 30,  3, 32, 59, 14, 11, 33,
+   60, 24, 50,  9, 55, 19, 21, 34,
+   61, 29,  2, 53, 51, 23, 41, 18,
+   56, 28,  1, 43, 46, 27,  0, 35,
+   62, 31, 58,  4,  5, 49, 54,  6,
+   15, 52, 12, 40,  7, 42, 45, 16,
+   25, 57, 48, 13, 10, 39,  8, 44,
+   20, 47, 38, 22, 17, 37, 36, 26
+};
+
+/**
+ * bitScanForward
+ * @author Matt Taylor (2003)
+ * @param bb bitboard to scan
+ * @precondition bb != 0
+ * @return index (0..63) of least significant one bit
+ */
+int bitScan(bitboard b) {
+   unsigned int folded;
+   b ^= b - 1;
+   folded = (int) b ^ (b >> 32);
+   return lsb_64_table[folded * 0x78291ACF >> 26];
+}
+#endif
+
+#ifdef __EXTERN_POPCOUNT__
+
+const unsigned long long k1 = 0x5555555555555555ULL; /*  -1/3   */
+const unsigned long long k2 = 0x3333333333333333ULL; /*  -1/5   */
+const unsigned long long k4 = 0x0f0f0f0f0f0f0f0fULL; /*  -1/17  */
+const unsigned long long kf = 0x0101010101010101ULL; /*  -1/255 */
+
+int popCount(bitboard b)
+{
+    b =  b       - ((b >> 1)  & k1); /* put count of each 2 bits into those 2 bits */
+    b = (b & k2) + ((b >> 2)  & k2); /* put count of each 4 bits into those 4 bits */
+    b = (b       +  (b >> 4)) & k4 ; /* put count of each 8 bits into those 8 bits */
+    b += b >>  8;  /* put count of each 16 bits into their lowest 8 bits */
+    b += b >> 16;  /* put count of each 32 bits into their lowest 8 bits */
+    b += b >> 32;  /* put count of the final 64 bits into the lowest 8 bits */
+    return (int) b & 255;
+}
+
+#endif
 

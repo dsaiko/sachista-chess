@@ -248,8 +248,7 @@ char*  board2str(const struct chessBoard *board, const int decorated, char *buff
     bitboard  blackPawnReversed      = reverseRanks(board->blackPawn);
 
     // print all 64 pieces
-    int i;
-    for (i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
         if (decorated && ((i % 8) == 0)) {
             if (i > 0) {
                 outputchar(buffer, bufferSize, &position, '0' + 9 - (i / 8));
@@ -337,18 +336,16 @@ struct chessBoard boardFromString(const char *buffer) {
 
     //replace header in str
     char *headerpos = 0;
-    while(headerpos = strstr(str, header)) {
-        int i;
+    while((headerpos = strstr(str, header))) {
         int len = strlen(header);
-        for(i=0; i<len; i++)
+        for (int i=0; i<len; i++)
                 headerpos[i] = ' ';
 
     }
 
     //create FEN string from board pieces
-    int i=0;
     int len = strlen(str);
-    for (i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
         char c = str[i];
         switch (c) {
             case 'k':
@@ -413,12 +410,11 @@ char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSi
     board2str(board, 0, data, BUFFERSIZE);
     int fenPos = 0;
 
-    int i;
     int len = strlen(data);
     int emptyCount = 0;
     int lines = 0;
 
-    for (i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
         char piece = data[i];
 
         if (piece == NO_PIECE) {
@@ -507,10 +503,8 @@ unsigned long long perft(const struct chessBoard *board, const int depth)
     struct move moves[256];
     int size = generateMoves(board, moves, 256);
 
-    int i;
-
     struct chessBoard nextBoard = *board;
-    for(i=0; i<size; i++) {
+    for (int i=0; i<size; i++) {
         makeMove(&nextBoard, &moves[i]);
         if(isLegal(&nextBoard)) {
             count += perft(&nextBoard, depth -1);

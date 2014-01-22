@@ -27,21 +27,20 @@ int generateMoves(const struct chessBoard *board, struct move *m, const int buff
 
 bitboard moveBitBoard0(bitboard b, const int up, const int right) {
     //move the piece up or down
-    int i;
     if (up > 0) {
-        for(i=0; i < up; i++)
+        for(int i=0; i < up; i++)
             b = ONE_NORTH(b);
     } else if(up < 0) {
-        for(i=0; i < -up; i++)
+        for(int i=0; i < -up; i++)
             b = ONE_SOUTH(b);
     }
 
     //move the piece right or left
     if (right > 0) {
-        for(i=0; i < right; i++)
+        for(int i=0; i < right; i++)
             b = ONE_EAST(b);
     } else if( right < 0){
-        for(i=0; i < -right; i++)
+        for(int i=0; i < -right; i++)
             b = ONE_WEST(b);
     }
     return b;
