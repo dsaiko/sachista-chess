@@ -19,6 +19,7 @@
 #define SACHISTA_CHESS_MOVE_H
 
 #include "chesspiece.h"
+#include "bitboard.h"
 
 struct move {
     enum chessPiece piece           ;

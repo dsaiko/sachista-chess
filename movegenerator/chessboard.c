@@ -505,7 +505,7 @@ unsigned long long perft(const struct chessBoard *board, const int depth)
 
     struct chessBoard nextBoard = *board;
     for (int i=0; i<size; i++) {
-        makeMove(&nextBoard, &moves[i]);
+        makeMove(&nextBoard, moves + i);
         if(isLegal(&nextBoard)) {
             count += perft(&nextBoard, depth -1);
         }

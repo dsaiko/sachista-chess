@@ -283,7 +283,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move *moves, con
             }
 
             //add move to array
-            ADD_MOVE(movingPiece, NO_PIECE, 0, 0);
+            GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, 0);
 
             //remove this move
             movesBoard ^= target;

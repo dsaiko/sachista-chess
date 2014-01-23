@@ -14,17 +14,12 @@ extern "C"{
 bitboard moveBitBoard0(bitboard b, const int up, const int right);
 
 
-#define ADD_MOVE(PIECE, PROMOTIONPIECE, CASTLING, ENPASSANT)                                                                            \
+#define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, CASTLING, ENPASSANT)                                                                            \
     if(*movesIndex < bufferSize) {                                                                                                      \
-       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), sourceIndex, targetIndex, (CASTLING), (ENPASSANT)};               \
+       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (CASTLING), (ENPASSANT)};               \
        *movesIndex +=1;                                                                                                                 \
     }
 
-#define ADD_MOVE2(PIECE, TARGETINDEX, PROMOTIONPIECE, CASTLING, ENPASSANT)                                                                            \
-    if(*movesIndex < bufferSize) {                                                                                                      \
-       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), sourceIndex, (TARGETINDEX), (CASTLING), (ENPASSANT)};               \
-       *movesIndex +=1;                                                                                                                 \
-    }
 
 void initMovesGeneratorKing();
 void initMovesGeneratorRook();

@@ -85,13 +85,13 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
 
                 //white promotion?
                 if (targetIndex > 55) {
-                    ADD_MOVE(WHITE_PAWN, WHITE_BISHOP, 0, 0);
-                    ADD_MOVE(WHITE_PAWN, WHITE_KNIGHT, 0, 0);
-                    ADD_MOVE(WHITE_PAWN, WHITE_QUEEN, 0, 0);
-                    ADD_MOVE(WHITE_PAWN, WHITE_ROOK, 0, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0, 0);
                 } else {
                     //normal move/capture
-                    ADD_MOVE(WHITE_PAWN, NO_PIECE, 0, 0);
+                    GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0, 0);
                 }
 
                 //remove this move
@@ -102,7 +102,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             movesBoard = attacks & board->enPassant;
             if (movesBoard) {
               const int targetIndex = bitScan(movesBoard);
-              ADD_MOVE(WHITE_PAWN, NO_PIECE, 0, 1);
+              GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0, 1);
             }
 
             //remove this piece
@@ -139,13 +139,13 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
 
                 //white promotion?
                 if (targetIndex < 8) {
-                    ADD_MOVE(BLACK_PAWN, BLACK_BISHOP, 0, 0);
-                    ADD_MOVE(BLACK_PAWN, BLACK_KNIGHT, 0, 0);
-                    ADD_MOVE(BLACK_PAWN, BLACK_QUEEN, 0, 0);
-                    ADD_MOVE(BLACK_PAWN, BLACK_ROOK, 0, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0, 0);
                 } else {
                     //normal move/capture
-                    ADD_MOVE(BLACK_PAWN, NO_PIECE, 0, 0);
+                    GENERATE_MOVE(BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0, 0);
                 }
 
                 //remove this move
@@ -156,7 +156,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             movesBoard = attacks & board->enPassant;
             if (movesBoard) {
               const int targetIndex = bitScan(movesBoard);
-              ADD_MOVE(BLACK_PAWN, NO_PIECE, 0, 1);
+              GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 0, 1);
             }
 
             //remove this piece
