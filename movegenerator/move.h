@@ -28,9 +28,11 @@ struct move {
     unsigned int    sourceIndex     ;
     unsigned int    targetIndex     ;
 
-    int             castling        ;
     int             enPassant       ;
 };
+
+#define IS_WHITE_CASTLING(m) (m->sourceIndex == INDEX_E1 && (m->targetIndex == INDEX_C1 || m->targetIndex == INDEX_G1))
+#define IS_BLACK_CASTLING(m) (m->sourceIndex == INDEX_E8 && (m->targetIndex == INDEX_C8 || m->targetIndex == INDEX_G8))
 
 #ifdef __cplusplus
 extern "C"{

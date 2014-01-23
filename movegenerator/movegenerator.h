@@ -14,9 +14,9 @@ extern "C"{
 bitboard moveBitBoard0(bitboard b, const int up, const int right);
 
 
-#define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, CASTLING, ENPASSANT)                                                                            \
+#define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, ENPASSANT)                                                                            \
     if(*movesIndex < bufferSize) {                                                                                                      \
-       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (CASTLING), (ENPASSANT)};               \
+       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (ENPASSANT)};               \
        *movesIndex +=1;                                                                                                                 \
     }
 

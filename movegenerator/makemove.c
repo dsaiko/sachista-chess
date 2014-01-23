@@ -57,11 +57,10 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             board->halfMoveClock++;
             board->whiteKing ^= source | target;
             board->castlingWhite = 0;
-            if (m->castling) {
+            if (IS_WHITE_CASTLING(m)) {
                 if (m->targetIndex == INDEX_C1) {
                     board->whiteRook ^= BITMASK_A1 | BITMASK_D1;
-                }
-                if (m->targetIndex == INDEX_G1) {
+                } else {
                     board->whiteRook ^= BITMASK_H1 | BITMASK_F1;
                 }
             }
@@ -111,11 +110,10 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             board->halfMoveClock++;
             board->blackKing ^= source | target;
             board->castlingBlack = 0;
-            if (m->castling) {
+            if (IS_BLACK_CASTLING(m)) {
                 if (m->targetIndex == INDEX_C8) {
                     board->blackRook ^= BITMASK_A8 | BITMASK_D8;
-                }
-                if (m->targetIndex == INDEX_G8) {
+                } else {
                     board->blackRook ^= BITMASK_H8 | BITMASK_F8;
                 }
             }

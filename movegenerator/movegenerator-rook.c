@@ -204,7 +204,7 @@ void generateMovesRook(const struct chessBoard *board, struct move *moves, const
                       movingPiece = BLACK_QUEEN;
                   }
               }
-              GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, 0);
+              GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
 
               //remove move
               movesBoard ^= target;

@@ -70,7 +70,7 @@ void generateMovesKnight(const struct chessBoard *board, struct move *moves, con
              int targetIndex = bitScan(movesBoard);
              bitboard target = BITMASK_SQUARE(targetIndex);
 
-             GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, 0);
+             GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
              movesBoard ^= target;
          }
 
