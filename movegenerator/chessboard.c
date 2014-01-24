@@ -500,7 +500,7 @@ unsigned long long perft(const struct chessBoard *board, const int depth)
     }
 
     //compute directly
-    struct move moves[256];
+    struct move moves[255];
     int size = generateMoves(board, moves, 256);
 
     struct chessBoard nextBoard = *board;
