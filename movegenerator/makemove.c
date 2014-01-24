@@ -31,14 +31,12 @@ void makeMove(struct chessBoard *board, const struct move *m) {
 
     //APPLY MOVE
     board->halfMoveClock++;
-    switch (m->piece) {
-        case WHITE_KNIGHT:
+
+    if(m->piece == WHITE_KNIGHT) {
             board->whiteKnight ^= source | target;
-            break;
-        case WHITE_BISHOP:
+    } else if(m->piece == WHITE_BISHOP) {
             board->whiteBishop ^= source | target;
-            break;
-        case WHITE_ROOK:
+    } else if(m->piece == WHITE_ROOK) {
             board->whiteRook ^= source | target;
             if (m->sourceIndex == INDEX_A1) {
                 board->castlingWhite &= ~QUEEN_SIDE;
@@ -46,11 +44,9 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             if (m->sourceIndex == INDEX_H1) {
                 board->castlingWhite &= ~KING_SIDE;
             }
-            break;
-        case WHITE_QUEEN:
+    } else if(m->piece == WHITE_QUEEN) {
             board->whiteQueen ^= source | target;
-            break;
-        case WHITE_KING:
+    } else if(m->piece == WHITE_KING) {
             board->whiteKing ^= source | target;
             board->castlingWhite = 0;
             if (IS_WHITE_CASTLING(m)) {
@@ -60,8 +56,7 @@ void makeMove(struct chessBoard *board, const struct move *m) {
                     board->whiteRook ^= BITMASK_H1 | BITMASK_F1;
                 }
             }
-            break;
-        case WHITE_PAWN:
+    } else if(m->piece == WHITE_PAWN) {
             board->halfMoveClock = 0;
             board->whitePawn ^= source | target;
             if ((m->targetIndex - m->sourceIndex) > 10) {
@@ -79,14 +74,11 @@ void makeMove(struct chessBoard *board, const struct move *m) {
                     board->whiteKnight |= target;
                 }
             }
-            break;
-        case BLACK_KNIGHT:
+    } else if(m->piece == BLACK_KNIGHT) {
             board->blackKnight ^= source | target;
-            break;
-        case BLACK_BISHOP:
+    } else if(m->piece == BLACK_BISHOP) {
             board->blackBishop ^= source | target;
-            break;
-        case BLACK_ROOK:
+    } else if(m->piece == BLACK_ROOK) {
             board->blackRook ^= source | target;
             if (m->sourceIndex == INDEX_A8) {
                 board->castlingBlack &= ~QUEEN_SIDE;
@@ -94,11 +86,9 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             if (m->sourceIndex == INDEX_H8) {
                 board->castlingBlack &= ~KING_SIDE;
             }
-            break;
-        case BLACK_QUEEN:
+    } else if(m->piece == BLACK_QUEEN) {
             board->blackQueen ^= source | target;
-            break;
-        case BLACK_KING:
+    } else if(m->piece == BLACK_KING) {
             board->blackKing ^= source | target;
             board->castlingBlack = 0;
             if (IS_BLACK_CASTLING(m)) {
@@ -108,8 +98,7 @@ void makeMove(struct chessBoard *board, const struct move *m) {
                     board->blackRook ^= BITMASK_H8 | BITMASK_F8;
                 }
             }
-            break;
-        case BLACK_PAWN:
+    } else if(m->piece == BLACK_PAWN) {
             board->halfMoveClock = 0;
             board->blackPawn ^= source | target;
             if ((m->sourceIndex - m->targetIndex) > 10) { // double move
@@ -127,15 +116,12 @@ void makeMove(struct chessBoard *board, const struct move *m) {
                     board->blackKnight |= target;
                 }
             }
-            break;
     }
 
 
-    //CHECK CAPTURES
-    enum chessPiece capturedPiece = NO_PIECE;
-
     //reset halfmoveClock if piece was captured
     if (m->isCapture) {
+        enum chessPiece capturedPiece = NO_PIECE;
         board->halfMoveClock = 0;
 
         if (board->nextMove == BLACK) {
