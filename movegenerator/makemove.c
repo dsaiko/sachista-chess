@@ -30,17 +30,15 @@ void makeMove(struct chessBoard *board, const struct move *m) {
 
 
     //APPLY MOVE
+    board->halfMoveClock++;
     switch (m->piece) {
         case WHITE_KNIGHT:
-            board->halfMoveClock++;
             board->whiteKnight ^= source | target;
             break;
         case WHITE_BISHOP:
-            board->halfMoveClock++;
             board->whiteBishop ^= source | target;
             break;
         case WHITE_ROOK:
-            board->halfMoveClock++;
             board->whiteRook ^= source | target;
             if (m->sourceIndex == INDEX_A1) {
                 board->castlingWhite &= ~QUEEN_SIDE;
@@ -50,11 +48,9 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             }
             break;
         case WHITE_QUEEN:
-            board->halfMoveClock++;
             board->whiteQueen ^= source | target;
             break;
         case WHITE_KING:
-            board->halfMoveClock++;
             board->whiteKing ^= source | target;
             board->castlingWhite = 0;
             if (IS_WHITE_CASTLING(m)) {
@@ -85,15 +81,12 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             }
             break;
         case BLACK_KNIGHT:
-            board->halfMoveClock++;
             board->blackKnight ^= source | target;
             break;
         case BLACK_BISHOP:
-            board->halfMoveClock++;
             board->blackBishop ^= source | target;
             break;
         case BLACK_ROOK:
-            board->halfMoveClock++;
             board->blackRook ^= source | target;
             if (m->sourceIndex == INDEX_A8) {
                 board->castlingBlack &= ~QUEEN_SIDE;
@@ -103,11 +96,9 @@ void makeMove(struct chessBoard *board, const struct move *m) {
             }
             break;
         case BLACK_QUEEN:
-            board->halfMoveClock++;
             board->blackQueen ^= source | target;
             break;
         case BLACK_KING:
-            board->halfMoveClock++;
             board->blackKing ^= source | target;
             board->castlingBlack = 0;
             if (IS_BLACK_CASTLING(m)) {
