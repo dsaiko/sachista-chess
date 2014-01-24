@@ -59,6 +59,8 @@ struct chessBoard {
 
 };
 
+#define MAX_MOVES_ARR_LENGTH    220
+
 extern struct chessBoard emptyBoard;
 extern struct chessBoard standardBoard;
 
@@ -75,7 +77,7 @@ extern struct chessBoard boardFromFEN(const char *fen);
 
 
 extern void initMovesGenerator();
-extern int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize);
+extern void generateMoves(const struct chessBoard *board, struct move **m, const struct move *arrayEnd);
 
 
 extern void makeMove(struct chessBoard *board0, const struct move *m);

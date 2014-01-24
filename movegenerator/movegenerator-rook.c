@@ -155,7 +155,7 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
     return attacks;
 }
 
-void generateMovesRook(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesRook(const struct chessBoard *board, struct move **moves, const struct move *arrayEnd, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
      bitboard rook;
 

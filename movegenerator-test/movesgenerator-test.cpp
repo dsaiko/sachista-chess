@@ -6,7 +6,11 @@ void testMoves(const int expectedCount, const char *boardString)
 {
     struct chessBoard board = boardFromString(boardString);
     struct move moves[256];
-    int size = generateMoves(&board, moves, 256);
+    struct move *pointer = moves;
+    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
+
+    generateMoves(&board, &pointer, end);
+    int size = pointer - moves;
     LONGS_EQUAL(expectedCount, size);
 }
 
@@ -14,7 +18,11 @@ void testMovesFromFen(const int expectedCount, const char *boardString)
 {
     struct chessBoard board = boardFromFEN(boardString);
     struct move moves[256];
-    int size = generateMoves(&board, moves, 256);
+    struct move *pointer = moves;
+    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
+
+    generateMoves(&board, &pointer, end);
+    int size = pointer - moves;
     LONGS_EQUAL(expectedCount, size);
 }
 
@@ -22,12 +30,16 @@ void testValidMoves(const int expectedCount, const char *boardString)
 {
     struct chessBoard board = boardFromString(boardString);
     struct move moves[256];
-    int size = generateMoves(&board, moves, 256);
+    struct move *pointer = moves;
+    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
+
+    generateMoves(&board, &pointer, end);
+
     int validCount = 0;
-    int i;
-    for(i=0; i<size; i++) {
+    struct move *iterator = moves;
+    while(iterator < pointer) {
         struct chessBoard nextBoard = board;
-        makeMove(&nextBoard, &moves[i]);
+        makeMove(&nextBoard, iterator++);
         if(isLegal(&nextBoard)) {
             validCount ++;
         }

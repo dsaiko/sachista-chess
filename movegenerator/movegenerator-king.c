@@ -67,7 +67,7 @@ int isUnderAttack(const struct chessBoard *board, char color, bitboard allPieces
 }
 
 
-void generateMovesKing(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesKing(const struct chessBoard *board, struct move **moves, const struct move *arrayEnd, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
 
     //set up color

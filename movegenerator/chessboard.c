@@ -500,12 +500,16 @@ unsigned long long perft(const struct chessBoard *board, const int depth)
     }
 
     //compute directly
-    struct move moves[255];
-    int size = generateMoves(board, moves, 256);
+    struct move moves[MAX_MOVES_ARR_LENGTH];
+    struct move *pointer = moves;
+    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
+
+    generateMoves(board, &pointer, end);
 
     struct chessBoard nextBoard = *board;
-    for (int i=0; i<size; i++) {
-        makeMove(&nextBoard, moves + i);
+    struct move *iterator = moves;
+    while(iterator < pointer) {
+        makeMove(&nextBoard, iterator++);
         if(isLegal(&nextBoard)) {
             count += perft(&nextBoard, depth -1);
         }
