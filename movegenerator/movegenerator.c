@@ -11,16 +11,18 @@ void initMovesGenerator() {
 
 int generateMoves(const struct chessBoard *board, struct move *m, const int bufferSize)
 {
+    const bitboard opponentPieces = (board->nextMove == WHITE) ? BLACK_PIECES(board) : WHITE_PIECES(board);
     const bitboard boardAvailable = (board->nextMove == WHITE) ? ~WHITE_PIECES(board) : ~BLACK_PIECES(board);
     const bitboard allPieces = ALL_PIECES(board);
 
+
     int movesIndex = 0;
 
-    generateMovesKnight(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
-    generateMovesPawn(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
-    generateMovesKing(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
-    generateMovesRook(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
-    generateMovesBishop(board, m, bufferSize, &movesIndex, boardAvailable, allPieces);
+    generateMovesKnight(board, m, bufferSize, &movesIndex, boardAvailable, allPieces, opponentPieces);
+    generateMovesPawn(board, m, bufferSize, &movesIndex, boardAvailable, allPieces, opponentPieces);
+    generateMovesKing(board, m, bufferSize, &movesIndex, boardAvailable, allPieces, opponentPieces);
+    generateMovesRook(board, m, bufferSize, &movesIndex, boardAvailable, allPieces, opponentPieces);
+    generateMovesBishop(board, m, bufferSize, &movesIndex, boardAvailable, allPieces, opponentPieces);
 
     return movesIndex;
 }

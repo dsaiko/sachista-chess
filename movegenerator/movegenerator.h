@@ -14,10 +14,10 @@ extern "C"{
 bitboard moveBitBoard0(bitboard b, const int up, const int right);
 
 
-#define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, ENPASSANT)                                                                            \
-    if(*movesIndex < bufferSize) {                                                                                                      \
-       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (ENPASSANT)};               \
-       *movesIndex +=1;                                                                                                                 \
+#define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, ISENPASSANT, ISCAPTURE)                                              \
+    if(*movesIndex < bufferSize) {                                                                                                          \
+       moves[*movesIndex] =  (struct move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (ISENPASSANT), ((ISCAPTURE) != 0)};     \
+       *movesIndex +=1;                                                                                                                     \
     }
 
 
@@ -33,12 +33,12 @@ bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor c
 bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
 bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
 
-void generateMovesKing(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);
-void generateMovesQueen(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);
-void generateMovesPawn(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);
-void generateMovesRook(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);
-void generateMovesBishop(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);
-void generateMovesKnight(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces);
+void generateMovesKing(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesQueen(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesPawn(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesRook(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesBishop(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesKnight(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
 
 #ifdef __cplusplus
 }

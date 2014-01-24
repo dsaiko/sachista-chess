@@ -155,7 +155,7 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
     return attacks;
 }
 
-void generateMovesRook(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
+void generateMovesRook(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
      bitboard rook;
 
@@ -204,7 +204,7 @@ void generateMovesRook(const struct chessBoard *board, struct move *moves, const
                       movingPiece = BLACK_QUEEN;
                   }
               }
-              GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
+              GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
 
               //remove move
               movesBoard ^= target;

@@ -49,7 +49,7 @@ bitboard generateAttacksPawn(const struct chessBoard *board, enum pieceColor col
 }
 
 
-void generateMovesPawn(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
+void generateMovesPawn(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     const bitboard emptyBoard = ~allPieces;
 
@@ -83,15 +83,18 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
                 const int targetIndex = bitScan(movesBoard);
                 const bitboard target = BITMASK_SQUARE(targetIndex);
 
+                const bitboard capture = target & allPieces;
+
+
                 //white promotion?
                 if (targetIndex > 55) {
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0);
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0, capture);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0, capture);
                 } else {
                     //normal move/capture
-                    GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0, capture);
                 }
 
                 //remove this move
@@ -102,7 +105,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             movesBoard = attacks & board->enPassant;
             if (movesBoard) {
               const int targetIndex = bitScan(movesBoard);
-              GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 1);
+              GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 1, 1);
             }
 
             //remove this piece
@@ -137,15 +140,17 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
                 const int targetIndex = bitScan(movesBoard);
                 const bitboard target = BITMASK_SQUARE(targetIndex);
 
+                const bitboard capture = target & allPieces;
+
                 //white promotion?
                 if (targetIndex < 8) {
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0, capture);
                 } else {
                     //normal move/capture
-                    GENERATE_MOVE(BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0, capture);
                 }
 
                 //remove this move
@@ -156,7 +161,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move *moves, const
             movesBoard = attacks & board->enPassant;
             if (movesBoard) {
               const int targetIndex = bitScan(movesBoard);
-              GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 1);
+              GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 1, 1);
             }
 
             //remove this piece

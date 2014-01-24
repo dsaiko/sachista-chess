@@ -28,7 +28,8 @@ struct move {
     unsigned int    sourceIndex     ;
     unsigned int    targetIndex     ;
 
-    int             enPassant       ;
+    int             isEnPassant     ;
+    int             isCapture       ;
 };
 
 #define IS_WHITE_CASTLING(m) (m->sourceIndex == INDEX_E1 && (m->targetIndex == INDEX_C1 || m->targetIndex == INDEX_G1))

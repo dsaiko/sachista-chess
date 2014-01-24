@@ -143,109 +143,109 @@ void makeMove(struct chessBoard *board, const struct move *m) {
     //CHECK CAPTURES
     enum chessPiece capturedPiece = NO_PIECE;
 
-    if (board->nextMove == BLACK) {
-        //check capture
-        if ((board->whiteBishop & target) != 0) {
-            capturedPiece = WHITE_BISHOP;
-        } else if ((board->whiteKing & target) != 0) {
-            capturedPiece = WHITE_KING;
-        } else if ((board->whiteKnight & target) != 0) {
-            capturedPiece = WHITE_KNIGHT;
-        } else if ((board->whitePawn & target) != 0) {
-            capturedPiece = WHITE_PAWN;
-        } else if ((board->whiteQueen & target) != 0) {
-            capturedPiece = WHITE_QUEEN;
-        } else if ((board->whiteRook & target) != 0) {
-            capturedPiece = WHITE_ROOK;
-        } else if (m->enPassant) {
-            capturedPiece = WHITE_PAWN;
-        }
-    } else {
-        //check capture
-        if ((board->blackBishop & target) != 0) {
-            capturedPiece = BLACK_BISHOP;
-        } else if ((board->blackKing & target) != 0) {
-            capturedPiece = BLACK_KING;
-        } else if ((board->blackKnight & target) != 0) {
-            capturedPiece = BLACK_KNIGHT;
-        } else if ((board->blackPawn & target) != 0) {
-            capturedPiece = BLACK_PAWN;
-        } else if ((board->blackQueen & target) != 0) {
-            capturedPiece = BLACK_QUEEN;
-        } else if ((board->blackRook & target) != 0) {
-            capturedPiece = BLACK_ROOK;
-        } else if (m->enPassant) {
-            capturedPiece = BLACK_PAWN;
-        }
-    }
-
-
     //reset halfmoveClock if piece was captured
-    if (m->enPassant || capturedPiece != NO_PIECE) {
+    if (m->isCapture) {
         board->halfMoveClock = 0;
+
+        if (board->nextMove == BLACK) {
+            //check capture
+            if ((board->whiteBishop & target) != 0) {
+                capturedPiece = WHITE_BISHOP;
+            } else if ((board->whiteKing & target) != 0) {
+                capturedPiece = WHITE_KING;
+            } else if ((board->whiteKnight & target) != 0) {
+                capturedPiece = WHITE_KNIGHT;
+            } else if ((board->whitePawn & target) != 0) {
+                capturedPiece = WHITE_PAWN;
+            } else if ((board->whiteQueen & target) != 0) {
+                capturedPiece = WHITE_QUEEN;
+            } else if ((board->whiteRook & target) != 0) {
+                capturedPiece = WHITE_ROOK;
+            } else if (m->isEnPassant) {
+                capturedPiece = WHITE_PAWN;
+            }
+        } else {
+            //check capture
+            if ((board->blackBishop & target) != 0) {
+                capturedPiece = BLACK_BISHOP;
+            } else if ((board->blackKing & target) != 0) {
+                capturedPiece = BLACK_KING;
+            } else if ((board->blackKnight & target) != 0) {
+                capturedPiece = BLACK_KNIGHT;
+            } else if ((board->blackPawn & target) != 0) {
+                capturedPiece = BLACK_PAWN;
+            } else if ((board->blackQueen & target) != 0) {
+                capturedPiece = BLACK_QUEEN;
+            } else if ((board->blackRook & target) != 0) {
+                capturedPiece = BLACK_ROOK;
+            } else if (m->isEnPassant) {
+                capturedPiece = BLACK_PAWN;
+            }
+        }
+
+        //process capture
+        if (m->isEnPassant) {
+            if (board->nextMove == BLACK) {
+                board->whitePawn ^= ONE_NORTH(target);
+            } else {
+                board->blackPawn ^= ONE_SOUTH(target);
+            }
+        } else {
+            switch (capturedPiece) {
+                case WHITE_BISHOP:
+                    board->whiteBishop ^= target;
+                    break;
+                case BLACK_BISHOP:
+                    board->blackBishop ^= target;
+                    break;
+                case WHITE_KING:
+                    board->whiteKing ^= target;
+                    board->castlingWhite = 0;
+                    break;
+                case BLACK_KING:
+                    board->blackKing ^= target;
+                    board->castlingBlack = 0;
+                    break;
+                case WHITE_KNIGHT:
+                    board->whiteKnight ^= target;
+                    break;
+                case BLACK_KNIGHT:
+                    board->blackKnight ^= target;
+                    break;
+                case WHITE_PAWN:
+                    board->whitePawn ^= target;
+                    break;
+                case BLACK_PAWN:
+                    board->blackPawn ^= target;
+                    break;
+                case WHITE_QUEEN:
+                    board->whiteQueen ^= target;
+                    break;
+                case BLACK_QUEEN:
+                    board->blackQueen ^= target;
+                    break;
+                case WHITE_ROOK:
+                    board->whiteRook ^= target;
+                    if (m->targetIndex == INDEX_A1) {
+                        board->castlingWhite &= ~QUEEN_SIDE;
+                    }
+                    if (m->targetIndex == INDEX_H1) {
+                        board->castlingWhite &= ~KING_SIDE;
+                    }
+                    break;
+                case BLACK_ROOK:
+                    board->blackRook ^= target;
+                    if (m->targetIndex == INDEX_A8) {
+                        board->castlingBlack &= ~QUEEN_SIDE;
+                    }
+                    if (m->targetIndex == INDEX_H8) {
+                        board->castlingBlack &= ~KING_SIDE;
+                    }
+                    break;
+            }
+        }
     }
 
-    //process capture
-    if (m->enPassant) {
-        if (board->nextMove == BLACK) {
-            board->whitePawn ^= ONE_NORTH(target);
-        } else {
-            board->blackPawn ^= ONE_SOUTH(target);
-        }
-    } else {
-        switch (capturedPiece) {
-            case WHITE_BISHOP:
-                board->whiteBishop ^= target;
-                break;
-            case BLACK_BISHOP:
-                board->blackBishop ^= target;
-                break;
-            case WHITE_KING:
-                board->whiteKing ^= target;
-                board->castlingWhite = 0;
-                break;
-            case BLACK_KING:
-                board->blackKing ^= target;
-                board->castlingBlack = 0;
-                break;
-            case WHITE_KNIGHT:
-                board->whiteKnight ^= target;
-                break;
-            case BLACK_KNIGHT:
-                board->blackKnight ^= target;
-                break;
-            case WHITE_PAWN:
-                board->whitePawn ^= target;
-                break;
-            case BLACK_PAWN:
-                board->blackPawn ^= target;
-                break;
-            case WHITE_QUEEN:
-                board->whiteQueen ^= target;
-                break;
-            case BLACK_QUEEN:
-                board->blackQueen ^= target;
-                break;
-            case WHITE_ROOK:
-                board->whiteRook ^= target;
-                if (m->targetIndex == INDEX_A1) {
-                    board->castlingWhite &= ~QUEEN_SIDE;
-                }
-                if (m->targetIndex == INDEX_H1) {
-                    board->castlingWhite &= ~KING_SIDE;
-                }
-                break;
-            case BLACK_ROOK:
-                board->blackRook ^= target;
-                if (m->targetIndex == INDEX_A8) {
-                    board->castlingBlack &= ~QUEEN_SIDE;
-                }
-                if (m->targetIndex == INDEX_H8) {
-                    board->castlingBlack &= ~KING_SIDE;
-                }
-                break;
-        }
-    }
 
     //switch sides
     if (board->nextMove == BLACK) {

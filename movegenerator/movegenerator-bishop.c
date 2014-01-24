@@ -233,7 +233,7 @@ bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor c
        return attacks;
 }
 
-void generateMovesBishop(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
+void generateMovesBishop(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     bitboard bishop;
 
@@ -283,7 +283,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move *moves, con
             }
 
             //add move to array
-            GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
+            GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
 
             //remove this move
             movesBoard ^= target;

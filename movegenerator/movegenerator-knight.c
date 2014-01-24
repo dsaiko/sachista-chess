@@ -44,7 +44,7 @@ bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor c
     return attacks;
 }
 
-void generateMovesKnight(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces)
+void generateMovesKnight(const struct chessBoard *board, struct move *moves, const int bufferSize, int *movesIndex, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     bitboard knight;
     enum chessPiece movingPiece;
@@ -70,7 +70,7 @@ void generateMovesKnight(const struct chessBoard *board, struct move *moves, con
              int targetIndex = bitScan(movesBoard);
              bitboard target = BITMASK_SQUARE(targetIndex);
 
-             GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
+             GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
              movesBoard ^= target;
          }
 
