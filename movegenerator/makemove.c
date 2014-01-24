@@ -181,7 +181,7 @@ void makeMove(struct chessBoard *board, const struct move *m) {
 
 
     //reset halfmoveClock if piece was captured
-    if (capturedPiece != NO_PIECE) {
+    if (m->enPassant || capturedPiece != NO_PIECE) {
         board->halfMoveClock = 0;
     }
 
