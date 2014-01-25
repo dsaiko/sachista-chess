@@ -77,7 +77,7 @@ extern struct chessBoard boardFromFEN(const char *fen);
 
 
 extern void initMovesGenerator();
-extern void generateMoves(const struct chessBoard *board, struct move **m, const struct move *arrayEnd);
+extern void generateMoves(const struct chessBoard *board, struct move **m);
 
 
 extern void makeMove(struct chessBoard *board0, const struct move *m);

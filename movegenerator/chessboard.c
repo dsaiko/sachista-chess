@@ -502,9 +502,7 @@ unsigned long long perft(const struct chessBoard *board, const int depth)
     //compute directly
     struct move moves[MAX_MOVES_ARR_LENGTH];
     struct move *pointer = moves;
-    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
-
-    generateMoves(board, &pointer, end);
+    generateMoves(board, &pointer);
 
     struct chessBoard nextBoard = *board;
     struct move *iterator = moves;

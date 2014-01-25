@@ -49,7 +49,7 @@ bitboard generateAttacksPawn(const struct chessBoard *board, enum pieceColor col
 }
 
 
-void generateMovesPawn(const struct chessBoard *board, struct move **moves, const struct move *arrayEnd, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesPawn(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     const bitboard emptyBoard = ~allPieces;
 

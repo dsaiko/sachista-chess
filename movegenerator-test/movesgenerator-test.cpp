@@ -7,9 +7,8 @@ void testMoves(const int expectedCount, const char *boardString)
     struct chessBoard board = boardFromString(boardString);
     struct move moves[256];
     struct move *pointer = moves;
-    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
 
-    generateMoves(&board, &pointer, end);
+    generateMoves(&board, &pointer);
     int size = pointer - moves;
     LONGS_EQUAL(expectedCount, size);
 }
@@ -19,9 +18,8 @@ void testMovesFromFen(const int expectedCount, const char *boardString)
     struct chessBoard board = boardFromFEN(boardString);
     struct move moves[256];
     struct move *pointer = moves;
-    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
 
-    generateMoves(&board, &pointer, end);
+    generateMoves(&board, &pointer);
     int size = pointer - moves;
     LONGS_EQUAL(expectedCount, size);
 }
@@ -31,9 +29,8 @@ void testValidMoves(const int expectedCount, const char *boardString)
     struct chessBoard board = boardFromString(boardString);
     struct move moves[256];
     struct move *pointer = moves;
-    struct move *end = moves + MAX_MOVES_ARR_LENGTH;
 
-    generateMoves(&board, &pointer, end);
+    generateMoves(&board, &pointer);
 
     int validCount = 0;
     struct move *iterator = moves;
