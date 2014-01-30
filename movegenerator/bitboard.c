@@ -18,8 +18,9 @@
 #include <stdio.h>
 #include "bitboard.h"
 
-void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
-void outputchar(char *buffer, const int bufferSize, int *position, const char c);
+void outputStr(char *buffer, const int bufferSize, int *position, const char *str);
+void outputChar(char *buffer, const int bufferSize, int *position, const char c);
+void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
 
 /*
  * These constants were pregenerated
@@ -79,35 +80,29 @@ char *bitboard2str(bitboard b, char *buffer, int bufferSize)
     b = reverseRanks(b);
 
     //header
-    outputstr(buffer, bufferSize, &position, header);
-
-    char c[] = "\0\0";
+    outputStr(buffer, bufferSize, &position, header);
 
     for (int i = 0; i < 64; i++) {
         if ((i % 8) == 0) {
             if (i > 0) {
                 //print right column digit
-                c[0] = '0' + 9 - (i / 8);
-                outputstr(buffer, bufferSize, &position, c);
-                outputstr(buffer, bufferSize, &position, "\n");
+                outputCharArray(buffer, bufferSize, &position, 2, '0' + 9 - (i / 8), '\n');
             }
             //print left column digit
-            c[0] = '0' + 8 - (i / 8);
-            outputstr(buffer, bufferSize, &position, c);
-            outputstr(buffer, bufferSize, &position, " ");
+            outputCharArray(buffer, bufferSize, &position, 2, '0' + 8 - (i / 8), ' ');
         }
         if(b & (1ULL << i)) {
-            outputstr(buffer, bufferSize, &position, "x ");
+            outputStr(buffer, bufferSize, &position, "x ");
         } else {
-            outputstr(buffer, bufferSize, &position, "- ");
+            outputStr(buffer, bufferSize, &position, "- ");
         }
     }
 
     //last right column digit
-    outputstr(buffer, bufferSize, &position, "1\n");
+    outputStr(buffer, bufferSize, &position, "1\n");
 
     //footer
-    outputstr(buffer, bufferSize, &position, header);
+    outputStr(buffer, bufferSize, &position, header);
 
     //end string
     if(position < bufferSize)

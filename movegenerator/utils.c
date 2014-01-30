@@ -17,8 +17,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
-void outputstr(char *buffer, const int bufferSize, int *position, const char *str)
+void outputStr(char *buffer, const int bufferSize, int *position, const char *str)
 {
     int len = strlen(str);
     if(*position + len < bufferSize) {
@@ -27,11 +28,23 @@ void outputstr(char *buffer, const int bufferSize, int *position, const char *st
     }
 }
 
-void outputchar(char *buffer, const int bufferSize, int *position, const char c)
-{
-      if(*position + 1 < bufferSize) {
-          buffer[*position] = c;
-          *position += 1;
-      }
+
+void outputChar(char *buffer, const int bufferSize, int *position, const char c) {
+    if(*position + 1 < bufferSize) {
+        buffer[*position] = c;
+        *position += 1;
+    }
 }
 
+void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...)
+{
+    va_list ap;
+    va_start(ap, chars);
+
+    outputChar(buffer, bufferSize, position, chars);
+    for(int i = 0; i < count -1 ; i++) {
+        outputChar(buffer, bufferSize, position,  va_arg(ap,int));
+    }
+
+    va_end(ap);
+}

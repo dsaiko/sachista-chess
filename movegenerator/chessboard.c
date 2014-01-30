@@ -80,8 +80,10 @@ int boardCmp(const struct chessBoard *board1, const struct chessBoard *board2)
     return 0;
 }
 
-void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
-void outputchar(char *buffer, const int bufferSize, int *position, const char c);
+
+void outputStr(char *buffer, const int bufferSize, int *position, const char *str);
+void outputChar(char *buffer, const int bufferSize, int *position, const char c);
+void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
 
 struct chessBoard boardFromFEN(const char *fen) {
     struct chessBoard board = emptyBoard;
@@ -231,7 +233,7 @@ char*  board2str(const struct chessBoard *board, const int decorated, char *buff
 
     //header
     if(decorated)
-        outputstr(buffer, bufferSize, &position, header);
+        outputStr(buffer, bufferSize, &position, header);
 
 
     bitboard  whiteKingReversed      = reverseRanks(board->whiteKing);
@@ -251,16 +253,11 @@ char*  board2str(const struct chessBoard *board, const int decorated, char *buff
     for (int i = 0; i < 64; i++) {
         if (decorated && ((i % 8) == 0)) {
             if (i > 0) {
-                outputchar(buffer, bufferSize, &position, '0' + 9 - (i / 8));
-                outputchar(buffer, bufferSize, &position, '\n');
-
+                outputCharArray(buffer, bufferSize, &position, 2, '0' + 9 - (i / 8), '\n');
             }
-            outputchar(buffer, bufferSize, &position, '0' + 8 - (i / 8));
-            outputchar(buffer, bufferSize, &position, ' ');
-        } else if ((i % 8) == 0) {
-            if (i > 0) {
-                outputchar(buffer, bufferSize, &position, '\n');
-            }
+            outputCharArray(buffer, bufferSize, &position, 2, '0' + 8 - (i / 8), ' ');
+        } else if (i > 0 && ((i % 8) == 0)) {
+            outputChar(buffer, bufferSize, &position, '\n');
         }
 
         char c = NO_PIECE;
@@ -268,51 +265,39 @@ char*  board2str(const struct chessBoard *board, const int decorated, char *buff
 
         if (whiteKingReversed & test) {
             c = WHITE_KING;
-        }
-        if (whiteQueenReversed & test) {
+        } else if (whiteQueenReversed & test) {
             c = WHITE_QUEEN;
-        }
-        if (whiteRookReversed & test) {
+        } else if (whiteRookReversed & test) {
             c = WHITE_ROOK;
-        }
-        if (whiteKnightReversed & test) {
+        } else if (whiteKnightReversed & test) {
             c = WHITE_KNIGHT;
-        }
-        if (whiteBishopReversed & test) {
+        } else if (whiteBishopReversed & test) {
             c = WHITE_BISHOP;
-        }
-        if (whitePawnReversed & test) {
+        } else if (whitePawnReversed & test) {
             c = WHITE_PAWN;
-        }
-
-        if (blackKingReversed & test) {
+        } else if (blackKingReversed & test) {
             c = BLACK_KING;
-        }
-        if (blackQueenReversed & test) {
+        } else if (blackQueenReversed & test) {
             c = BLACK_QUEEN;
-        }
-        if (blackRookReversed & test) {
+        } else if (blackRookReversed & test) {
             c = BLACK_ROOK;
-        }
-        if (blackKnightReversed & test) {
+        } else if (blackKnightReversed & test) {
             c = BLACK_KNIGHT;
-        }
-        if (blackBishopReversed & test) {
+        } else if (blackBishopReversed & test) {
             c = BLACK_BISHOP;
-        }
-        if (blackPawnReversed & test) {
+        } else if (blackPawnReversed & test) {
             c = BLACK_PAWN;
         }
 
-        outputchar(buffer, bufferSize, &position, c);
+        outputChar(buffer, bufferSize, &position, c);
         if (decorated) {
-            outputchar(buffer, bufferSize, &position, ' ');
+            outputChar(buffer, bufferSize, &position, ' ');
         }
     }
 
     if (decorated) {
-        outputstr(buffer, bufferSize, &position, "1\n");
-        outputstr(buffer, bufferSize, &position, header);
+        outputStr(buffer, bufferSize, &position, "1\n");
+        outputStr(buffer, bufferSize, &position, header);
     }
 
     if(position < bufferSize)
@@ -360,18 +345,18 @@ struct chessBoard boardFromString(const char *buffer) {
             case 'N':
             case 'B':
             case 'P':
-                outputchar(fen, BUFFERSIZE, &fenPos, c);
+                outputChar(fen, BUFFERSIZE, &fenPos, c);
                 break;
             case '-':
-                outputchar(fen, BUFFERSIZE, &fenPos, '1');
+                outputChar(fen, BUFFERSIZE, &fenPos, '1');
                 break;
         }
 
     }
     if(fenPos > 0 && fenPos < 64)
-        outputchar(fen, BUFFERSIZE, &fenPos, '/');
+        outputChar(fen, BUFFERSIZE, &fenPos, '/');
 
-    outputstr(fen, BUFFERSIZE, &fenPos, " w KQkq - 0 1");
+    outputStr(fen, BUFFERSIZE, &fenPos, " w KQkq - 0 1");
     fen[fenPos] = '\0';
 
     board = boardFromFEN(fen);
@@ -422,9 +407,9 @@ char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSi
             emptyCount++;
         } else if(piece != '\n' && piece != ' ') {
             if (emptyCount > 0) {
-                outputchar(buffer, bufferSize, &fenPos, '0' + emptyCount);
+                outputChar(buffer, bufferSize, &fenPos, '0' + emptyCount);
             }
-            outputchar(buffer, bufferSize, &fenPos, piece);
+            outputChar(buffer, bufferSize, &fenPos, piece);
             emptyCount = 0;
         } else if (piece == '\n') {
 
@@ -432,59 +417,48 @@ char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSi
 
             // output empty fields at the end of rank
             if (emptyCount > 0) {
-                outputchar(buffer, bufferSize, &fenPos, '0' + emptyCount);
+                outputChar(buffer, bufferSize, &fenPos, '0' + emptyCount);
                 emptyCount = 0;
             }
             if(lines < 8)
-                outputchar(buffer, bufferSize, &fenPos, '/');
+                outputChar(buffer, bufferSize, &fenPos, '/');
         }
     }
     // output empty fields at the end of rank
     if (emptyCount > 0) {
-        outputchar(buffer, bufferSize, &fenPos, '0' + emptyCount);
+        outputChar(buffer, bufferSize, &fenPos, '0' + emptyCount);
         emptyCount = 0;
     }
 
     // next move
-    outputchar(buffer, bufferSize, &fenPos, ' ');
-    outputchar(buffer, bufferSize, &fenPos, board->nextMove);
-    outputchar(buffer, bufferSize, &fenPos, ' ');
+    outputCharArray(buffer, bufferSize, &fenPos, 3, ' ', board->nextMove, ' ');
 
 
     // castling
-    if ((board->castlingWhite) || (board->castlingBlack)) {
-        if (board->castlingWhite & KING_SIDE) {
-            outputchar(buffer, bufferSize, &fenPos, 'K');
-        }
-        if (board->castlingWhite & QUEEN_SIDE) {
-            outputchar(buffer, bufferSize, &fenPos, 'Q');
-        }
-        if (board->castlingBlack & KING_SIDE) {
-            outputchar(buffer, bufferSize, &fenPos, 'k');
-        }
-        if (board->castlingBlack & QUEEN_SIDE) {
-            outputchar(buffer, bufferSize, &fenPos, 'q');
-        }
-    } else {
-        outputchar(buffer, bufferSize, &fenPos, '-');
-    }
-    outputchar(buffer, bufferSize, &fenPos, ' ');
+    if (board->castlingWhite & KING_SIDE)                   outputChar(buffer, bufferSize, &fenPos, 'K');
+    if (board->castlingWhite & QUEEN_SIDE)                  outputChar(buffer, bufferSize, &fenPos, 'Q');
+    if (board->castlingBlack & KING_SIDE)                   outputChar(buffer, bufferSize, &fenPos, 'k');
+    if (board->castlingBlack & QUEEN_SIDE)                  outputChar(buffer, bufferSize, &fenPos, 'q');
+    if (board->castlingBlack & QUEEN_SIDE)                  outputChar(buffer, bufferSize, &fenPos, 'q');
+    if ((board->castlingBlack | board->castlingWhite) == 0) outputChar(buffer, bufferSize, &fenPos, '-');
+    outputChar(buffer, bufferSize, &fenPos, ' ');
 
     // enPassant
-    if (board->enPassant == 0) {
-        outputchar(buffer, bufferSize, &fenPos, '-');
+    if (board->enPassant) {
+        outputStr(buffer, bufferSize, &fenPos, fieldNotation(bitScan(board->enPassant), data, 3));
     } else {
-        outputstr(buffer, bufferSize, &fenPos, fieldNotation(bitScan(board->enPassant), data, 3));
+        outputChar(buffer, bufferSize, &fenPos, '-');
     }
-    outputchar(buffer, bufferSize, &fenPos, ' ');
+
+    outputChar(buffer, bufferSize, &fenPos, ' ');
 
     sprintf(data, "%d", board->halfMoveClock);
-    outputstr(buffer, bufferSize, &fenPos, data);
+    outputStr(buffer, bufferSize, &fenPos, data);
 
-    outputchar(buffer, bufferSize, &fenPos, ' ');
+    outputChar(buffer, bufferSize, &fenPos, ' ');
 
     sprintf(data, "%d", board->fullMoveNumber);
-    outputstr(buffer, bufferSize, &fenPos, data);
+    outputStr(buffer, bufferSize, &fenPos, data);
 
     buffer[fenPos] = 0;
     return buffer;

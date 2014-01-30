@@ -73,7 +73,7 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
     //set up color
         if (board->nextMove == WHITE) {
             const bitboard king = board->whiteKing;
-            if (king == 0) return;
+            if (!king) return;
 
             const int sourceIndex = bitScan(king);
 
@@ -92,7 +92,7 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
                 movesBoard ^= target;
             }
 
-            if (board->castlingWhite == 0) return;
+            if (!board->castlingWhite) return;
 
             //if castling available
             if ((board->castlingWhite & KING_SIDE) && ((allPieces & WHITE_CASTLE_OO_EMPTY) == 0)) {
@@ -111,7 +111,7 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
 
         } else {
             const bitboard king = board->blackKing;
-            if (king == 0) return;
+            if (!king) return;
 
             const int sourceIndex = bitScan(king);
 
@@ -129,7 +129,7 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
                 movesBoard ^= target;
             }
 
-            if (board->castlingBlack == 0) return;
+            if (!board->castlingBlack) return;
 
             //if castling available
             if ((board->castlingBlack & KING_SIDE) && ((allPieces & BLACK_CASTLE_OO_EMPTY) == 0)) {

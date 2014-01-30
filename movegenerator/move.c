@@ -18,8 +18,9 @@
 #include "bitboard.h"
 #include "move.h"
 
-void outputstr(char *buffer, const int bufferSize, int *position, const char *str);
-void outputchar(char *buffer, const int bufferSize, int *position, const char c);
+void outputStr(char *buffer, const int bufferSize, int *position, const char *str);
+void outputChar(char *buffer, const int bufferSize, int *position, const char c);
+void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
 
 char *move2str(struct move *m, char *buffer, int bufferSize) {
     int position = 0;
@@ -27,19 +28,20 @@ char *move2str(struct move *m, char *buffer, int bufferSize) {
     char notation[3];
 
     fieldNotation(m->sourceIndex, notation, sizeof(notation) / sizeof(char));
-    outputstr(buffer, bufferSize, &position, notation);
+    outputStr(buffer, bufferSize, &position, notation);
 
     fieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
-    outputstr(buffer, bufferSize, &position, notation);
+    outputStr(buffer, bufferSize, &position, notation);
 
     if(m->promotionPiece != NO_PIECE) {
         notation[0] = m->promotionPiece;
         notation[1] = '\0';
-        outputstr(buffer, bufferSize, &position, notation);
+        outputStr(buffer, bufferSize, &position, notation);
     }
 
     if(position < bufferSize)
         buffer[position] = 0;
+
     return buffer;
 }
 

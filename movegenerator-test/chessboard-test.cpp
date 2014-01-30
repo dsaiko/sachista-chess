@@ -95,6 +95,7 @@ TEST(ChessBoardTest, TestToString)
     chessBoard board2 = boardFromFEN(buffer);
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
+
     board2str(&board, 1, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
     board2.enPassant = BITMASK_A2;

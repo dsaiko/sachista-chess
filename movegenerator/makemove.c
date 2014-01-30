@@ -235,6 +235,7 @@ int isLegal(const struct chessBoard *board) {
 
        rooks = board->blackQueen | board->blackRook;
        bishops = board->blackQueen | board->blackBishop;
+
    } else {
        //check if black king is not under check
        kingIndex = bitScan(board->blackKing);
@@ -252,6 +253,7 @@ int isLegal(const struct chessBoard *board) {
 
        rooks = board->whiteQueen | board->whiteRook;
        bishops = board->whiteQueen | board->whiteBishop;
+
    }
 
    if (rooks) {

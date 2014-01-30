@@ -39,6 +39,8 @@ unsigned long long timeval_diff(struct timeval *start_time,  struct timeval *end
   return 1000000ULL * difference.tv_sec + difference.tv_usec;
 }
 
+
+
 int main() {
 #if defined(__i386__)
     char architecture[] = "x86";
