@@ -57,7 +57,7 @@ typedef struct ChessBoard {
                     blackBishop,
                     blackPawn;
 
-    bitboard        enPassant;
+    int             enPassantIndex;
 
 } ChessBoard;
 

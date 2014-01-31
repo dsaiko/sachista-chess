@@ -23,8 +23,8 @@
 typedef struct UndoInfo {
     CastlingState  castlingState;
     int            halfMoveClock;
+    int            enPassantIndex;
 
-    ChessBoard     board;
 } UndoInfo;
 
 UndoInfo   undoInfoArray[10];
@@ -48,9 +48,9 @@ void undoMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
 //                    blackBishop,
 //                    blackPawn;
 
-//    bitboard        enPassant;
-
     board->halfMoveClock = undoIterator->halfMoveClock;
+    board->enPassantIndex = undoIterator->enPassantIndex;
+
     if(board->nextMove == WHITE) {
 
         board->fullMoveNumber--;
@@ -62,20 +62,18 @@ void undoMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
         board->castlingWhite = undoIterator->castlingState;
 
     }
-    *board = undoIterator->board;
 }
 
 void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
     //en passant target
-    board->enPassant = 0;
+    board->enPassantIndex = 0;
 
     const bitboard source = BITMASK_SQUARE(m->sourceIndex);
     const bitboard target = BITMASK_SQUARE(m->targetIndex);
     const int isCapture = (target & allPieces) || m->isEnPassant;
 
 
-    undoIterator->board = *board;
-    //APPLY MOVE
+    undoIterator->enPassantIndex = board->enPassantIndex;
     undoIterator->halfMoveClock = board->halfMoveClock++;
 
     if(board->nextMove == WHITE) {
@@ -109,7 +107,7 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
                 board->halfMoveClock = 0;
                 board->whitePawn ^= source | target;
                 if ((m->targetIndex - m->sourceIndex) > 10) {
-                    board->enPassant = ONE_NORTH(source);
+                    board->enPassantIndex = m->sourceIndex + 8;
                 }
                 if (m->promotionPiece != NO_PIECE) {
                     board->whitePawn ^= target;
@@ -186,7 +184,7 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
                 board->halfMoveClock = 0;
                 board->blackPawn ^= source | target;
                 if ((m->sourceIndex - m->targetIndex) > 10) { // double move
-                    board->enPassant = ONE_SOUTH(source);
+                    board->enPassantIndex = m->sourceIndex - 8;
                 }
                 if (m->promotionPiece != NO_PIECE) {
                     board->blackPawn ^= target;

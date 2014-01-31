@@ -75,7 +75,7 @@ int boardCmp(const ChessBoard *board1, const ChessBoard *board2)
     if(board1->blackBishop      !=      board2->blackBishop)    return -1;
     if(board1->blackPawn        !=      board2->blackPawn)      return -1;
 
-    if(board1->enPassant        !=      board2->enPassant)      return -1;
+    if(board1->enPassantIndex   !=      board2->enPassantIndex) return -1;
 
     return 0;
 }
@@ -188,7 +188,7 @@ ChessBoard boardFromFEN(const char *fen) {
 
 
         if(strPos == 2) {
-            board.enPassant = bitmaskFromNotation(enPassantNotation);
+            board.enPassantIndex = (enPassantNotation[0] - 'a') + ((enPassantNotation[1] - '1') << 3);
         }
 
         pos++;
@@ -444,8 +444,8 @@ char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
     outputChar(buffer, bufferSize, &fenPos, ' ');
 
     // enPassant
-    if (board->enPassant) {
-        outputStr(buffer, bufferSize, &fenPos, fieldNotation(bitScan(board->enPassant), data, 3));
+    if (board->enPassantIndex) {
+        outputStr(buffer, bufferSize, &fenPos, fieldNotation(board->enPassantIndex, data, 3));
     } else {
         outputChar(buffer, bufferSize, &fenPos, '-');
     }

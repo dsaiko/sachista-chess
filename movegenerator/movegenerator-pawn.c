@@ -95,8 +95,10 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const bitboard boa
             }
 
             //check enpassant capture
-            movesBoard = attacks & board->enPassant;
-            if (movesBoard) GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+            if(board->enPassantIndex) {
+                movesBoard = attacks & BITMASK_SQUARE(board->enPassantIndex);
+                if (movesBoard) GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+            }
 
         }
     } else {
@@ -139,8 +141,10 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const bitboard boa
             }
 
             //check enpassant capture
-            movesBoard = attacks & board->enPassant;
-            if (movesBoard) GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+            if(board->enPassantIndex) {
+                movesBoard = attacks & BITMASK_SQUARE(board->enPassantIndex);
+                if (movesBoard) GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+            }
         }
     }
 }

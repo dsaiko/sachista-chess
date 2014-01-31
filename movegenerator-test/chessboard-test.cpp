@@ -61,7 +61,7 @@ TEST(ChessBoardTest, TestFromFEN)
     LONGS_EQUAL(WHITE, board.nextMove);
     LONGS_EQUAL(0, board.castlingWhite);
     LONGS_EQUAL(0, board.castlingBlack);
-    LONGS_EQUAL(0, board.enPassant);
+    LONGS_EQUAL(0, board.enPassantIndex);
     LONGS_EQUAL(0, board.halfMoveClock);
     LONGS_EQUAL(1, board.fullMoveNumber);
 
@@ -71,7 +71,7 @@ TEST(ChessBoardTest, TestFromFEN)
     LONGS_EQUAL(BLACK, board.nextMove);
     LONGS_EQUAL(BOTH_SIDES, board.castlingWhite);
     LONGS_EQUAL(QUEEN_SIDE, board.castlingBlack);
-    LONGS_EQUAL(BITMASK_A2, board.enPassant);
+    LONGS_EQUAL(INDEX_A2, board.enPassantIndex);
     LONGS_EQUAL(14, board.halfMoveClock);
     LONGS_EQUAL(33, board.fullMoveNumber);
 
@@ -98,12 +98,12 @@ TEST(ChessBoardTest, TestToString)
 
     board2str(&board, 1, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
-    board2.enPassant = BITMASK_A2;
+    board2.enPassantIndex = INDEX_A2;
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
     board2str(&board, 0, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromString(buffer);
-    board2.enPassant = BITMASK_A2;
+    board2.enPassantIndex = INDEX_A2;
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
 
