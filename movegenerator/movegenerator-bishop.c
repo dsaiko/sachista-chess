@@ -236,56 +236,47 @@ bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor c
 void generateMovesBishop(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     bitboard bishop;
+    bitboard queen;
+    enum chessPiece movingPiece;
 
     //choose color
     if (board->nextMove == WHITE) {
-        bishop = board->whiteBishop | board->whiteQueen;
+        bishop = board->whiteBishop;
+        queen  = board->whiteQueen;
+        movingPiece = WHITE_BISHOP;
     } else {
-        bishop = board->blackBishop | board->blackQueen;
+        bishop = board->blackBishop;
+        queen  = board->blackQueen;
+        movingPiece = BLACK_BISHOP;
     }
 
-    //for all bishops
-    while (bishop) {
-        //get next piece index
-        const int sourceIndex = bitScanPop(bishop);
-        const bitboard source = BITMASK_SQUARE(sourceIndex);
+    for(int i=0; i<2; i++) {
+        //for all bishops
+        while (bishop) {
+            //get next piece index
+            const int sourceIndex = bitScanPop(bishop);
 
-        //get states of diagonals using magic number multiplication
-        const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
-        const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
+            //get states of diagonals using magic number multiplication
+            const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
+            const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
 
-        //get all moves using precomputed values
-        bitboard movesBoard = MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1];
-        movesBoard |= MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
+            //get all moves using precomputed values
+            bitboard movesBoard = MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1];
+            movesBoard |= MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
 
-        //remove own color from possible moves
-        movesBoard &= boardAvailable;
+            //remove own color from possible moves
+            movesBoard &= boardAvailable;
 
-        //for all moves
-        while (movesBoard) {
-            //get next move
-            const int targetIndex = bitScanPop(movesBoard);
-            const bitboard target = BITMASK_SQUARE(targetIndex);
-
-            enum chessPiece movingPiece;
-            if(board->nextMove == WHITE) {
-              if(board->whiteBishop & source) {
-                  movingPiece = WHITE_BISHOP;
-              } else {
-                  movingPiece = WHITE_QUEEN;
-              }
-            } else {
-                if(board->blackBishop & source) {
-                    movingPiece = BLACK_BISHOP;
-                } else {
-                    movingPiece = BLACK_QUEEN;
-                }
+            //for all moves
+            while (movesBoard) {
+                //get next move
+                const int targetIndex = bitScanPop(movesBoard);
+                //add move to array
+                GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
             }
-
-            //add move to array
-            GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
         }
+
+        bishop = queen;
+        movingPiece = (board->nextMove == WHITE) ? WHITE_QUEEN : BLACK_QUEEN;
     }
-
-
 }

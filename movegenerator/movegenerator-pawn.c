@@ -62,11 +62,10 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
         while (pieces) {
             //get next piece
             const int sourceIndex = bitScanPop(pieces);
-            const bitboard source = BITMASK_SQUARE(sourceIndex);
 
             //get possible moves - moves minus my onw color
             //one step forward
-            bitboard movesBoard = ONE_NORTH(source) & emptyBoard;
+            bitboard movesBoard = WHITE_PAWN_MOVES[sourceIndex] & emptyBoard;
 
             //if one step forward was sucessful and we are on base rank, try double move
             if ((movesBoard) && (sourceIndex < 16)) {
@@ -74,27 +73,23 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
             }
 
             //get attacks, only against oponent pieces
-            const bitboard attacks = (ONE_NORTH_EAST(source) | ONE_NORTH_WEST(source));
+            const bitboard attacks = WHITE_PAWN_ATTACKS[sourceIndex];
             movesBoard |=  attacks & oponentPieces;
 
             //for all moves
             while (movesBoard) {
                 //get next move
                 const int targetIndex = bitScanPop(movesBoard);
-                const bitboard target = BITMASK_SQUARE(targetIndex);
-
-                const bitboard capture = target & allPieces;
-
 
                 //white promotion?
                 if (targetIndex > 55) {
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0, capture);
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0, capture);
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0, capture);
-                    GENERATE_MOVE(WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0);
                 } else {
                     //normal move/capture
-                    GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0);
                 }
 
             }
@@ -103,7 +98,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
             movesBoard = attacks & board->enPassant;
             if (movesBoard) {
               const int targetIndex = bitScan(movesBoard);
-              GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 1, 1);
+              GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 1);
             }
 
         }
@@ -115,11 +110,10 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
         while (pieces) {
             //get next piece
             const int sourceIndex = bitScanPop(pieces);
-            const bitboard source = BITMASK_SQUARE(sourceIndex);
 
             //get possible moves - moves minus my onw color
             //one step forward
-            bitboard movesBoard = ONE_SOUTH(source) & emptyBoard;
+            bitboard movesBoard = BLACK_PAWN_MOVES[sourceIndex] & emptyBoard;
 
             //if one step forward was sucessful and we are on base rank, try double move
             if ((movesBoard) && (sourceIndex > 47)) {
@@ -127,26 +121,23 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
             }
 
             //get attacks, only against oponent pieces
-            const bitboard attacks = (ONE_SOUTH_EAST(source) | ONE_SOUTH_WEST(source));
+            const bitboard attacks = BLACK_PAWN_ATTACKS[sourceIndex];
             movesBoard |=  attacks & oponentPieces;
 
             //for all moves
             while (movesBoard) {
                 //get next move
                 const int targetIndex = bitScanPop(movesBoard);
-                const bitboard target = BITMASK_SQUARE(targetIndex);
-
-                const bitboard capture = target & allPieces;
 
                 //white promotion?
                 if (targetIndex < 8) {
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0, capture);
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0, capture);
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0, capture);
-                    GENERATE_MOVE(BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0);
                 } else {
                     //normal move/capture
-                    GENERATE_MOVE(BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0, capture);
+                    GENERATE_MOVE(BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0);
                 }
             }
 
@@ -154,7 +145,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
             movesBoard = attacks & board->enPassant;
             if (movesBoard) {
               const int targetIndex = bitScan(movesBoard);
-              GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 1, 1);
+              GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 1);
             }
         }
     }

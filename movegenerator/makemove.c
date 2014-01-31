@@ -20,19 +20,21 @@
 #include "move.h"
 
 
-void makeMove(struct chessBoard *board, const struct move *m) {
+void makeMove(struct chessBoard *board, const bitboard allPieces, const struct move *m) {
 
     //en passant target
     board->enPassant = 0;
 
     const bitboard source = BITMASK_SQUARE(m->sourceIndex);
     const bitboard target = BITMASK_SQUARE(m->targetIndex);
+    const int isCapture = (target & allPieces) || m->isEnPassant;
 
 
     //APPLY MOVE
     board->halfMoveClock++;
 
     if(board->nextMove == WHITE) {
+
         if(m->piece == WHITE_KNIGHT) {
                 board->whiteKnight ^= source | target;
         } else if(m->piece == WHITE_BISHOP) {
@@ -78,7 +80,7 @@ void makeMove(struct chessBoard *board, const struct move *m) {
         }
 
         //reset halfmoveClock if piece was captured
-        if (m->isCapture) {
+        if (isCapture) {
             board->halfMoveClock = 0;
 
             //check capture
@@ -154,7 +156,7 @@ void makeMove(struct chessBoard *board, const struct move *m) {
 
 
         //reset halfmoveClock if piece was captured
-        if (m->isCapture) {
+        if (isCapture) {
             board->halfMoveClock = 0;
 
             if (m->isEnPassant) {

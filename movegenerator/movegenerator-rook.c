@@ -158,53 +158,46 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
 void generateMovesRook(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
      bitboard rook;
+     bitboard queen;
+     enum chessPiece movingPiece;
+
 
       //configure color
       if (board->nextMove == WHITE) {
-          rook = board->whiteRook | board->whiteQueen;
+          rook = board->whiteRook;
+          queen  = board->whiteQueen;
+          movingPiece = WHITE_ROOK;
       } else {
-          rook = board->blackRook | board->blackQueen;
+          rook = board->blackRook;
+          queen  = board->blackQueen;
+          movingPiece = BLACK_ROOK;
       }
 
-      //for all rooks
-      while (rook) {
-          //get next rook
-          const int sourceIndex = bitScanPop(rook);
-          const bitboard source = BITMASK_SQUARE(sourceIndex);
+      for(int i=0; i<2; i++) {
+          //for all rooks
+          while (rook) {
+              //get next rook
+              const int sourceIndex = bitScanPop(rook);
 
-          //use magic multipliers to get occupancy state index
-          const int stateIndexRank = (int) ((allPieces & MOVE_RANK_MASK[sourceIndex]) >> MOVE_RANK_SHIFT[sourceIndex]);
-          const int stateIndexFile = (int) (((allPieces & MOVE_FILE_MASK[sourceIndex]) * MOVE_FILE_MAGIC[sourceIndex]) >> 57);
+              //use magic multipliers to get occupancy state index
+              const int stateIndexRank = (int) ((allPieces & MOVE_RANK_MASK[sourceIndex]) >> MOVE_RANK_SHIFT[sourceIndex]);
+              const int stateIndexFile = (int) (((allPieces & MOVE_FILE_MASK[sourceIndex]) * MOVE_FILE_MAGIC[sourceIndex]) >> 57);
 
-          //get possible moves
-          bitboard movesBoard = MOVE_RANK_ATTACKS[sourceIndex][stateIndexRank];
-          movesBoard |= MOVE_FILE_ATTACKS[sourceIndex][stateIndexFile];
+              //get possible moves
+              bitboard movesBoard = MOVE_RANK_ATTACKS[sourceIndex][stateIndexRank];
+              movesBoard |= MOVE_FILE_ATTACKS[sourceIndex][stateIndexFile];
 
-          //un-mask own color
-          movesBoard &= boardAvailable;
+              //un-mask own color
+              movesBoard &= boardAvailable;
 
-          //for all moves
-          while (movesBoard) {
-              //get current move
-              const int targetIndex = bitScanPop(movesBoard);
-              const bitboard target = BITMASK_SQUARE(targetIndex);
-
-
-              enum chessPiece movingPiece;
-              if(board->nextMove == WHITE) {
-                if(board->whiteRook & source) {
-                    movingPiece = WHITE_ROOK;
-                } else {
-                    movingPiece = WHITE_QUEEN;
-                }
-              } else {
-                  if(board->blackRook & source) {
-                      movingPiece = BLACK_ROOK;
-                  } else {
-                      movingPiece = BLACK_QUEEN;
-                  }
+              //for all moves
+              while (movesBoard) {
+                  //get current move
+                  const int targetIndex = bitScanPop(movesBoard);
+                  GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
               }
-              GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
           }
+          rook = queen;
+          movingPiece = (board->nextMove == WHITE) ? WHITE_QUEEN : BLACK_QUEEN;
       }
 }

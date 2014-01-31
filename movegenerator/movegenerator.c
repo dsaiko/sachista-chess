@@ -9,11 +9,10 @@ void initMovesGenerator() {
     initMovesGeneratorRook();
 }
 
-void generateMoves(const struct chessBoard *board, struct move **m)
+void generateMoves(const struct chessBoard *board, const bitboard allPieces, struct move **m)
 {
     const bitboard opponentPieces = (board->nextMove == WHITE) ? BLACK_PIECES(board) : WHITE_PIECES(board);
     const bitboard boardAvailable = (board->nextMove == WHITE) ? ~WHITE_PIECES(board) : ~BLACK_PIECES(board);
-    const bitboard allPieces = ALL_PIECES(board);
 
     generateMovesKnight (board, m, boardAvailable, allPieces, opponentPieces);
     generateMovesPawn   (board, m, boardAvailable, allPieces, opponentPieces);
