@@ -247,7 +247,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move **moves, co
     //for all bishops
     while (bishop) {
         //get next piece index
-        const int sourceIndex = bitScan(bishop);
+        const int sourceIndex = bitScanPop(bishop);
         const bitboard source = BITMASK_SQUARE(sourceIndex);
 
         //get states of diagonals using magic number multiplication
@@ -264,7 +264,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move **moves, co
         //for all moves
         while (movesBoard) {
             //get next move
-            const int targetIndex = bitScan(movesBoard);
+            const int targetIndex = bitScanPop(movesBoard);
             const bitboard target = BITMASK_SQUARE(targetIndex);
 
             enum chessPiece movingPiece;
@@ -284,13 +284,7 @@ void generateMovesBishop(const struct chessBoard *board, struct move **moves, co
 
             //add move to array
             GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
-
-            //remove this move
-            movesBoard ^= target;
         }
-
-        //remove current piece
-        bishop ^= source;
     }
 
 

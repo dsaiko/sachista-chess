@@ -169,7 +169,7 @@ void generateMovesRook(const struct chessBoard *board, struct move **moves, cons
       //for all rooks
       while (rook) {
           //get next rook
-          const int sourceIndex = bitScan(rook);
+          const int sourceIndex = bitScanPop(rook);
           const bitboard source = BITMASK_SQUARE(sourceIndex);
 
           //use magic multipliers to get occupancy state index
@@ -186,7 +186,7 @@ void generateMovesRook(const struct chessBoard *board, struct move **moves, cons
           //for all moves
           while (movesBoard) {
               //get current move
-              const int targetIndex = bitScan(movesBoard);
+              const int targetIndex = bitScanPop(movesBoard);
               const bitboard target = BITMASK_SQUARE(targetIndex);
 
 
@@ -205,12 +205,6 @@ void generateMovesRook(const struct chessBoard *board, struct move **moves, cons
                   }
               }
               GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
-
-              //remove move
-              movesBoard ^= target;
           }
-
-          //remove this rook
-          rook ^= source;
       }
 }

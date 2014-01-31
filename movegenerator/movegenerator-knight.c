@@ -59,7 +59,7 @@ void generateMovesKnight(const struct chessBoard *board, struct move **moves, co
 
     // while there are knight pieces
     while (knight) {
-         int sourceIndex = bitScan(knight);
+         int sourceIndex = bitScanPop(knight);
          bitboard source = BITMASK_SQUARE(sourceIndex);
 
          // get possible moves - moves minus my onw color
@@ -67,14 +67,10 @@ void generateMovesKnight(const struct chessBoard *board, struct move **moves, co
 
          // for all moves
          while (movesBoard) {
-             int targetIndex = bitScan(movesBoard);
+             int targetIndex = bitScanPop(movesBoard);
              bitboard target = BITMASK_SQUARE(targetIndex);
 
              GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
-             movesBoard ^= target;
          }
-
-         // remove the piece
-         knight ^= source;
     }
 }

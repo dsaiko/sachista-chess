@@ -1,5 +1,5 @@
 #include <CppUTest/CommandLineTestRunner.h>
-#include "bitboard.h"
+#include "chessboard.h"
 
 TEST_GROUP(BitBoardTest)
 {

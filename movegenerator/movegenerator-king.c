@@ -83,13 +83,10 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
             while (movesBoard) {
 
                 //get next move
-                const int targetIndex = bitScan(movesBoard);
+                const int targetIndex = bitScanPop(movesBoard);
                 const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 GENERATE_MOVE(WHITE_KING, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
-
-                //remove this move
-                movesBoard ^= target;
             }
 
             if (!board->castlingWhite) return;
@@ -120,13 +117,10 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
             //for all moves
             while (movesBoard) {
                 //get next move
-                const int targetIndex = bitScan(movesBoard);
+                const int targetIndex = bitScanPop(movesBoard);
                 const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 GENERATE_MOVE(BLACK_KING, NO_PIECE, sourceIndex, targetIndex, 0, target & allPieces);
-
-                //remove this move
-                movesBoard ^= target;
             }
 
             if (!board->castlingBlack) return;

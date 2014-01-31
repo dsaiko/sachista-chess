@@ -12,6 +12,8 @@ add_library (
     movegenerator-pawn
     movegenerator-rook
     movegenerator-knight
+    bitscan
+    popcount
     makemove
 )
 

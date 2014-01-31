@@ -22,6 +22,8 @@
 #include "chesspiece.h"
 #include "move.h"
 #include "version.h"
+#include "bitscan.h"
+#include "popcount.h"
 
 #ifdef __cplusplus
 extern "C"{

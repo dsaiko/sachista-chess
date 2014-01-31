@@ -283,47 +283,6 @@ extern char *bitboard2str(bitboard b, char *buffer, int bufferSize);
  */
 extern char *fieldNotation(int index, char *buffer, int bufferSize);
 
-
-#ifdef _MSC_VER
-#define bitScan(b)                                  \
-({                                                  \
-    int r = 0;                                      \
-    _BitScanForward64(&r, b);                         \
-    r;                                              \
-})
-#elif defined(__x86_64__)
-#define bitScan(b)                                  \
-({                                                  \
-    bitboard __res;                                 \
-    __asm__("bsfq %0, %0" : "=r" (__res) : "0" (b));   \
-    (int) __res;                                    \
-})
-#else
-    #define __EXTERN_BITSCAN__
-    extern int bitScan(bitboard b);
-#endif
-
-
-
-#if defined(_MSC_VER) && defined(__INTEL_COMPILER)
-    #define popCount(b) _mm_popcnt_u64(b)
-#elif defined(_MSC_VER)
-    #define popCount(b) __popcnt64(b)
-#elif defined(__x86_64__)
-#define popCount(b)                                     \
-({                                                      \
-    bitboard __res;                                     \
-    __asm__("popcnt %1, %0" : "=r" (__res) : "r" (b));  \
-    (int) __res;                                        \
-})
-#else
-    #define __EXTERN_POPCOUNT__
-    extern int popCount(bitboard b);
-#endif
-
-
-
-
 #ifdef __cplusplus
 }
 #endif

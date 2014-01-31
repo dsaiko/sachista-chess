@@ -61,7 +61,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
         //while there are pieces
         while (pieces) {
             //get next piece
-            const int sourceIndex = bitScan(pieces);
+            const int sourceIndex = bitScanPop(pieces);
             const bitboard source = BITMASK_SQUARE(sourceIndex);
 
             //get possible moves - moves minus my onw color
@@ -80,7 +80,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
             //for all moves
             while (movesBoard) {
                 //get next move
-                const int targetIndex = bitScan(movesBoard);
+                const int targetIndex = bitScanPop(movesBoard);
                 const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 const bitboard capture = target & allPieces;
@@ -97,8 +97,6 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
                     GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0, capture);
                 }
 
-                //remove this move
-                movesBoard ^= target;
             }
 
             //check enpassant capture
@@ -108,8 +106,6 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
               GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 1, 1);
             }
 
-            //remove this piece
-            pieces ^= source;
         }
     } else {
         bitboard pieces = board->blackPawn;
@@ -118,7 +114,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
         //while there are pieces
         while (pieces) {
             //get next piece
-            const int sourceIndex = bitScan(pieces);
+            const int sourceIndex = bitScanPop(pieces);
             const bitboard source = BITMASK_SQUARE(sourceIndex);
 
             //get possible moves - moves minus my onw color
@@ -137,7 +133,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
             //for all moves
             while (movesBoard) {
                 //get next move
-                const int targetIndex = bitScan(movesBoard);
+                const int targetIndex = bitScanPop(movesBoard);
                 const bitboard target = BITMASK_SQUARE(targetIndex);
 
                 const bitboard capture = target & allPieces;
@@ -152,9 +148,6 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
                     //normal move/capture
                     GENERATE_MOVE(BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0, capture);
                 }
-
-                //remove this move
-                movesBoard ^= target;
             }
 
             //check enpassant capture
@@ -163,9 +156,6 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
               const int targetIndex = bitScan(movesBoard);
               GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 1, 1);
             }
-
-            //remove this piece
-            pieces ^= source;
         }
     }
 }
