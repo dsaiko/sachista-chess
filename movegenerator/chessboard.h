@@ -36,7 +36,7 @@ typedef enum CastlingState {
 } CastlingState;
 
 typedef struct ChessBoard {
-    ChessPieceColor nextMove;
+    PieceColor nextMove;
     CastlingState   castlingWhite;
     CastlingState   castlingBlack;
 

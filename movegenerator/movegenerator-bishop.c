@@ -214,7 +214,7 @@ INLINE bitboard BISHOP_ATTACKS(const int sourceIndex, const ChessBoard *board, c
     return MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1] | MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
 }
 
-bitboard generateAttacksBishop(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
+bitboard generateAttacksBishop(const ChessBoard *board, const PieceColor color, const bitboard allPieces)
 {
     bitboard bishop = (color == WHITE) ? (board->whiteBishop | board->whiteQueen) : (board->blackBishop | board->blackQueen);
 
@@ -229,7 +229,7 @@ void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard b
 {
     bitboard bishop;
     bitboard queen;
-    ChessPiece movingPiece;
+    Piece movingPiece;
 
     //choose color
     if (board->nextMove == WHITE) {

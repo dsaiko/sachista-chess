@@ -137,7 +137,7 @@ INLINE bitboard ROOK_ATTACKS(const int sourceIndex, const ChessBoard *board, con
     return MOVE_RANK_ATTACKS[sourceIndex][stateIndexRank] | MOVE_FILE_ATTACKS[sourceIndex][stateIndexFile];
 }
 
-bitboard generateAttacksRook(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
+bitboard generateAttacksRook(const ChessBoard *board, const PieceColor color, const bitboard allPieces)
 {
     bitboard rook = (color == WHITE) ? (board->whiteRook | board->whiteQueen) : (board->blackRook | board->blackQueen);
 
@@ -153,7 +153,7 @@ void generateMovesRook(const ChessBoard *board, Move **moves, const bitboard boa
 {
      bitboard rook;
      bitboard queen;
-     ChessPiece movingPiece;
+     Piece movingPiece;
 
 
       //configure color

@@ -33,8 +33,8 @@ char *move2str(Move *m, char *buffer, int bufferSize) {
     fieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
     outputStr(buffer, bufferSize, &position, notation);
 
-    if(m->promotionPiece != NO_PIECE) {
-        notation[0] = m->promotionPiece;
+    if(m->promotionPiece) {
+        notation[0] = PIECE2CHAR(m->promotionPiece);
         notation[1] = '\0';
         outputStr(buffer, bufferSize, &position, notation);
     }

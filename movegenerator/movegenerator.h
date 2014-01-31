@@ -27,11 +27,11 @@ void initMovesGeneratorKnight();
 void initMovesGeneratorBishop();
 void initMovesGeneratorPawn();
 
-bitboard generateAttacksKing    (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
-bitboard generateAttacksPawn    (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
-bitboard generateAttacksKnight  (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
-bitboard generateAttacksRook    (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
-bitboard generateAttacksBishop  (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
+bitboard generateAttacksKing    (const ChessBoard *board, const PieceColor color);
+bitboard generateAttacksPawn    (const ChessBoard *board, const PieceColor color);
+bitboard generateAttacksKnight  (const ChessBoard *board, const PieceColor color);
+bitboard generateAttacksRook    (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
+bitboard generateAttacksBishop  (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
 
 void generateMovesKing  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
 void generateMovesQueen (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);

@@ -35,7 +35,7 @@ void initMovesGeneratorKing() {
    }
 }
 
-bitboard generateAttacksKing(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
+bitboard generateAttacksKing(const ChessBoard *board, const PieceColor color)
 {
     bitboard piece;
     if(color == WHITE) {
@@ -56,11 +56,11 @@ int isUnderAttack(const ChessBoard *board, char color, bitboard allPieces, bitbo
     if(attacks & bitmask) return 1;
     attacks  =  generateAttacksBishop(board, color, allPieces);
     if(attacks & bitmask) return 1;
-    attacks  =  generateAttacksKnight(board, color, allPieces);
+    attacks  =  generateAttacksKnight(board, color);
     if(attacks & bitmask) return 1;
-    attacks  =  generateAttacksPawn(board, color, allPieces);
+    attacks  =  generateAttacksPawn(board, color);
     if(attacks & bitmask) return 1;
-    attacks  =  generateAttacksKing(board, color, allPieces);
+    attacks  =  generateAttacksKing(board, color);
     if(attacks & bitmask) return 1;
 
     return 0;

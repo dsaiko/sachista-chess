@@ -39,7 +39,7 @@ void initMovesGeneratorPawn() {
 }
 
 
-bitboard generateAttacksPawn(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
+bitboard generateAttacksPawn(const ChessBoard *board, const PieceColor color)
 {
     if(color == WHITE) {
         return ONE_NORTH_EAST(board->whitePawn) | ONE_NORTH_WEST(board->whitePawn);

@@ -22,8 +22,8 @@
 #include "bitboard.h"
 
 typedef struct Move {
-    ChessPiece piece           ;
-    ChessPiece promotionPiece  ;
+    Piece piece           ;
+    Piece promotionPiece  ;
 
     unsigned int    sourceIndex     ;
     unsigned int    targetIndex     ;

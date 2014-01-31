@@ -27,7 +27,7 @@ void initMovesGeneratorKnight() {
 }
 
 
-bitboard generateAttacksKnight(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
+bitboard generateAttacksKnight(const ChessBoard *board, const PieceColor color)
 {
     bitboard pieces = color == WHITE ? board->whiteKnight : board->blackKnight;
     bitboard attacks = 0;
@@ -41,7 +41,7 @@ bitboard generateAttacksKnight(const ChessBoard *board, const ChessPieceColor co
 void generateMovesKnight(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     bitboard knight;
-    ChessPiece movingPiece;
+    Piece movingPiece;
 
     if(board->nextMove == WHITE) {
         knight = board->whiteKnight;

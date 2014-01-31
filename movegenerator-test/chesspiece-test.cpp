@@ -15,19 +15,19 @@ TEST(ChessPieceTest, TestPieces)
     for(int i=0; i< (int) strlen(pieces); i++) {
         Move m;
 
-        m.piece = (ChessPiece) pieces[i];
-        m.promotionPiece = (ChessPiece) pieces[i];
+        m.piece = CHAR2PIECE(pieces[i]);
+        m.promotionPiece = CHAR2PIECE(pieces[i]);
 
         LONGS_EQUAL(m.piece, m.promotionPiece);
-        LONGS_EQUAL(m.piece, pieces[i]);
+        LONGS_EQUAL(m.piece, CHAR2PIECE(pieces[i]));
 
     }
 
     Move m;
-    m.piece = (ChessPiece) 'p';
+    m.piece = CHAR2PIECE('p');
     m.sourceIndex = INDEX_A1;
     m.targetIndex = INDEX_H8;
-    m.promotionPiece = (ChessPiece) 'K';
+    m.promotionPiece = CHAR2PIECE('K');
 
     LONGS_EQUAL(INDEX_A1, m.sourceIndex);
     LONGS_EQUAL(INDEX_H8, m.targetIndex);

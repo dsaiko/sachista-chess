@@ -75,7 +75,7 @@ int main() {
 
         gettimeofday(&end, NULL);
 
-        unsigned long long t = timeval_diff(&start, &end) / 1000;
+        double t = (timeval_diff(&start, &end) +1 )/ 1000.0;
 
         printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
                 i,
