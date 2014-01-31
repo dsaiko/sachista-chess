@@ -21,15 +21,15 @@
 #include "chesspiece.h"
 #include "bitboard.h"
 
-struct move {
-    enum chessPiece piece           ;
-    enum chessPiece promotionPiece  ;
+typedef struct Move {
+    ChessPiece piece           ;
+    ChessPiece promotionPiece  ;
 
     unsigned int    sourceIndex     ;
     unsigned int    targetIndex     ;
 
     int             isEnPassant     ;
-};
+} Move;
 
 #define IS_WHITE_CASTLING(m) (m->sourceIndex == INDEX_E1 && (m->targetIndex == INDEX_C1 || m->targetIndex == INDEX_G1))
 #define IS_BLACK_CASTLING(m) (m->sourceIndex == INDEX_E8 && (m->targetIndex == INDEX_C8 || m->targetIndex == INDEX_G8))
@@ -38,7 +38,7 @@ struct move {
 extern "C"{
 #endif
 
-extern char *move2str(struct move *m, char *buffer, int bufferSize);
+extern char *move2str(Move *m, char *buffer, int bufferSize);
 
 #ifdef __cplusplus
 }

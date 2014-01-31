@@ -29,16 +29,16 @@
 extern "C"{
 #endif
 
-enum castling {
+typedef enum CastlingState {
     KING_SIDE   = 1,
     QUEEN_SIDE  = 2,
     BOTH_SIDES  = KING_SIDE | QUEEN_SIDE
-};
+} CastlingState;
 
-struct chessBoard {
-    enum pieceColor nextMove;
-    enum castling   castlingWhite;
-    enum castling   castlingBlack;
+typedef struct ChessBoard {
+    ChessPieceColor nextMove;
+    CastlingState   castlingWhite;
+    CastlingState   castlingBlack;
 
     int             halfMoveClock;
     int             fullMoveNumber;
@@ -59,33 +59,34 @@ struct chessBoard {
 
     bitboard        enPassant;
 
-};
+} ChessBoard;
 
 #define MAX_MOVES_ARR_LENGTH    220
 
-extern struct chessBoard emptyBoard;
-extern struct chessBoard standardBoard;
+extern ChessBoard emptyBoard;
+extern ChessBoard standardBoard;
 
 #define WHITE_PIECES(b)     ((b)->whiteKing | (b)->whiteQueen | (b)->whiteRook | (b)->whiteKnight | (b)->whiteBishop | (b)->whitePawn)
 #define BLACK_PIECES(b)     ((b)->blackKing | (b)->blackQueen | (b)->blackRook | (b)->blackKnight | (b)->blackBishop | (b)->blackPawn)
 #define ALL_PIECES(b)       (WHITE_PIECES(b) | BLACK_PIECES(b))
 
-extern int               boardCmp(const struct chessBoard *board1, const struct chessBoard *board2);
+extern int               boardCmp(const ChessBoard *board1, const ChessBoard *board2);
 
-extern char*             board2str(const struct chessBoard *board, const int decorated, char *buffer, const int bufferSize);
-extern struct chessBoard boardFromString(const char *buffer);
-extern char*             board2fen(const struct chessBoard *board, char *buffer, const int bufferSize);
-extern struct chessBoard boardFromFEN(const char *fen);
+extern char*             board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize);
+extern ChessBoard boardFromString(const char *buffer);
+extern char*             board2fen(const ChessBoard *board, char *buffer, const int bufferSize);
+extern ChessBoard boardFromFEN(const char *fen);
 
 
 extern void initMovesGenerator();
-extern void generateMoves(const struct chessBoard *board, const bitboard allPieces, struct move **m);
+extern void generateMoves(const ChessBoard *board, const bitboard allPieces, Move **m);
 
 
-extern void makeMove(struct chessBoard *board0, const bitboard allPieces, const struct move *m);
-extern int isLegal(const struct chessBoard *board);
+extern void makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
+extern void undoMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
+extern int isLegal(const ChessBoard *board);
 
-extern unsigned long long perft(const struct chessBoard *board, const int depth);
+extern unsigned long long perft(ChessBoard *board, const int depth);
 
 #ifdef __cplusplus
 }

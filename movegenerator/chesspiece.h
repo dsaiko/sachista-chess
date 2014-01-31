@@ -18,7 +18,7 @@
 #ifndef SACHISTA_CHESS_PIECE_H
 #define SACHISTA_CHESS_PIECE_H
 
-enum chessPiece {
+typedef enum ChessPiece {
     NO_PIECE        = '-',
     WHITE_KING      = 'K',
     WHITE_QUEEN     = 'Q',
@@ -32,12 +32,12 @@ enum chessPiece {
     BLACK_KNIGHT    = 'n',
     BLACK_PAWN      = 'p',
     BLACK_ROOK      = 'r'
-};
+} ChessPiece;
 
-enum pieceColor {
+typedef enum ChessPieceColor {
     WHITE           = 'w',
     BLACK           = 'b'
-};
+} ChessPieceColor;
 
 
 #endif //SACHISTA_CHESS_PIECE_H

@@ -206,33 +206,30 @@ void initMovesGeneratorBishop()
     }
 }
 
-bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
+INLINE bitboard BISHOP_ATTACKS(const int sourceIndex, const ChessBoard *board, const bitboard allPieces) {
+    const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
+    const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
+
+    //add attacks
+    return MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1] | MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
+}
+
+bitboard generateAttacksBishop(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
 {
     bitboard bishop = (color == WHITE) ? (board->whiteBishop | board->whiteQueen) : (board->blackBishop | board->blackQueen);
 
     bitboard attacks = 0;
 
-       //for all bishops
-       while (bishop) {
-           //get index of next piece
-           const int sourceIndex = bitScanPop(bishop);
-
-           //get states of diagonals using magic number multiplication
-           const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
-           const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
-
-           //add attacks
-           attacks |= MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1] | MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
-       }
-
-       return attacks;
+    //for all bishops
+    while (bishop) attacks |= BISHOP_ATTACKS(bitScanPop(bishop), board, allPieces);
+    return attacks;
 }
 
-void generateMovesBishop(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     bitboard bishop;
     bitboard queen;
-    enum chessPiece movingPiece;
+    ChessPiece movingPiece;
 
     //choose color
     if (board->nextMove == WHITE) {
@@ -245,30 +242,17 @@ void generateMovesBishop(const struct chessBoard *board, struct move **moves, co
         movingPiece = BLACK_BISHOP;
     }
 
+    int sourceIndex;
+
     for(int i=0; i<2; i++) {
         //for all bishops
         while (bishop) {
-            //get next piece index
-            const int sourceIndex = bitScanPop(bishop);
-
-            //get states of diagonals using magic number multiplication
-            const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
-            const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
-
+            sourceIndex = bitScanPop(bishop);
             //get all moves using precomputed values
-            bitboard movesBoard = MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1];
-            movesBoard |= MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
-
-            //remove own color from possible moves
-            movesBoard &= boardAvailable;
+            bitboard movesBoard = BISHOP_ATTACKS(sourceIndex, board, allPieces) & boardAvailable;
 
             //for all moves
-            while (movesBoard) {
-                //get next move
-                const int targetIndex = bitScanPop(movesBoard);
-                //add move to array
-                GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
-            }
+            while (movesBoard) GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
         }
 
         bishop = queen;

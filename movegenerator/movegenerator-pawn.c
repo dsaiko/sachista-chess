@@ -39,7 +39,7 @@ void initMovesGeneratorPawn() {
 }
 
 
-bitboard generateAttacksPawn(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
+bitboard generateAttacksPawn(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
 {
     if(color == WHITE) {
         return ONE_NORTH_EAST(board->whitePawn) | ONE_NORTH_WEST(board->whitePawn);
@@ -49,7 +49,7 @@ bitboard generateAttacksPawn(const struct chessBoard *board, enum pieceColor col
 }
 
 
-void generateMovesPawn(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesPawn(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     const bitboard emptyBoard = ~allPieces;
 
@@ -96,10 +96,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
 
             //check enpassant capture
             movesBoard = attacks & board->enPassant;
-            if (movesBoard) {
-              const int targetIndex = bitScan(movesBoard);
-              GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 1);
-            }
+            if (movesBoard) GENERATE_MOVE(WHITE_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
 
         }
     } else {
@@ -143,10 +140,7 @@ void generateMovesPawn(const struct chessBoard *board, struct move **moves, cons
 
             //check enpassant capture
             movesBoard = attacks & board->enPassant;
-            if (movesBoard) {
-              const int targetIndex = bitScan(movesBoard);
-              GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, targetIndex, 1);
-            }
+            if (movesBoard) GENERATE_MOVE(BLACK_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
         }
     }
 }

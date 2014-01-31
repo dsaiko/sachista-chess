@@ -19,7 +19,7 @@
 
 #define BUFFERSIZE 512
 
-struct chessBoard emptyBoard = {
+ChessBoard emptyBoard = {
       WHITE,
       0,
       0,
@@ -30,7 +30,7 @@ struct chessBoard emptyBoard = {
       0
 };
 
-struct chessBoard standardBoard = {
+ChessBoard standardBoard = {
       WHITE,
       BOTH_SIDES,
       BOTH_SIDES,
@@ -51,7 +51,7 @@ struct chessBoard standardBoard = {
       0
 };
 
-int boardCmp(const struct chessBoard *board1, const struct chessBoard *board2)
+int boardCmp(const ChessBoard *board1, const ChessBoard *board2)
 {
 
     if(board1->nextMove         !=      board2->nextMove)       return -1;
@@ -85,8 +85,8 @@ void outputStr(char *buffer, const int bufferSize, int *position, const char *st
 void outputChar(char *buffer, const int bufferSize, int *position, const char c);
 void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
 
-struct chessBoard boardFromFEN(const char *fen) {
-    struct chessBoard board = emptyBoard;
+ChessBoard boardFromFEN(const char *fen) {
+    ChessBoard board = emptyBoard;
 
     //rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     //8/1K6/1Q6/8/5r2/4rk2/8/8 w - -
@@ -155,7 +155,7 @@ struct chessBoard boardFromFEN(const char *fen) {
 
     pos++; //skip space
     if(pos < len)
-        board.nextMove = (enum pieceColor) fen[pos++];
+        board.nextMove = (ChessPieceColor) fen[pos++];
 
     pos++; //skip space
     while(pos < len) {
@@ -226,7 +226,7 @@ struct chessBoard boardFromFEN(const char *fen) {
     return board;
 }
 
-char*  board2str(const struct chessBoard *board, const int decorated, char *buffer, const int bufferSize)
+char*  board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize)
 {
     char header[] = "  a b c d e f g h\n";
     int position = 0;
@@ -307,8 +307,8 @@ char*  board2str(const struct chessBoard *board, const int decorated, char *buff
 
 }
 
-struct chessBoard boardFromString(const char *buffer) {
-    struct chessBoard board = emptyBoard;
+ChessBoard boardFromString(const char *buffer) {
+    ChessBoard board = emptyBoard;
     if(strlen(buffer) > BUFFERSIZE) return board;
 
     char str[BUFFERSIZE];
@@ -389,7 +389,7 @@ struct chessBoard boardFromString(const char *buffer) {
     return board;
 }
 
-char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSize) {
+char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
     // get the pieces
     char data[BUFFERSIZE];
     board2str(board, 0, data, BUFFERSIZE);
@@ -465,7 +465,7 @@ char* board2fen(const struct chessBoard *board, char *buffer, const int bufferSi
 }
 
 
-unsigned long long perft(const struct chessBoard *board, const int depth)
+unsigned long long perft(ChessBoard *board, const int depth)
 {
     unsigned long long count = 0;
 
@@ -474,19 +474,18 @@ unsigned long long perft(const struct chessBoard *board, const int depth)
     }
 
     //compute directly
-    struct move moves[MAX_MOVES_ARR_LENGTH];
-    struct move *pointer = moves;
+    Move moves[MAX_MOVES_ARR_LENGTH];
+    Move *pointer = moves;
     const bitboard allPieces = ALL_PIECES(board);
     generateMoves(board, allPieces, &pointer);
 
-    struct chessBoard nextBoard = *board;
-    struct move *iterator = moves;
+    Move *iterator = moves;
     while(iterator < pointer) {
-        makeMove(&nextBoard, allPieces, iterator++);
-        if(isLegal(&nextBoard)) {
-            count += perft(&nextBoard, depth -1);
+        makeMove(board, allPieces, iterator);
+        if(isLegal(board)) {
+            count += perft(board, depth -1);
         }
-        nextBoard = *board;
+        undoMove(board, allPieces, iterator++);
     }
 
     return count;

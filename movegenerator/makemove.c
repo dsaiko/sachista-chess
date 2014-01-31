@@ -20,8 +20,52 @@
 #include "move.h"
 
 
-void makeMove(struct chessBoard *board, const bitboard allPieces, const struct move *m) {
+typedef struct UndoInfo {
+    CastlingState  castlingState;
+    int            halfMoveClock;
 
+    ChessBoard     board;
+} UndoInfo;
+
+UndoInfo   undoInfoArray[10];
+UndoInfo   *undoIterator = undoInfoArray;
+
+
+void undoMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
+    undoIterator --;
+
+//    bitboard        whiteKing,
+//                    whiteQueen,
+//                    whiteRook,
+//                    whiteKnight,
+//                    whiteBishop,
+//                    whitePawn;
+
+//    bitboard        blackKing,
+//                    blackQueen,
+//                    blackRook,
+//                    blackKnight,
+//                    blackBishop,
+//                    blackPawn;
+
+//    bitboard        enPassant;
+
+    board->halfMoveClock = undoIterator->halfMoveClock;
+    if(board->nextMove == WHITE) {
+
+        board->fullMoveNumber--;
+        board->nextMove = BLACK;
+        board->castlingBlack = undoIterator->castlingState;
+
+    } else {
+        board->nextMove = WHITE;
+        board->castlingWhite = undoIterator->castlingState;
+
+    }
+    *board = undoIterator->board;
+}
+
+void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
     //en passant target
     board->enPassant = 0;
 
@@ -30,10 +74,12 @@ void makeMove(struct chessBoard *board, const bitboard allPieces, const struct m
     const int isCapture = (target & allPieces) || m->isEnPassant;
 
 
+    undoIterator->board = *board;
     //APPLY MOVE
-    board->halfMoveClock++;
+    undoIterator->halfMoveClock = board->halfMoveClock++;
 
     if(board->nextMove == WHITE) {
+        undoIterator->castlingState = board->castlingWhite;
 
         if(m->piece == WHITE_KNIGHT) {
                 board->whiteKnight ^= source | target;
@@ -52,7 +98,7 @@ void makeMove(struct chessBoard *board, const bitboard allPieces, const struct m
         } else if(m->piece == WHITE_KING) {
                 board->whiteKing ^= source | target;
                 board->castlingWhite = 0;
-                if (IS_WHITE_CASTLING(m)) {
+                if (IS_WHITE_CASTLING(m)) {                    
                     if (m->targetIndex == INDEX_C1) {
                         board->whiteRook ^= BITMASK_A1 | BITMASK_D1;
                     } else {
@@ -110,6 +156,8 @@ void makeMove(struct chessBoard *board, const bitboard allPieces, const struct m
 
         board->nextMove = BLACK;
     } else {
+        undoIterator->castlingState = board->castlingBlack;
+
         if(m->piece == BLACK_KNIGHT) {
                 board->blackKnight ^= source | target;
         } else if(m->piece == BLACK_BISHOP) {
@@ -186,6 +234,8 @@ void makeMove(struct chessBoard *board, const bitboard allPieces, const struct m
         board->fullMoveNumber++;
         board->nextMove = WHITE;
     }
+
+    undoIterator++;
 }
 
 
@@ -214,7 +264,7 @@ extern bitboard BLACK_PAWN_DOUBLE_MOVES[64];
 extern bitboard BLACK_PAWN_ATTACKS[64];
 extern bitboard KNIGHT_MOVES[64];
 
-int isLegal(const struct chessBoard *board) {
+int isLegal(const ChessBoard *board) {
    const bitboard allPieces = ALL_PIECES(board);
    bitboard rooks;
    bitboard bishops;

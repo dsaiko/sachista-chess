@@ -13,21 +13,21 @@ TEST(ChessPieceTest, TestPieces)
     char pieces[] = {"-KQBNPRkqbnpr\0"};
 
     for(int i=0; i< (int) strlen(pieces); i++) {
-        move m;
+        Move m;
 
-        m.piece = (chessPiece) pieces[i];
-        m.promotionPiece = (chessPiece) pieces[i];
+        m.piece = (ChessPiece) pieces[i];
+        m.promotionPiece = (ChessPiece) pieces[i];
 
         LONGS_EQUAL(m.piece, m.promotionPiece);
         LONGS_EQUAL(m.piece, pieces[i]);
 
     }
 
-    move m;
-    m.piece = (chessPiece) 'p';
+    Move m;
+    m.piece = (ChessPiece) 'p';
     m.sourceIndex = INDEX_A1;
     m.targetIndex = INDEX_H8;
-    m.promotionPiece = (chessPiece) 'K';
+    m.promotionPiece = (ChessPiece) 'K';
 
     LONGS_EQUAL(INDEX_A1, m.sourceIndex);
     LONGS_EQUAL(INDEX_H8, m.targetIndex);

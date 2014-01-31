@@ -16,7 +16,7 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right);
 
 #define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, ISENPASSANT)                                      \
        {                                                                                                                            \
-            *(*moves) =  (struct move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (ISENPASSANT)}; \
+            *(*moves) =  (Move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (ISENPASSANT)}; \
             (*moves)++;                                                                                                             \
        }
 
@@ -27,18 +27,18 @@ void initMovesGeneratorKnight();
 void initMovesGeneratorBishop();
 void initMovesGeneratorPawn();
 
-bitboard generateAttacksKing    (const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
-bitboard generateAttacksPawn    (const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
-bitboard generateAttacksKnight  (const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
-bitboard generateAttacksRook    (const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
-bitboard generateAttacksBishop  (const struct chessBoard *board, enum pieceColor color, bitboard allPieces);
+bitboard generateAttacksKing    (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
+bitboard generateAttacksPawn    (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
+bitboard generateAttacksKnight  (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
+bitboard generateAttacksRook    (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
+bitboard generateAttacksBishop  (const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces);
 
-void generateMovesKing  (const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesQueen (const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesPawn  (const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesRook  (const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesBishop(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesKnight(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesKing  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesQueen (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesPawn  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesRook  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesKnight(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
 
 #ifdef __cplusplus
 }

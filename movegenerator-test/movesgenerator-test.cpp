@@ -4,9 +4,9 @@
 
 void testMoves(const int expectedCount, const char *boardString)
 {
-    struct chessBoard board = boardFromString(boardString);
-    struct move moves[256];
-    struct move *pointer = moves;
+    ChessBoard board = boardFromString(boardString);
+    Move moves[256];
+    Move *pointer = moves;
 
     const bitboard allPieces = ALL_PIECES(&board);
     generateMoves(&board, allPieces, &pointer);
@@ -16,9 +16,9 @@ void testMoves(const int expectedCount, const char *boardString)
 
 void testMovesFromFen(const int expectedCount, const char *boardString)
 {
-    struct chessBoard board = boardFromFEN(boardString);
-    struct move moves[256];
-    struct move *pointer = moves;
+    ChessBoard board = boardFromFEN(boardString);
+    Move moves[256];
+    Move *pointer = moves;
 
     const bitboard allPieces = ALL_PIECES(&board);
     generateMoves(&board, allPieces, &pointer);
@@ -28,21 +28,21 @@ void testMovesFromFen(const int expectedCount, const char *boardString)
 
 void testValidMoves(const int expectedCount, const char *boardString)
 {
-    struct chessBoard board = boardFromString(boardString);
-    struct move moves[256];
-    struct move *pointer = moves;
+    ChessBoard board = boardFromString(boardString);
+    Move moves[256];
+    Move *pointer = moves;
 
     const bitboard allPieces = ALL_PIECES(&board);
     generateMoves(&board, allPieces, &pointer);
 
     int validCount = 0;
-    struct move *iterator = moves;
+    Move *iterator = moves;
     while(iterator < pointer) {
-        struct chessBoard nextBoard = board;
-        makeMove(&nextBoard, allPieces, iterator++);
-        if(isLegal(&nextBoard)) {
+        makeMove(&board, allPieces, iterator);
+        if(isLegal(&board)) {
             validCount ++;
         }
+        undoMove(&board, allPieces, iterator++);
     }
 
     LONGS_EQUAL(expectedCount, validCount);
@@ -55,7 +55,7 @@ TEST_GROUP(MovesGenerator)
 
 TEST(MovesGenerator, PerfT)
 {
-    chessBoard board = standardBoard;
+    ChessBoard board = standardBoard;
     LONGS_EQUAL(197281, perft(&board, 4));
 
     board = boardFromFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");

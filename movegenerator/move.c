@@ -22,7 +22,7 @@ void outputStr(char *buffer, const int bufferSize, int *position, const char *st
 void outputChar(char *buffer, const int bufferSize, int *position, const char c);
 void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
 
-char *move2str(struct move *m, char *buffer, int bufferSize) {
+char *move2str(Move *m, char *buffer, int bufferSize) {
     int position = 0;
 
     char notation[3];

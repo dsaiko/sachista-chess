@@ -35,7 +35,7 @@ void initMovesGeneratorKing() {
    }
 }
 
-bitboard generateAttacksKing(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
+bitboard generateAttacksKing(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
 {
     bitboard piece;
     if(color == WHITE) {
@@ -50,7 +50,7 @@ bitboard generateAttacksKing(const struct chessBoard *board, enum pieceColor col
 }
 
 
-int isUnderAttack(const struct chessBoard *board, char color, bitboard allPieces, bitboard bitmask) {
+int isUnderAttack(const ChessBoard *board, char color, bitboard allPieces, bitboard bitmask) {
 
     bitboard attacks = generateAttacksRook(board, color, allPieces);
     if(attacks & bitmask) return 1;
@@ -67,7 +67,7 @@ int isUnderAttack(const struct chessBoard *board, char color, bitboard allPieces
 }
 
 
-void generateMovesKing(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesKing(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
 
     //set up color
@@ -80,12 +80,7 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
             bitboard movesBoard = KING_MOVES[sourceIndex] & boardAvailable;
 
             //for all moves
-            while (movesBoard) {
-
-                //get next move
-                const int targetIndex = bitScanPop(movesBoard);
-                GENERATE_MOVE(WHITE_KING, NO_PIECE, sourceIndex, targetIndex, 0);
-            }
+            while (movesBoard) GENERATE_MOVE(WHITE_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
 
             if (!board->castlingWhite) return;
 
@@ -113,11 +108,7 @@ void generateMovesKing(const struct chessBoard *board, struct move **moves, cons
             bitboard movesBoard = KING_MOVES[sourceIndex] & boardAvailable;
 
             //for all moves
-            while (movesBoard) {
-                //get next move
-                const int targetIndex = bitScanPop(movesBoard);
-                GENERATE_MOVE(BLACK_KING, NO_PIECE, sourceIndex, targetIndex, 0);
-            }
+            while (movesBoard) GENERATE_MOVE(BLACK_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
 
             if (!board->castlingBlack) return;
 

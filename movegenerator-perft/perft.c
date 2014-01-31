@@ -67,7 +67,7 @@ int main() {
    int i;
    for (i = 1; i <= 7; i++) {
 
-        const struct chessBoard board = standardBoard;
+        ChessBoard board = standardBoard;
 
         gettimeofday(&start, NULL);
 

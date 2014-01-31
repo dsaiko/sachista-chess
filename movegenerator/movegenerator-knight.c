@@ -27,7 +27,7 @@ void initMovesGeneratorKnight() {
 }
 
 
-bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor color, bitboard allPieces)
+bitboard generateAttacksKnight(const ChessBoard *board, const ChessPieceColor color, const bitboard allPieces)
 {
     bitboard pieces = color == WHITE ? board->whiteKnight : board->blackKnight;
     bitboard attacks = 0;
@@ -38,10 +38,10 @@ bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor c
     return attacks;
 }
 
-void generateMovesKnight(const struct chessBoard *board, struct move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesKnight(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
     bitboard knight;
-    enum chessPiece movingPiece;
+    ChessPiece movingPiece;
 
     if(board->nextMove == WHITE) {
         knight = board->whiteKnight;
@@ -54,14 +54,9 @@ void generateMovesKnight(const struct chessBoard *board, struct move **moves, co
     // while there are knight pieces
     while (knight) {
          int sourceIndex = bitScanPop(knight);
-
          // get possible moves - moves minus my onw color
          bitboard movesBoard = KNIGHT_MOVES[sourceIndex] & boardAvailable;
-
          // for all moves
-         while (movesBoard) {
-             int targetIndex = bitScanPop(movesBoard);
-             GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, targetIndex, 0);
-         }
+         while (movesBoard) GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
     }
 }
