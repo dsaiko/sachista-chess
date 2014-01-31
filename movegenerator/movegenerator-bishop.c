@@ -215,19 +215,14 @@ bitboard generateAttacksBishop(const struct chessBoard *board, enum pieceColor c
        //for all bishops
        while (bishop) {
            //get index of next piece
-           const int sourceIndex = bitScan(bishop);
-           const bitboard source =  BITMASK_SQUARE(sourceIndex);
+           const int sourceIndex = bitScanPop(bishop);
 
            //get states of diagonals using magic number multiplication
            const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
            const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
 
            //add attacks
-           attacks |= MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1];
-           attacks |= MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
-
-           //remove the current bishop
-           bishop ^= source;
+           attacks |= MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1] | MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
        }
 
        return attacks;

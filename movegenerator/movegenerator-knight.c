@@ -33,13 +33,7 @@ bitboard generateAttacksKnight(const struct chessBoard *board, enum pieceColor c
     bitboard attacks = 0;
 
     // while there are knight pieces
-    while (pieces) {
-        int sourceIndex = bitScan(pieces);
-
-        // get attacks
-        attacks |= KNIGHT_MOVES[sourceIndex];
-        pieces ^= BITMASK_SQUARE(sourceIndex);
-    }
+    while (pieces) attacks |= KNIGHT_MOVES[bitScanPop(pieces)];
 
     return attacks;
 }

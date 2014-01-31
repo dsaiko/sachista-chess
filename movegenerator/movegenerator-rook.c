@@ -137,8 +137,7 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
     //for all rooks
     while (rook) {
         //get next rook
-        const int sourceIndex = bitScan(rook);
-        const bitboard source = BITMASK_SQUARE(sourceIndex);
+        const int sourceIndex = bitScanPop(rook);
 
         //use magic multipliers to get occupancy state index
         const int stateIndexRank = (int) ((allPieces & MOVE_RANK_MASK[sourceIndex]) >> MOVE_RANK_SHIFT[sourceIndex]);
@@ -147,9 +146,6 @@ bitboard generateAttacksRook(const struct chessBoard *board, enum pieceColor col
         //get possible attacks for field / occupancy state index
         attacks |= MOVE_RANK_ATTACKS[sourceIndex][stateIndexRank];
         attacks |= MOVE_FILE_ATTACKS[sourceIndex][stateIndexFile];
-
-        //remove this rook
-        rook ^= source;
     }
 
     return attacks;
