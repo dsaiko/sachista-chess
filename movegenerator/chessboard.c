@@ -464,7 +464,7 @@ char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
 }
 
 
-unsigned long long perft(ChessBoard *board, const int depth)
+unsigned long long perft(const ChessBoard *board, const int depth)
 {
     unsigned long long count = 0;
 
@@ -479,12 +479,15 @@ unsigned long long perft(ChessBoard *board, const int depth)
     generateMoves(board, allPieces, &pointer);
 
     Move *iterator = moves;
+    ChessBoard makeBoard = *board;
     while(iterator < pointer) {
-        makeMove(board, allPieces, iterator);
-        if(isLegal(board)) {
-            count += perft(board, depth -1);
+        makeMove(&makeBoard, allPieces, iterator);
+        if(isLegal(&makeBoard)) {
+            count += perft(&makeBoard, depth -1);
         }
-        undoMove(board, allPieces, iterator++);
+        undoMove(&makeBoard, allPieces, iterator);
+        iterator ++;
+        makeBoard = *board;
     }
 
     return count;

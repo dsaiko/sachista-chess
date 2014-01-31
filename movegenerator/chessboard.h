@@ -86,7 +86,7 @@ extern void makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m
 extern void undoMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
 extern int isLegal(const ChessBoard *board);
 
-extern unsigned long long perft(ChessBoard *board, const int depth);
+extern unsigned long long perft(const ChessBoard *board, const int depth);
 
 #ifdef __cplusplus
 }
