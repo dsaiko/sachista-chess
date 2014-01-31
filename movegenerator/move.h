@@ -31,9 +31,6 @@ typedef struct Move {
     int             isEnPassant     ;
 } Move;
 
-#define IS_WHITE_CASTLING(m) (m->sourceIndex == INDEX_E1 && (m->targetIndex == INDEX_C1 || m->targetIndex == INDEX_G1))
-#define IS_BLACK_CASTLING(m) (m->sourceIndex == INDEX_E8 && (m->targetIndex == INDEX_C8 || m->targetIndex == INDEX_G8))
-
 #ifdef __cplusplus
 extern "C"{
 #endif

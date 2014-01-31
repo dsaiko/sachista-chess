@@ -28,22 +28,9 @@ void testMovesFromFen(const int expectedCount, const char *boardString)
 
 void testValidMoves(const int expectedCount, const char *boardString)
 {
+
     ChessBoard board = boardFromString(boardString);
-    Move moves[256];
-    Move *pointer = moves;
-
-    const bitboard allPieces = ALL_PIECES(&board);
-    generateMoves(&board, allPieces, &pointer);
-
-    int validCount = 0;
-    Move *iterator = moves;
-    while(iterator < pointer) {
-        makeMove(&board, allPieces, iterator);
-        if(isLegal(&board)) {
-            validCount ++;
-        }
-        undoMove(&board, allPieces, iterator++);
-    }
+    int validCount = perft(&board, 1);
 
     LONGS_EQUAL(expectedCount, validCount);
 }
