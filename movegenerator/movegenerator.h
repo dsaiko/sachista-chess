@@ -21,6 +21,30 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right);
        }
 
 
+int MOVE_RANK_SHIFT[64];
+bitboard MOVE_RANK_MASK[64];
+bitboard MOVE_RANK_ATTACKS[64][64];
+bitboard MOVE_FILE_MASK[64];
+bitboard MOVE_FILE_MAGIC[64];
+bitboard MOVE_FILE_ATTACKS[64][64];
+
+bitboard MOVE_A1H8_MASK[64];
+bitboard MOVE_A1H8_MAGIC[64];
+bitboard MOVE_A8H1_MASK[64];
+bitboard MOVE_A8H1_MAGIC[64];
+
+bitboard MOVE_A1H8_ATTACKS[64][64];
+bitboard MOVE_A8H1_ATTACKS[64][64];
+
+bitboard KING_MOVES[64];
+bitboard WHITE_PAWN_MOVES[64];
+bitboard WHITE_PAWN_DOUBLE_MOVES[64];
+bitboard WHITE_PAWN_ATTACKS[64];
+bitboard BLACK_PAWN_MOVES[64];
+bitboard BLACK_PAWN_DOUBLE_MOVES[64];
+bitboard BLACK_PAWN_ATTACKS[64];
+bitboard KNIGHT_MOVES[64];
+
 void initMovesGeneratorKing();
 void initMovesGeneratorRook();
 void initMovesGeneratorKnight();

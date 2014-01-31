@@ -481,12 +481,10 @@ unsigned long long perft(const ChessBoard *board, const int depth)
     Move *iterator = moves;
     ChessBoard makeBoard = *board;
     while(iterator < pointer) {
-        makeMove(&makeBoard, allPieces, iterator);
+        makeMove(&makeBoard, allPieces, iterator ++);
         if(isLegal(&makeBoard)) {
             count += perft(&makeBoard, depth -1);
         }
-        undoMove(&makeBoard, allPieces, iterator);
-        iterator ++;
         makeBoard = *board;
     }
 

@@ -1,8 +1,6 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
-bitboard KING_MOVES[64];
-
 const bitboard WHITE_CASTLE_OO_EMPTY = BITMASK_F1 | BITMASK_G1;
 const bitboard WHITE_CASTLE_OO_ATTACKS = BITMASK_E1 | BITMASK_F1 | BITMASK_G1;
 const bitboard WHITE_CASTLE_OOO_EMPTY = BITMASK_B1 | BITMASK_C1 | BITMASK_D1;

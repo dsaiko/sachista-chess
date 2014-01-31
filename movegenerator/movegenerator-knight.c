@@ -1,10 +1,6 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
-
-bitboard KNIGHT_MOVES[64];
-
-
 void initMovesGeneratorKnight() {
     //for all fields
     for (int i = 0; i < 64; i++) {

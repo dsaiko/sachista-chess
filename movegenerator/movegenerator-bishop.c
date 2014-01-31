@@ -6,13 +6,6 @@
 int A1H8_INDEX[64];
 int A8H1_INDEX[64];
 
-bitboard MOVE_A1H8_MASK[64];
-bitboard MOVE_A1H8_MAGIC[64];
-bitboard MOVE_A8H1_MASK[64];
-bitboard MOVE_A8H1_MAGIC[64];
-
-bitboard MOVE_A1H8_ATTACKS[64][64];
-bitboard MOVE_A8H1_ATTACKS[64][64];
 
 
 const bitboard MAGIC_A8H1[] = {

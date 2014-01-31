@@ -1,15 +1,6 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
-bitboard WHITE_PAWN_MOVES[64];
-bitboard WHITE_PAWN_DOUBLE_MOVES[64];
-bitboard WHITE_PAWN_ATTACKS[64];
-bitboard BLACK_PAWN_MOVES[64];
-bitboard BLACK_PAWN_DOUBLE_MOVES[64];
-bitboard BLACK_PAWN_ATTACKS[64];
-
-
-
 void initMovesGeneratorPawn() {
     //for all fields
     for (int i = 0; i < 64; i++) {
