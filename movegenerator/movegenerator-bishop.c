@@ -245,7 +245,7 @@ void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard b
             bitboard movesBoard = BISHOP_ATTACKS(sourceIndex, board, allPieces) & boardAvailable;
 
             //for all moves
-            while (movesBoard) GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+            while (movesBoard) GENERATE_MOVE(moves, movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
         }
 
         bishop = queen;

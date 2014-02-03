@@ -168,7 +168,7 @@ void generateMovesRook(const ChessBoard *board, Move **moves, const bitboard boa
               bitboard movesBoard = ROOK_ATTACKS(sourceIndex, board, allPieces) & boardAvailable;
 
               //for all moves
-              while (movesBoard) GENERATE_MOVE(movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+              while (movesBoard) GENERATE_MOVE(moves, movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
           }
           rook = queen;
           movingPiece = (board->nextMove == WHITE) ? WHITE_QUEEN : BLACK_QUEEN;

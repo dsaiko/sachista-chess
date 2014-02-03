@@ -9,16 +9,16 @@ void initMovesGenerator() {
     initMovesGeneratorRook();
 }
 
-void generateMoves(const ChessBoard *board, const bitboard allPieces, Move **m)
+int generateMoves(const ChessBoard *board, const bitboard allPieces, Move **moves)
 {
     const bitboard opponentPieces = (board->nextMove == WHITE) ? BLACK_PIECES(board) : WHITE_PIECES(board);
     const bitboard boardAvailable = (board->nextMove == WHITE) ? ~WHITE_PIECES(board) : ~BLACK_PIECES(board);
 
-    generateMovesKnight (board, m, boardAvailable, allPieces, opponentPieces);
-    generateMovesPawn   (board, m, boardAvailable, allPieces, opponentPieces);
-    generateMovesKing   (board, m, boardAvailable, allPieces, opponentPieces);
-    generateMovesRook   (board, m, boardAvailable, allPieces, opponentPieces);
-    generateMovesBishop (board, m, boardAvailable, allPieces, opponentPieces);
+    generateMovesKnight (board, moves, boardAvailable);
+    generateMovesPawn   (board, moves, allPieces, opponentPieces);
+    generateMovesKing   (board, moves, boardAvailable, allPieces, opponentPieces);
+    generateMovesRook   (board, moves, boardAvailable, allPieces, opponentPieces);
+    generateMovesBishop (board, moves, boardAvailable, allPieces, opponentPieces);
 }
 
 bitboard moveBitBoard0(bitboard b, const int up, const int right) {

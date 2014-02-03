@@ -61,7 +61,7 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
                 board->whitePawn ^= source | target;
                 if ((m->targetIndex - m->sourceIndex) > 10) {
                     board->enPassantIndex = m->sourceIndex + 8;
-                } else if (m->promotionPiece != NO_PIECE) {
+                } else if (m->promotionPiece) {
                     board->whitePawn ^= target;
                     if (m->promotionPiece == WHITE_QUEEN) {
                         board->whiteQueen |= target;
@@ -82,15 +82,15 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
             //check capture
             if (m->isEnPassant) {
                 board->blackPawn ^= ONE_SOUTH(target);
-            } else if ((board->blackBishop & target) != 0) {
+            } else if (board->blackBishop & target) {
                 board->blackBishop ^= target;
-            } else if ((board->blackKnight & target) != 0) {
+            } else if (board->blackKnight & target) {
                 board->blackKnight ^= target;
-            } else if ((board->blackPawn & target) != 0) {
+            } else if (board->blackPawn & target) {
                 board->blackPawn ^= target;
-            } else if ((board->blackQueen & target) != 0) {
+            } else if (board->blackQueen & target) {
                 board->blackQueen ^= target;
-            } else if ((board->blackRook & target) != 0) {
+            } else if (board->blackRook & target) {
                 board->blackRook ^= target;
                 if (m->targetIndex == INDEX_A8) {
                     board->castlingBlack &= ~QUEEN_SIDE;
@@ -131,7 +131,7 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
                 board->blackPawn ^= source | target;
                 if ((m->sourceIndex - m->targetIndex) > 10) { // double move
                     board->enPassantIndex = m->sourceIndex - 8;
-                } else if (m->promotionPiece != NO_PIECE) {
+                } else if (m->promotionPiece) {
                     board->blackPawn ^= target;
                     if (m->promotionPiece == BLACK_QUEEN) {
                         board->blackQueen |= target;
@@ -152,15 +152,15 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
 
             if (m->isEnPassant) {
                 board->whitePawn ^= ONE_NORTH(target);
-            } else if ((board->whiteBishop & target) != 0) {
+            } else if (board->whiteBishop & target) {
                 board->whiteBishop ^= target;
-            } else if ((board->whiteKnight & target) != 0) {
+            } else if (board->whiteKnight & target) {
                 board->whiteKnight ^= target;
-            } else if ((board->whitePawn & target) != 0) {
+            } else if (board->whitePawn & target) {
                 board->whitePawn ^= target;
-            } else if ((board->whiteQueen & target) != 0) {
+            } else if (board->whiteQueen & target) {
                 board->whiteQueen ^= target;
-            } else if ((board->whiteRook & target) != 0) {
+            } else if (board->whiteRook & target) {
                 board->whiteRook ^= target;
                 if (m->targetIndex == INDEX_A1) {
                     board->castlingWhite &= ~QUEEN_SIDE;

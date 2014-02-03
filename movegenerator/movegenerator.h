@@ -14,12 +14,10 @@ extern "C"{
 bitboard moveBitBoard0(bitboard b, const int up, const int right);
 
 
-#define GENERATE_MOVE(PIECE, PROMOTIONPIECE, SOURCEINDEX, TARGETINDEX, ISENPASSANT)                                      \
-       {                                                                                                                            \
-            *(*moves) =  (Move){(PIECE), (PROMOTIONPIECE), (SOURCEINDEX), (TARGETINDEX), (ISENPASSANT)}; \
-            (*moves)++;                                                                                                             \
-       }
-
+INLINE void GENERATE_MOVE(Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
+    *(*moves) = (Move){(piece), (promotionPiece), (sourceIndex), (targetIndex), (isEnPassant)};
+    (*moves)++;
+}
 
 int MOVE_RANK_SHIFT[64];
 bitboard MOVE_RANK_MASK[64];
@@ -59,10 +57,10 @@ bitboard generateAttacksBishop  (const ChessBoard *board, const PieceColor color
 
 void generateMovesKing  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
 void generateMovesQueen (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesPawn  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesPawn  (const ChessBoard *board, Move **moves, const bitboard allPieces, const bitboard opponentPieces);
 void generateMovesRook  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
 void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesKnight(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
+void generateMovesKnight(const ChessBoard *board, Move **moves, const bitboard boardAvailable);
 
 #ifdef __cplusplus
 }

@@ -64,28 +64,26 @@ int main() {
 
    struct timeval start, end;
 
-   int i;
-   for (i = 1; i <= 7; i++) {
+   int depth = 6;
 
         ChessBoard board = standardBoard;
 
         gettimeofday(&start, NULL);
 
-        unsigned long long n =  perft(&board, i);
+        unsigned long long n =  perft(&board, depth);
 
         gettimeofday(&end, NULL);
 
         double t = (timeval_diff(&start, &end) +1 )/ 1000.0;
 
         printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
-                i,
+                depth,
                 ((double) t / 1000.0),
                 (unsigned long long) ((double) n / ((double) t / 1000.0)),
                 n
         );
 
         fflush(stdout);
-   }
 
     return 0;
 }

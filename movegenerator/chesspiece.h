@@ -22,56 +22,26 @@
 
 typedef enum Piece {
     NO_PIECE        = 0,
-    WHITE_KING      = 1,
-    WHITE_QUEEN     = 2,
-    WHITE_BISHOP    = 3,
-    WHITE_KNIGHT    = 4,
-    WHITE_PAWN      = 5,
-    WHITE_ROOK      = 6,
-    BLACK_KING      = 7,
-    BLACK_QUEEN     = 8,
-    BLACK_BISHOP    = 9,
-    BLACK_KNIGHT    = 10,
-    BLACK_PAWN      = 11,
-    BLACK_ROOK      = 12
+    WHITE_KING      = 'K',
+    WHITE_QUEEN     = 'Q',
+    WHITE_BISHOP    = 'B',
+    WHITE_KNIGHT    = 'N',
+    WHITE_PAWN      = 'P',
+    WHITE_ROOK      = 'R',
+    BLACK_KING      = 'k',
+    BLACK_QUEEN     = 'q',
+    BLACK_BISHOP    = 'b',
+    BLACK_KNIGHT    = 'n',
+    BLACK_PAWN      = 'p',
+    BLACK_ROOK      = 'r'
 } Piece;
 
 typedef enum PieceColor {
-    WHITE           = 0,
-    BLACK           = 1
+    WHITE           = 'w',
+    BLACK           = 'b'
 } PieceColor;
 
-INLINE char PIECE2CHAR(Piece piece) {
-    if(piece == WHITE_PAWN)      return  'P';
-    if(piece == BLACK_PAWN)      return  'p';
-    if(piece == WHITE_BISHOP)    return  'B';
-    if(piece == WHITE_KNIGHT)    return  'N';
-    if(piece == WHITE_ROOK)      return  'R';
-    if(piece == BLACK_BISHOP)    return  'b';
-    if(piece == BLACK_KNIGHT)    return  'n';
-    if(piece == BLACK_ROOK)      return  'r';
-    if(piece == WHITE_KING)      return  'K';
-    if(piece == WHITE_QUEEN)     return  'Q';
-    if(piece == BLACK_KING)      return  'k';
-    if(piece == BLACK_QUEEN)     return  'q';
-    return '-';
-}
 
-INLINE Piece CHAR2PIECE(char piece) {
-    if(piece == 'P') return WHITE_PAWN;
-    if(piece == 'p') return BLACK_PAWN;
-    if(piece == 'B') return WHITE_BISHOP;
-    if(piece == 'N') return WHITE_KNIGHT;
-    if(piece == 'R') return WHITE_ROOK;
-    if(piece == 'b') return BLACK_BISHOP;
-    if(piece == 'n') return BLACK_KNIGHT;
-    if(piece == 'r') return BLACK_ROOK;
-    if(piece == 'K') return WHITE_KING;
-    if(piece == 'Q') return WHITE_QUEEN;
-    if(piece == 'k') return BLACK_KING;
-    if(piece == 'q') return BLACK_QUEEN;
-    return NO_PIECE;
-}
 
 #endif //SACHISTA_CHESS_PIECE_H
 

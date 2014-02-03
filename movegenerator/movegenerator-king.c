@@ -67,7 +67,6 @@ int isUnderAttack(const ChessBoard *board, char color, bitboard allPieces, bitbo
 
 void generateMovesKing(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
 {
-
     //set up color
         if (board->nextMove == WHITE) {
             const bitboard king = board->whiteKing;
@@ -78,7 +77,7 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const bitboard boa
             bitboard movesBoard = KING_MOVES[sourceIndex] & boardAvailable;
 
             //for all moves
-            while (movesBoard) GENERATE_MOVE(WHITE_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+            while (movesBoard) GENERATE_MOVE(moves, WHITE_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
 
             if (!board->castlingWhite) return;
 
@@ -87,13 +86,13 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const bitboard boa
                 //generate oponent attacks for castling on demand only
                 if(isUnderAttack(board, BLACK, allPieces, WHITE_CASTLE_OO_ATTACKS) == 0) {
                     //add short castling move
-                    GENERATE_MOVE(WHITE_KING, NO_PIECE, sourceIndex, INDEX_G1, 0);
+                    GENERATE_MOVE(moves, WHITE_KING, NO_PIECE, sourceIndex, INDEX_G1, 0);
                 }
             }
             if ((board->castlingWhite & QUEEN_SIDE) && ((allPieces & WHITE_CASTLE_OOO_EMPTY) == 0)) {
                 if(isUnderAttack(board, BLACK, allPieces, WHITE_CASTLE_OOO_ATTACKS) == 0) {
                     //add long castling move
-                    GENERATE_MOVE(WHITE_KING, NO_PIECE, sourceIndex, INDEX_C1, 0);
+                    GENERATE_MOVE(moves, WHITE_KING, NO_PIECE, sourceIndex, INDEX_C1, 0);
                 }
             }
 
@@ -106,7 +105,7 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const bitboard boa
             bitboard movesBoard = KING_MOVES[sourceIndex] & boardAvailable;
 
             //for all moves
-            while (movesBoard) GENERATE_MOVE(BLACK_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+            while (movesBoard) GENERATE_MOVE(moves, BLACK_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
 
             if (!board->castlingBlack) return;
 
@@ -115,13 +114,13 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const bitboard boa
                 //generate oponent attacks for castling on demand only
                 if(isUnderAttack(board, WHITE, allPieces, BLACK_CASTLE_OO_ATTACKS) == 0) {
                 //add short castling move
-                    GENERATE_MOVE(BLACK_KING, NO_PIECE, sourceIndex, INDEX_G8, 0);
+                    GENERATE_MOVE(moves, BLACK_KING, NO_PIECE, sourceIndex, INDEX_G8, 0);
                 }
             }
             if ((board->castlingBlack & QUEEN_SIDE) && ((allPieces & BLACK_CASTLE_OOO_EMPTY) == 0)) {
                 if(isUnderAttack(board, WHITE, allPieces, BLACK_CASTLE_OOO_ATTACKS) == 0) {
                     //add long castling move
-                    GENERATE_MOVE(BLACK_KING, NO_PIECE, sourceIndex, INDEX_C8, 0);
+                    GENERATE_MOVE(moves, BLACK_KING, NO_PIECE, sourceIndex, INDEX_C8, 0);
                 }
             }
         }

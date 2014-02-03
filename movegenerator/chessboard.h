@@ -79,7 +79,7 @@ extern ChessBoard boardFromFEN(const char *fen);
 
 
 extern void initMovesGenerator();
-extern void generateMoves(const ChessBoard *board, const bitboard allPieces, Move **m);
+extern int generateMoves(const ChessBoard *board, const bitboard allPieces, Move **moves);
 
 
 extern void makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
