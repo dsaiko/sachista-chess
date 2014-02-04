@@ -14,11 +14,6 @@ extern "C"{
 bitboard moveBitBoard0(bitboard b, const int up, const int right);
 
 
-INLINE void GENERATE_MOVE(Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
-    *(*moves) = (Move){(piece), (promotionPiece), (sourceIndex), (targetIndex), (isEnPassant)};
-    (*moves)++;
-}
-
 int MOVE_RANK_SHIFT[64];
 bitboard MOVE_RANK_MASK[64];
 bitboard MOVE_RANK_ATTACKS[64][64];
@@ -55,12 +50,21 @@ bitboard generateAttacksKnight  (const ChessBoard *board, const PieceColor color
 bitboard generateAttacksRook    (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
 bitboard generateAttacksBishop  (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
 
-void generateMovesKing  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesQueen (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesPawn  (const ChessBoard *board, Move **moves, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesRook  (const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces);
-void generateMovesKnight(const ChessBoard *board, Move **moves, const bitboard boardAvailable);
+void generateMovesKing  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void generateMovesPawn  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void generateMovesRook  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void generateMovesBishop(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+
+
+int isLegalMove(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move *move);
+
+INLINE void GENERATE_MOVE(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
+    *(*moves) = (Move){(piece), (promotionPiece), (sourceIndex), (targetIndex), (isEnPassant)};
+    if(isLegalMove(board, boardInfo, *moves)) {
+        (*moves)++;
+    }
+}
 
 #ifdef __cplusplus
 }

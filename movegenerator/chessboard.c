@@ -19,7 +19,7 @@
 
 #define BUFFERSIZE 512
 
-ChessBoard emptyBoard = {
+const ChessBoard emptyBoard = {
       WHITE,
       0,
       0,
@@ -27,10 +27,10 @@ ChessBoard emptyBoard = {
       1,
       0,0,0,0,0,0,
       0,0,0,0,0,0,
-      0
+      0,
 };
 
-ChessBoard standardBoard = {
+const ChessBoard standardBoard = {
       WHITE,
       BOTH_SIDES,
       BOTH_SIDES,
@@ -494,19 +494,18 @@ unsigned long long perft(const ChessBoard *board, const int depth)
     //compute directly
     Move moves[MAX_MOVES_ARR_LENGTH];
     Move *pointer = moves;
-    const bitboard allPieces = ALL_PIECES(board);
-    generateMoves(board, allPieces, &pointer);
+    ChessBoardComputedInfo boardInfo = computeInfo(board);
+
+    generateMoves(board, &boardInfo, &pointer);
 
     if(depth == 1) return pointer - moves;
 
     Move *iterator = moves;
-    ChessBoard makeBoard = *board;
+    ChessBoard nextBoard = *board;
     while(iterator < pointer) {
-        makeMove(&makeBoard, allPieces, iterator ++);
-        if(isLegal(&makeBoard)) {
-            count += perft(&makeBoard, depth -1);
-        }
-        makeBoard = *board;
+        makeMove(&nextBoard, boardInfo.allPieces, iterator ++);
+        count += perft(&nextBoard, depth -1);
+        nextBoard = *board;
     }
 
     return count;

@@ -1,6 +1,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include "chessboard.h"
 
+
 TEST_GROUP(BitBoardTest)
 {
 };
@@ -87,4 +88,5 @@ TEST(BitBoardTest, TestBasicOperations)
     LONGS_EQUAL(0, ONE_NORTH_EAST(BITMASK_H8));
     LONGS_EQUAL(0, ONE_EAST(BITMASK_H8));
 }
+
 

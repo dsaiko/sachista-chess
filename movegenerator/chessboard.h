@@ -61,32 +61,50 @@ typedef struct ChessBoard {
 
 } ChessBoard;
 
+typedef struct ChessBoardComputedInfo {
+    bitboard        allPieces;
+    bitboard        opponentPieces;
+    bitboard        boardAvailable; //empty or opponent
+} ChessBoardComputedInfo;
+
 #define MAX_MOVES_ARR_LENGTH    220
 
-extern ChessBoard emptyBoard;
-extern ChessBoard standardBoard;
+extern const ChessBoard emptyBoard;
+extern const ChessBoard standardBoard;
 
 #define WHITE_PIECES(b)     ((b)->whiteKing | (b)->whiteQueen | (b)->whiteRook | (b)->whiteKnight | (b)->whiteBishop | (b)->whitePawn)
 #define BLACK_PIECES(b)     ((b)->blackKing | (b)->blackQueen | (b)->blackRook | (b)->blackKnight | (b)->blackBishop | (b)->blackPawn)
 #define ALL_PIECES(b)       (WHITE_PIECES(b) | BLACK_PIECES(b))
 
-extern int               boardCmp(const ChessBoard *board1, const ChessBoard *board2);
+int         boardCmp(const ChessBoard *board1, const ChessBoard *board2);
 
-extern char*             board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize);
-extern ChessBoard boardFromString(const char *buffer);
-extern char*             board2fen(const ChessBoard *board, char *buffer, const int bufferSize);
-extern ChessBoard boardFromFEN(const char *fen);
-
-
-extern void initMovesGenerator();
-extern int generateMoves(const ChessBoard *board, const bitboard allPieces, Move **moves);
+char*       board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize);
+ChessBoard  boardFromString(const char *buffer);
+char*       board2fen(const ChessBoard *board, char *buffer, const int bufferSize);
+ChessBoard  boardFromFEN(const char *fen);
 
 
-extern void makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
-extern void undoMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
-extern int isLegal(const ChessBoard *board);
+void            initMovesGenerator();
+int generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
 
-extern unsigned long long perft(const ChessBoard *board, const int depth);
+void makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
+
+unsigned long long perft(const ChessBoard *board, const int depth);
+
+INLINE ChessBoardComputedInfo computeInfo(const ChessBoard *board) {
+    ChessBoardComputedInfo info;
+    info.allPieces = ALL_PIECES(board);
+
+    if(board->nextMove == WHITE) {
+        info.opponentPieces =  BLACK_PIECES(board) ;
+        info.boardAvailable =  ~WHITE_PIECES(board);
+    } else {
+        info.opponentPieces = WHITE_PIECES(board);
+        info.boardAvailable = ~BLACK_PIECES(board);
+    }
+
+    return info;
+}
 
 #ifdef __cplusplus
 }

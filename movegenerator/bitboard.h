@@ -241,23 +241,23 @@ typedef uint64_t bitboard;
  * @param b
  * @return Transformed bitboard
  */
-extern bitboard  reverseRanks    (bitboard b);
+bitboard  reverseRanks    (bitboard b);
 
 /**
  * @brief Flips around A1H8 diagonal
  * @param b
  * @return Transformed bitboard
  */
-extern bitboard  flipDiagA1H8    (bitboard b);
+bitboard  flipDiagA1H8    (bitboard b);
 
 /**
  * @brief Mirrors the bitboard horizontally
  * @param b
  * @return Transformed bitboard
  */
-extern bitboard  mirrorHorizontal(bitboard b);
+bitboard  mirrorHorizontal(bitboard b);
 
-extern bitboard bitmaskFromNotation(const char *notation);
+bitboard bitmaskFromNotation(const char *notation);
 
 
 extern const bitboard   BITMASK_RANK[8];
@@ -272,7 +272,7 @@ extern const bitboard   BITMASK_A8H1[15];
  * @param bufferSize
  * @return Buffer with stored string representation of the bitboard
  */
-extern char *bitboard2str(bitboard b, char *buffer, int bufferSize);
+char *bitboard2str(bitboard b, char *buffer, int bufferSize);
 
 /**
  * @brief getFieldNotation
@@ -281,7 +281,7 @@ extern char *bitboard2str(bitboard b, char *buffer, int bufferSize);
  * @param bufferSize
  * @return Notation of a chessboard field
  */
-extern char *fieldNotation(int index, char *buffer, int bufferSize);
+char *fieldNotation(int index, char *buffer, int bufferSize);
 
 #ifdef __cplusplus
 }

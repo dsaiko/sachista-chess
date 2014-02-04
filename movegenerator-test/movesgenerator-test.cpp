@@ -8,8 +8,8 @@ void testMoves(const int expectedCount, const char *boardString)
     Move moves[256];
     Move *pointer = moves;
 
-    const bitboard allPieces = ALL_PIECES(&board);
-    generateMoves(&board, allPieces, &pointer);
+    ChessBoardComputedInfo boardInfo = computeInfo(&board);
+    generateMoves(&board, &boardInfo, &pointer);
     int size = pointer - moves;
     LONGS_EQUAL(expectedCount, size);
 }
@@ -20,21 +20,18 @@ void testMovesFromFen(const int expectedCount, const char *boardString)
     Move moves[256];
     Move *pointer = moves;
 
-    const bitboard allPieces = ALL_PIECES(&board);
-    generateMoves(&board, allPieces, &pointer);
+    ChessBoardComputedInfo boardInfo = computeInfo(&board);
+    generateMoves(&board, &boardInfo, &pointer);
     int size = pointer - moves;
     LONGS_EQUAL(expectedCount, size);
 }
 
 void testValidMoves(const int expectedCount, const char *boardString)
 {
-
     ChessBoard board = boardFromString(boardString);
     int validCount = perft(&board, 1);
-
     LONGS_EQUAL(expectedCount, validCount);
 }
-
 
 TEST_GROUP(MovesGenerator)
 {

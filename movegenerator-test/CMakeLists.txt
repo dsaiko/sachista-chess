@@ -8,12 +8,6 @@ add_executable          (
     chesspiece-test
     chessboard-test
     movesgenerator-test
-    movesgenerator-pawn-test
-    movesgenerator-knight-test
-    movesgenerator-king-test
-    movesgenerator-queen-test
-    movesgenerator-bishop-test
-    movesgenerator-rook-test
     main
 )
 

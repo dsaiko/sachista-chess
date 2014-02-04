@@ -1,6 +1,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include "chessboard.h"
 
+
 TEST_GROUP(ChessBoardTest)
 {
 };

@@ -207,7 +207,7 @@ INLINE bitboard BISHOP_ATTACKS(const int sourceIndex, const ChessBoard *board, c
     return MOVE_A8H1_ATTACKS[sourceIndex][stateIndexA8H1] | MOVE_A1H8_ATTACKS[sourceIndex][stateIndexA1H8];
 }
 
-bitboard generateAttacksBishop(const ChessBoard *board, const PieceColor color, const bitboard allPieces)
+INLINE bitboard generateAttacksBishop(const ChessBoard *board, const PieceColor color, const bitboard allPieces)
 {
     bitboard bishop = (color == WHITE) ? (board->whiteBishop | board->whiteQueen) : (board->blackBishop | board->blackQueen);
 
@@ -218,7 +218,7 @@ bitboard generateAttacksBishop(const ChessBoard *board, const PieceColor color, 
     return attacks;
 }
 
-void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard boardAvailable, const bitboard allPieces, const bitboard opponentPieces)
+void generateMovesBishop(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo)
 {
     bitboard bishop;
     bitboard queen;
@@ -242,10 +242,10 @@ void generateMovesBishop(const ChessBoard *board, Move **moves, const bitboard b
         while (bishop) {
             sourceIndex = bitScanPop(bishop);
             //get all moves using precomputed values
-            bitboard movesBoard = BISHOP_ATTACKS(sourceIndex, board, allPieces) & boardAvailable;
+            bitboard movesBoard = BISHOP_ATTACKS(sourceIndex, board, boardInfo->allPieces) & boardInfo->boardAvailable;
 
             //for all moves
-            while (movesBoard) GENERATE_MOVE(moves, movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+            while (movesBoard) GENERATE_MOVE(board, boardInfo, moves, movingPiece, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
         }
 
         bishop = queen;
