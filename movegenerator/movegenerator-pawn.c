@@ -1,3 +1,20 @@
+/*
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
+
+  sachista-chess is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  sachista-chess is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "chessboard.h"
 #include "movegenerator.h"
 
@@ -51,7 +68,7 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardCo
         //while there are pieces
         while (pieces) {
             //get next piece
-            const int sourceIndex = bitScanPop(pieces);
+            const int sourceIndex = bitPop(&pieces);
 
             //get possible moves - moves minus my onw color
             //one step forward
@@ -69,17 +86,17 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardCo
             //for all moves
             while (movesBoard) {
                 //get next move
-                const int targetIndex = bitScanPop(movesBoard);
+                const int targetIndex = bitPop(&movesBoard);
 
                 //white promotion?
                 if (targetIndex > 55) {
-                    GENERATE_MOVE(board, boardInfo, moves, WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(board, boardInfo, moves, WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0);
-                    GENERATE_MOVE(board, boardInfo, moves, WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(board, boardInfo,  moves, WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0);
+                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0);
                 } else {
                     //normal move/capture
-                    GENERATE_MOVE(board, boardInfo, moves, WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0);
                 }
 
             }
@@ -87,7 +104,7 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardCo
             //check enpassant capture
             if(board->enPassantIndex) {
                 movesBoard = attacks & BITMASK_SQUARE(board->enPassantIndex);
-                if (movesBoard) GENERATE_MOVE(board, boardInfo, moves, WHITE_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+                if (movesBoard) GENERATE_MOVE(moves, WHITE_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
             }
 
         }
@@ -97,7 +114,7 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardCo
         //while there are pieces
         while (pieces) {
             //get next piece
-            const int sourceIndex = bitScanPop(pieces);
+            const int sourceIndex = bitPop(&pieces);
 
             //get possible moves - moves minus my onw color
             //one step forward
@@ -115,24 +132,24 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardCo
             //for all moves
             while (movesBoard) {
                 //get next move
-                const int targetIndex = bitScanPop(movesBoard);
+                const int targetIndex = bitPop(&movesBoard);
 
                 //white promotion?
                 if (targetIndex < 8) {
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0);
                 } else {
                     //normal move/capture
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0);
+                    GENERATE_MOVE(moves, BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0);
                 }
             }
 
             //check enpassant capture
             if(board->enPassantIndex) {
                 movesBoard = attacks & BITMASK_SQUARE(board->enPassantIndex);
-                if (movesBoard) GENERATE_MOVE(board, boardInfo, moves, BLACK_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+                if (movesBoard) GENERATE_MOVE(moves, BLACK_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
             }
         }
     }

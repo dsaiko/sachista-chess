@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@
 
 #include "chessboard.h"
 #include "bitboard.h"
-#include "move.h"
 #include "movegenerator.h"
 
 void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
 
     const bitboard source = BITMASK_SQUARE(m->sourceIndex);
     const bitboard target = BITMASK_SQUARE(m->targetIndex);
-    const int isCapture = (target & allPieces) || m->isEnPassant;
+    const int isCapture = (target & allPieces) || unlikely(m->isEnPassant);
 
     board->halfMoveClock++;
 
@@ -56,7 +55,7 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
                         board->whiteRook ^= BITMASK_H1 | BITMASK_F1;
                     }
                 }
-        } else if(m->piece == WHITE_PAWN) {
+        } else if(likely(m->piece == WHITE_PAWN)) {
                 board->halfMoveClock = 0;
                 board->whitePawn ^= source | target;
                 if ((m->targetIndex - m->sourceIndex) > 10) {
@@ -76,11 +75,11 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
         }
 
         //reset halfmoveClock if piece was captured
-        if (isCapture) {
+        if (unlikely(isCapture)) {
             board->halfMoveClock = 0;
 
             //check capture
-            if (m->isEnPassant) {
+            if (unlikely(m->isEnPassant)) {
                 board->blackPawn ^= ONE_SOUTH(target);
             } else if (board->blackBishop & target) {
                 board->blackBishop ^= target;
@@ -126,7 +125,7 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
                         board->blackRook ^= BITMASK_H8 | BITMASK_F8;
                     }
                 }
-        } else if(m->piece == BLACK_PAWN) {
+        } else if(likely(m->piece == BLACK_PAWN)) {
                 board->halfMoveClock = 0;
                 board->blackPawn ^= source | target;
                 if ((m->sourceIndex - m->targetIndex) > 10) { // double move
@@ -147,10 +146,10 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
 
 
         //reset halfmoveClock if piece was captured
-        if (isCapture) {
+        if (unlikely(isCapture)) {
             board->halfMoveClock = 0;
 
-            if (m->isEnPassant) {
+            if (unlikely(m->isEnPassant)) {
                 board->whitePawn ^= ONE_NORTH(target);
             } else if (board->whiteBishop & target) {
                 board->whiteBishop ^= target;

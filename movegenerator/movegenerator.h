@@ -1,10 +1,23 @@
+/*
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
+
+  sachista-chess is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  sachista-chess is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #ifndef SACHISTA_CHESS_MOVEGENERATOR_H
 #define SACHISTA_CHESS_MOVEGENERATOR_H
 
-#include "bitboard.h"
-#include "chesspiece.h"
-#include "move.h"
 #include "chessboard.h"
 
 #ifdef __cplusplus
@@ -38,32 +51,27 @@ bitboard BLACK_PAWN_DOUBLE_MOVES[64];
 bitboard BLACK_PAWN_ATTACKS[64];
 bitboard KNIGHT_MOVES[64];
 
-void initMovesGeneratorKing();
-void initMovesGeneratorRook();
-void initMovesGeneratorKnight();
-void initMovesGeneratorBishop();
-void initMovesGeneratorPawn();
+void        initMovesGeneratorKing();
+void        initMovesGeneratorRook();
+void        initMovesGeneratorKnight();
+void        initMovesGeneratorBishop();
+void        initMovesGeneratorPawn();
 
-bitboard generateAttacksKing    (const ChessBoard *board, const PieceColor color);
-bitboard generateAttacksPawn    (const ChessBoard *board, const PieceColor color);
-bitboard generateAttacksKnight  (const ChessBoard *board, const PieceColor color);
-bitboard generateAttacksRook    (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
-bitboard generateAttacksBishop  (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
+bitboard    generateAttacksKing    (const ChessBoard *board, const PieceColor color);
+bitboard    generateAttacksPawn    (const ChessBoard *board, const PieceColor color);
+bitboard    generateAttacksKnight  (const ChessBoard *board, const PieceColor color);
+bitboard    generateAttacksRook    (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
+bitboard    generateAttacksBishop  (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
 
-void generateMovesKing  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void generateMovesPawn  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void generateMovesRook  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void generateMovesBishop(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesKing  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesPawn  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesRook  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesBishop(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
 
 
-int isLegalMove(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move *move);
-
-INLINE void GENERATE_MOVE(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
-    *(*moves) = (Move){(piece), (promotionPiece), (sourceIndex), (targetIndex), (isEnPassant)};
-    if(isLegalMove(board, boardInfo, *moves)) {
-        (*moves)++;
-    }
+INLINE void GENERATE_MOVE(Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
+    *((*moves)++) = (Move){(piece), (promotionPiece), (sourceIndex), (targetIndex), (isEnPassant)};
 }
 
 #ifdef __cplusplus

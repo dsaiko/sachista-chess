@@ -1,3 +1,19 @@
+#  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
+
+#  sachista-chess is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+
+#  sachista-chess is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 cmake_minimum_required      (VERSION 2.8.7)
 project                     (SACHISTA_CHESS)
 
@@ -7,14 +23,12 @@ set(CMAKE_C_FLAGS "-std=c99")
 
 if(MSVC)
   # Force to always compile with W4
-  if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-    string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-  endif()
+  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /W4 /O3")
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} /W4 /O3")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # Update if necessary
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -O3")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-long-long -O3")
 endif()
 
 enable_language             (C)

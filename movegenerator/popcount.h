@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include "utils.h"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -30,8 +31,6 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
-
-#define INLINE  inline __attribute__((always_inline))
 
 #if defined(_MSC_VER) && defined(__INTEL_COMPILER)
     #define popCount(b) _mm_popcnt_u64(b)
@@ -46,12 +45,12 @@ INLINE int popCount(bitboard b) {
 
 #else
 
-const unsigned long long k1 = 0x5555555555555555ULL; /*  -1/3   */
-const unsigned long long k2 = 0x3333333333333333ULL; /*  -1/5   */
-const unsigned long long k4 = 0x0f0f0f0f0f0f0f0fULL; /*  -1/17  */
-const unsigned long long kf = 0x0101010101010101ULL; /*  -1/255 */
-
 INLINE int popCount(bitboard b) {
+    static const unsigned long long k1 = 0x5555555555555555ULL; /*  -1/3   */
+    static const unsigned long long k2 = 0x3333333333333333ULL; /*  -1/5   */
+    static const unsigned long long k4 = 0x0f0f0f0f0f0f0f0fULL; /*  -1/17  */
+    static const unsigned long long kf = 0x0101010101010101ULL; /*  -1/255 */
+
     b =  b       - ((b >> 1)  & k1); /* put count of each 2 bits into those 2 bits */
     b = (b & k2) + ((b >> 2)  & k2); /* put count of each 4 bits into those 4 bits */
     b = (b       +  (b >> 4)) & k4 ; /* put count of each 8 bits into those 8 bits */
@@ -62,8 +61,6 @@ INLINE int popCount(bitboard b) {
 }
 
 #endif
-
-
 
 
 #ifdef __cplusplus

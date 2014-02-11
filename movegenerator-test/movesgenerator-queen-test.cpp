@@ -16,32 +16,58 @@
 */
 
 #include <CppUTest/CommandLineTestRunner.h>
-
-#include "stdio.h"
 #include "chessboard.h"
+
 
 extern void testMoves(const int expectedCount, const char *boardString);
 extern void testMovesFromFen(const int expectedCount, const char *boardString);
 extern void testValidMoves(const int expectedCount, const char *boardString);
 
+TEST_GROUP(MovesGeneratorQueen)
+{
+};
 
-int main(int ac, char** av) {
+TEST(MovesGeneratorQueen, TestMove)
+{
+testMoves(5, "\
+  a b c d e f g h\
+8 - - - - - - - - 8\
+7 - - - - - - - - 7\
+6 - - - - - - - - 6\
+5 - - - - - - - - 5\
+4 - - - - - - - - 4\
+3 - - - - - - - - 3\
+2 n n n - - - - - 2\
+1 n Q n - - - - - 1\
+  a b c d e f g h\
+");
 
-#if defined(__i386__)
-    char architecture[] = "x86";
-#elif defined(__x86_64__)
-    char architecture[] = "x64";
-#else
-    char architecture[] = "UnknownArchitecture";
-#endif
+testMoves(31, "\
+  a b c d e f g h\
+8 - - - - - - - - 8\
+7 - - - - - - - - 7\
+6 - - - - - - - - 6\
+5 - - - - - - - - 5\
+4 - - - - Q - - - 4\
+3 - - - - - - - - 3\
+2 n n n - - - - - 2\
+1 n Q n - - - - - 1\
+  a b c d e f g h\
+");
 
-   printf("Welcome to %s sachista-chess %s (%s)!\n",
-          architecture,
-          IMPLEMENTATION_VERSION,
-          IMPLEMENTATION_DATE
-   );
+testMoves(46, "\
+ a b c d e f g h\
+8 - - - - - - - - 8\
+7 - - - - - - - - 7\
+6 - - - - - - - - 6\
+5 - - - - - - - - 5\
+4 - - - - Q - - Q 4\
+3 - - - - - - - - 3\
+2 n n n - - - - - 2\
+1 n Q n - - - - - 1\
+ a b c d e f g h\
+");
 
-   initMovesGenerator();
-
-   return CommandLineTestRunner::RunAllTests(ac, av);
+testMovesFromFen(218, "3Q4/1Q4Q1/4Q3/2Q4R/Q4Q2/3Q4/1Q4Rp/1K1BBNNk w - - 0 1");
 }
+

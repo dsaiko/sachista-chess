@@ -1,3 +1,20 @@
+/*
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
+
+  sachista-chess is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  sachista-chess is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "chessboard.h"
 #include "movegenerator.h"
 
@@ -41,7 +58,7 @@ INLINE bitboard generateAttacksKing(const ChessBoard *board, const PieceColor co
 }
 
 
-INLINE int isUnderAttack(const ChessBoard *board, char color, bitboard allPieces, bitboard bitmask) {
+INLINE int isUnderAttack(const ChessBoard *board, const char color, const bitboard allPieces, const bitboard bitmask) {
 
     bitboard attacks = generateAttacksRook(board, color, allPieces);
     if(attacks & bitmask) return 1;
@@ -70,7 +87,7 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const ChessBoardCo
             bitboard movesBoard = KING_MOVES[sourceIndex] & boardInfo->boardAvailable;
 
             //for all moves
-            while (movesBoard) GENERATE_MOVE(board, boardInfo, moves, WHITE_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+            while (movesBoard) GENERATE_MOVE(moves, WHITE_KING, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
 
             if (!board->castlingWhite) return;
 
@@ -79,13 +96,13 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const ChessBoardCo
                 //generate oponent attacks for castling on demand only
                 if(isUnderAttack(board, BLACK, boardInfo->allPieces, WHITE_CASTLE_OO_ATTACKS) == 0) {
                     //add short castling move
-                    GENERATE_MOVE(board, boardInfo, moves, WHITE_KING, NO_PIECE, sourceIndex, INDEX_G1, 0);
+                    GENERATE_MOVE(moves, WHITE_KING, NO_PIECE, sourceIndex, INDEX_G1, 0);
                 }
             }
             if ((board->castlingWhite & QUEEN_SIDE) && ((boardInfo->allPieces & WHITE_CASTLE_OOO_EMPTY) == 0)) {
                 if(isUnderAttack(board, BLACK, boardInfo->allPieces, WHITE_CASTLE_OOO_ATTACKS) == 0) {
                     //add long castling move
-                    GENERATE_MOVE(board, boardInfo, moves, WHITE_KING, NO_PIECE, sourceIndex, INDEX_C1, 0);
+                    GENERATE_MOVE(moves, WHITE_KING, NO_PIECE, sourceIndex, INDEX_C1, 0);
                 }
             }
 
@@ -98,7 +115,7 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const ChessBoardCo
             bitboard movesBoard = KING_MOVES[sourceIndex] & boardInfo->boardAvailable;
 
             //for all moves
-            while (movesBoard) GENERATE_MOVE(board, boardInfo, moves, BLACK_KING, NO_PIECE, sourceIndex, bitScanPop(movesBoard), 0);
+            while (movesBoard) GENERATE_MOVE(moves, BLACK_KING, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
 
             if (!board->castlingBlack) return;
 
@@ -107,13 +124,13 @@ void generateMovesKing(const ChessBoard *board, Move **moves, const ChessBoardCo
                 //generate oponent attacks for castling on demand only
                 if(isUnderAttack(board, WHITE, boardInfo->allPieces, BLACK_CASTLE_OO_ATTACKS) == 0) {
                 //add short castling move
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_KING, NO_PIECE, sourceIndex, INDEX_G8, 0);
+                    GENERATE_MOVE(moves, BLACK_KING, NO_PIECE, sourceIndex, INDEX_G8, 0);
                 }
             }
             if ((board->castlingBlack & QUEEN_SIDE) && ((boardInfo->allPieces & BLACK_CASTLE_OOO_EMPTY) == 0)) {
                 if(isUnderAttack(board, WHITE, boardInfo->allPieces, BLACK_CASTLE_OOO_ATTACKS) == 0) {
                     //add long castling move
-                    GENERATE_MOVE(board, boardInfo, moves, BLACK_KING, NO_PIECE, sourceIndex, INDEX_C8, 0);
+                    GENERATE_MOVE(moves, BLACK_KING, NO_PIECE, sourceIndex, INDEX_C8, 0);
                 }
             }
         }

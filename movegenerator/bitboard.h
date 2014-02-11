@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include "utils.h"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -163,7 +164,6 @@ typedef uint64_t bitboard;
 #define INDEX_G8 62
 #define INDEX_H8 63
 
-
 #define  BITMASK_FILE_A             \
                 (   BITMASK_A1 |    \
                     BITMASK_A2 |    \
@@ -241,21 +241,58 @@ typedef uint64_t bitboard;
  * @param b
  * @return Transformed bitboard
  */
-bitboard  reverseRanks    (bitboard b);
+INLINE bitboard  reverseRanks    (const bitboard b) {
+    //return board with ranks (rows) in reverse order
+    return  ((b >> 56ULL) & (BITMASK_RANK_1))               |
+            (((b >> 48ULL) & BITMASK_RANK_1) << 8ULL)       |
+            (((b >> 40ULL) & BITMASK_RANK_1) << 16ULL)      |
+            (((b >> 32ULL) & BITMASK_RANK_1) << 24ULL)      |
+            (((b >> 24ULL) & BITMASK_RANK_1) << 32ULL)      |
+            (((b >> 16ULL) & BITMASK_RANK_1) << 40ULL)      |
+            (((b >> 8ULL) & BITMASK_RANK_1) << 48ULL)       |
+            ((b & BITMASK_RANK_1) << 56ULL);
+}
 
 /**
  * @brief Flips around A1H8 diagonal
  * @param b
  * @return Transformed bitboard
  */
-bitboard  flipDiagA1H8    (bitboard b);
+INLINE bitboard  flipDiagA1H8 (const bitboard b0) {
+    //Flips around A1H8 diagonal
+    static const bitboard k1 = 0x5500550055005500ULL;
+    static const bitboard k2 = 0x3333000033330000ULL;
+    static const bitboard k4 = 0x0f0f0f0f00000000ULL;
+
+    bitboard b = b0;
+
+    bitboard t = k4 & (b ^ (b << 28));
+    b ^= t ^ (t >> 28);
+    t = k2 & (b ^ (b << 14));
+    b ^= t ^ (t >> 14);
+    t = k1 & (b ^ (b << 7));
+    b ^= t ^ (t >> 7);
+    return b;
+}
 
 /**
  * @brief Mirrors the bitboard horizontally
  * @param b
  * @return Transformed bitboard
  */
-bitboard  mirrorHorizontal(bitboard b);
+INLINE bitboard  mirrorHorizontal(bitboard b0) {
+    //mirrors the bitboard horizontally
+    static const bitboard k1 = 0x5555555555555555ULL;
+    static const bitboard k2 = 0x3333333333333333ULL;
+    static const bitboard k4 = 0x0f0f0f0f0f0f0f0fULL;
+
+    bitboard b = b0;
+
+    b = ((b >> 1) & k1) | ((b & k1) << 1);
+    b = ((b >> 2) & k2) | ((b & k2) << 2);
+    b = ((b >> 4) & k4) | ((b & k4) << 4);
+    return b;
+}
 
 bitboard bitmaskFromNotation(const char *notation);
 
@@ -272,7 +309,7 @@ extern const bitboard   BITMASK_A8H1[15];
  * @param bufferSize
  * @return Buffer with stored string representation of the bitboard
  */
-char *bitboard2str(bitboard b, char *buffer, int bufferSize);
+char *bitboard2str(const bitboard b, char *buffer, const int bufferSize);
 
 /**
  * @brief getFieldNotation
@@ -281,7 +318,7 @@ char *bitboard2str(bitboard b, char *buffer, int bufferSize);
  * @param bufferSize
  * @return Notation of a chessboard field
  */
-char *fieldNotation(int index, char *buffer, int bufferSize);
+char *fieldNotation(const int index, char *buffer, const int bufferSize);
 
 #ifdef __cplusplus
 }

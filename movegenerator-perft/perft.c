@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include "chessboard.h"
 
 
-unsigned long long timeval_diff(struct timeval *start_time,  struct timeval *end_time)
+unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time)
 {
   struct timeval difference;
 
@@ -40,7 +40,6 @@ unsigned long long timeval_diff(struct timeval *start_time,  struct timeval *end
 }
 
 
-
 int main() {
 #if defined(__i386__)
     char architecture[] = "x86";
@@ -56,8 +55,7 @@ int main() {
           IMPLEMENTATION_DATE
    );
 
-   printf("Running perft for standard board layout for 7 plies.\n");
-   printf("Test should run aroun 5 minute.\n");
+   printf("Running perft for standard board layout for 6 plies.\n");
    printf("See: http://chessprogramming.wikispaces.com/Perft\n\n");
 
    initMovesGenerator();
@@ -66,24 +64,22 @@ int main() {
 
    int depth = 6;
 
-        ChessBoard board = standardBoard;
+    ChessBoard board = standardBoard;
 
-        gettimeofday(&start, NULL);
+    gettimeofday(&start, NULL);
 
-        unsigned long long n =  perft(&board, depth);
+    unsigned long long n =  perft(&board, depth);
 
-        gettimeofday(&end, NULL);
+    gettimeofday(&end, NULL);
 
-        double t = (timeval_diff(&start, &end) +1 )/ 1000.0;
+    double t = (timediff(&start, &end) +1 )/ 1000.0;
 
-        printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
-                depth,
-                ((double) t / 1000.0),
-                (unsigned long long) ((double) n / ((double) t / 1000.0)),
-                n
-        );
-
-        fflush(stdout);
+    printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
+            depth,
+            ((double) t / 1000.0),
+            (unsigned long long) ((double) n / ((double) t / 1000.0)),
+            n
+    );
 
     return 0;
 }

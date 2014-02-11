@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,10 +17,7 @@
 
 #include <stdio.h>
 #include "bitboard.h"
-
-void outputStr(char *buffer, const int bufferSize, int *position, const char *str);
-void outputChar(char *buffer, const int bufferSize, int *position, const char c);
-void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
+#include "utils.h"
 
 /*
  * These constants were pregenerated
@@ -30,87 +27,46 @@ const bitboard BITMASK_FILE[8]      =   {72340172838076673ULL, 14468034567615334
 const bitboard BITMASK_A1H8[15]     =   {72057594037927936ULL, 144396663052566528ULL, 288794425616760832ULL, 577588855528488960ULL, 1155177711073755136ULL, 2310355422147575808ULL, 4620710844295151872ULL, 9241421688590303745ULL, 36099303471055874ULL, 141012904183812ULL, 550831656968ULL, 2151686160ULL, 8405024ULL, 32832ULL, 128ULL};
 const bitboard BITMASK_A8H1[15]     =   {1ULL, 258ULL, 66052ULL, 16909320ULL, 4328785936ULL, 1108169199648ULL, 283691315109952ULL, 72624976668147840ULL, 145249953336295424ULL, 290499906672525312ULL, 580999813328273408ULL, 1161999622361579520ULL, 2323998145211531264ULL, 4647714815446351872ULL, 9223372036854775808ULL};
 
-bitboard reverseRanks(bitboard b) {
-    //return board with ranks (rows) in reverse order
-    return  ((b >> 56ULL) & (BITMASK_RANK_1))               |
-            (((b >> 48ULL) & BITMASK_RANK_1) << 8ULL)       |
-            (((b >> 40ULL) & BITMASK_RANK_1) << 16ULL)      |
-            (((b >> 32ULL) & BITMASK_RANK_1) << 24ULL)      |
-            (((b >> 24ULL) & BITMASK_RANK_1) << 32ULL)      |
-            (((b >> 16ULL) & BITMASK_RANK_1) << 40ULL)      |
-            (((b >> 8ULL) & BITMASK_RANK_1) << 48ULL)       |
-            ((b & BITMASK_RANK_1) << 56ULL);
-}
-
-bitboard flipDiagA1H8(bitboard b) {
-    //Flips around A1H8 diagonal
-    static const bitboard k1 = 0x5500550055005500ULL;
-    static const bitboard k2 = 0x3333000033330000ULL;
-    static const bitboard k4 = 0x0f0f0f0f00000000ULL;
-
-    bitboard t = k4 & (b ^ (b << 28));
-    b ^= t ^ (t >> 28);
-    t = k2 & (b ^ (b << 14));
-    b ^= t ^ (t >> 14);
-    t = k1 & (b ^ (b << 7));
-    b ^= t ^ (t >> 7);
-    return b;
-}
-
-
-bitboard mirrorHorizontal(bitboard b) {
-    //mirrors the bitboard horizontally
-    static const bitboard k1 = 0x5555555555555555ULL;
-    static const bitboard k2 = 0x3333333333333333ULL;
-    static const bitboard k4 = 0x0f0f0f0f0f0f0f0fULL;
-
-    b = ((b >> 1) & k1) | ((b & k1) << 1);
-    b = ((b >> 2) & k2) | ((b & k2) << 2);
-    b = ((b >> 4) & k4) | ((b & k4) << 4);
-    return b;
-}
-
-
-char *bitboard2str(bitboard b, char *buffer, int bufferSize)
+char *bitboard2str(const bitboard b, char *buffer, const int bufferSize)
 {
-    char header[] = "  a b c d e f g h\n";
-    int position = 0;
+    //reinitialize buffer to empty string
+    if(bufferSize < 1) return buffer;
+    buffer[0] = 0;
+
+    static const char header[] = "  a b c d e f g h\n";
 
     //we need this for printing
-    b = reverseRanks(b);
+    bitboard reversedBoard = reverseRanks(b);
 
     //header
-    outputStr(buffer, bufferSize, &position, header);
+    appendString(buffer, bufferSize, header);
 
     for (int i = 0; i < 64; i++) {
         if ((i % 8) == 0) {
             if (i > 0) {
                 //print right column digit
-                outputCharArray(buffer, bufferSize, &position, 2, '0' + 9 - (i / 8), '\n');
+                appendChars(buffer, bufferSize, 2, '0' + 9 - (i / 8), '\n');
             }
             //print left column digit
-            outputCharArray(buffer, bufferSize, &position, 2, '0' + 8 - (i / 8), ' ');
+            appendChars(buffer, bufferSize, 2, '0' + 8 - (i / 8), ' ');
         }
-        if(b & (1ULL << i)) {
-            outputStr(buffer, bufferSize, &position, "x ");
+        if(reversedBoard & (1ULL << i)) {
+            appendString(buffer, bufferSize, "x ");
         } else {
-            outputStr(buffer, bufferSize, &position, "- ");
+            appendString(buffer, bufferSize, "- ");
         }
     }
 
     //last right column digit
-    outputStr(buffer, bufferSize, &position, "1\n");
+    appendString(buffer, bufferSize, "1\n");
 
     //footer
-    outputStr(buffer, bufferSize, &position, header);
+    appendString(buffer, bufferSize, header);
 
-    //end string
-    if(position < bufferSize)
-        buffer[position] = '\0';
     return buffer;
 }
 
-char *fieldNotation(int index, char *buffer, int bufferSize) {
+char *fieldNotation(const int index, char *buffer, const int bufferSize) {
     if(bufferSize < 3) return buffer;
 
     buffer[0] = 'a' + (index % 8);

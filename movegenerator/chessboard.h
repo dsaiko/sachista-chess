@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 #define SACHISTA_CHESS_BOARD_H
 
 #include "bitboard.h"
-#include "chesspiece.h"
-#include "move.h"
 #include "version.h"
 #include "bitscan.h"
 #include "popcount.h"
@@ -34,6 +32,27 @@ typedef enum CastlingState {
     QUEEN_SIDE  = 2,
     BOTH_SIDES  = KING_SIDE | QUEEN_SIDE
 } CastlingState;
+
+typedef enum Piece {
+    NO_PIECE        = 0,
+    WHITE_KING      = 'K',
+    WHITE_QUEEN     = 'Q',
+    WHITE_BISHOP    = 'B',
+    WHITE_KNIGHT    = 'N',
+    WHITE_PAWN      = 'P',
+    WHITE_ROOK      = 'R',
+    BLACK_KING      = 'k',
+    BLACK_QUEEN     = 'q',
+    BLACK_BISHOP    = 'b',
+    BLACK_KNIGHT    = 'n',
+    BLACK_PAWN      = 'p',
+    BLACK_ROOK      = 'r'
+} Piece;
+
+typedef enum PieceColor {
+    WHITE           = 'w',
+    BLACK           = 'b'
+} PieceColor;
 
 typedef struct ChessBoard {
     PieceColor nextMove;
@@ -61,13 +80,24 @@ typedef struct ChessBoard {
 
 } ChessBoard;
 
+
 typedef struct ChessBoardComputedInfo {
     bitboard        allPieces;
     bitboard        opponentPieces;
     bitboard        boardAvailable; //empty or opponent
 } ChessBoardComputedInfo;
 
-#define MAX_MOVES_ARR_LENGTH    220
+typedef struct Move {
+    Piece piece           ;
+    Piece promotionPiece  ;
+
+    unsigned int    sourceIndex     ;
+    unsigned int    targetIndex     ;
+
+    int             isEnPassant     ;
+} Move;
+
+#define MAX_MOVES_ARR_SIZE    220
 
 extern const ChessBoard emptyBoard;
 extern const ChessBoard standardBoard;
@@ -84,15 +114,17 @@ char*       board2fen(const ChessBoard *board, char *buffer, const int bufferSiz
 ChessBoard  boardFromFEN(const char *fen);
 
 
-void            initMovesGenerator();
-int generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
-
-void makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
+void        initMovesGenerator();
+void        generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
+char *      move2str(const Move *m, char *buffer, const int bufferSize);
+void        makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
 
 unsigned long long perft(const ChessBoard *board, const int depth);
+int         isNotUnderCheck(const ChessBoard *board, const PieceColor nextMove);
 
 INLINE ChessBoardComputedInfo computeInfo(const ChessBoard *board) {
     ChessBoardComputedInfo info;
+
     info.allPieces = ALL_PIECES(board);
 
     if(board->nextMove == WHITE) {

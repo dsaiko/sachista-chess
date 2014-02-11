@@ -1,5 +1,5 @@
 /*
-  sachista-chess copyright (C) 2014 Dusan Saiko
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
 
   sachista-chess is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 */
 
 #include "chessboard.h"
+#include "utils.h"
 
 #define BUFFERSIZE 512
 
@@ -80,11 +81,6 @@ int boardCmp(const ChessBoard *board1, const ChessBoard *board2)
     return 0;
 }
 
-
-void outputStr(char *buffer, const int bufferSize, int *position, const char *str);
-void outputChar(char *buffer, const int bufferSize, int *position, const char c);
-void outputCharArray(char *buffer, const int bufferSize, int *position, int count, const int chars, ...);
-
 ChessBoard boardFromFEN(const char *fen) {
     ChessBoard board = emptyBoard;
 
@@ -93,16 +89,18 @@ ChessBoard boardFromFEN(const char *fen) {
 
     int pos = 0;
     int len = strlen(fen);
+
+    //protection against large strings
     if(len > 128) return board;
 
     while(pos < len) {
-        char c = fen[pos];
+        const char c = fen[pos];
         if(c == ' ') break;
 
         if(c == '/') {
             //nothing, next group
         } else if (c >= '0' && c <= '9') {
-            char i = c - '0';
+            const char i = c - '0';
 
             //output number of empty fields
             board.whiteKing   <<= i;
@@ -159,7 +157,7 @@ ChessBoard boardFromFEN(const char *fen) {
 
     pos++; //skip space
     while(pos < len) {
-        char c = fen[pos];
+        const char c = fen[pos];
         if(c == ' ') break;
 
         switch(c) {
@@ -252,12 +250,15 @@ ChessBoard boardFromFEN(const char *fen) {
 
 char*  board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize)
 {
-    char header[] = "  a b c d e f g h\n";
-    int position = 0;
+    //reinitialize buffer to empty string
+    if(bufferSize < 1) return buffer;
+    buffer[0] = 0;
+
+    static const char header[] = "  a b c d e f g h\n";
 
     //header
     if(decorated)
-        outputStr(buffer, bufferSize, &position, header);
+        appendString(buffer, bufferSize, header);
 
     bitboard  whiteKingReversed      = reverseRanks(board->whiteKing);
     bitboard  whiteQueenReversed     = reverseRanks(board->whiteQueen);
@@ -276,11 +277,11 @@ char*  board2str(const ChessBoard *board, const int decorated, char *buffer, con
     for (int i = 0; i < 64; i++) {
         if (decorated && ((i % 8) == 0)) {
             if (i > 0) {
-                outputCharArray(buffer, bufferSize, &position, 2, '0' + 9 - (i / 8), '\n');
+                appendChars(buffer, bufferSize, 2, '0' + 9 - (i / 8), '\n');
             }
-            outputCharArray(buffer, bufferSize, &position, 2, '0' + 8 - (i / 8), ' ');
+            appendChars(buffer, bufferSize, 2, '0' + 8 - (i / 8), ' ');
         } else if (i > 0 && ((i % 8) == 0)) {
-            outputChar(buffer, bufferSize, &position, '\n');
+            appendChar(buffer, bufferSize, '\n');
         }
 
         char c = '-';
@@ -312,19 +313,16 @@ char*  board2str(const ChessBoard *board, const int decorated, char *buffer, con
             c = BLACK_PAWN;
         }
 
-        outputChar(buffer, bufferSize, &position, c);
+        appendChar(buffer, bufferSize, c);
         if (decorated) {
-            outputChar(buffer, bufferSize, &position, ' ');
+            appendChar(buffer, bufferSize, ' ');
         }
     }
 
     if (decorated) {
-        outputStr(buffer, bufferSize, &position, "1\n");
-        outputStr(buffer, bufferSize, &position, header);
+        appendString(buffer, bufferSize, "1\n");
+        appendString(buffer, bufferSize, header);
     }
-
-    if(position < bufferSize)
-        buffer[position] = '\0';
 
     return buffer;
 
@@ -334,9 +332,8 @@ ChessBoard boardFromString(const char *buffer) {
     ChessBoard board = emptyBoard;
     if(strlen(buffer) > BUFFERSIZE) return board;
 
-    char str[BUFFERSIZE];
-    char fen[BUFFERSIZE];
-    int  fenPos = 0;
+    char str[BUFFERSIZE] = {0};
+    char fen[BUFFERSIZE] = {0};
 
     const char header[] = "a b c d e f g h";
 
@@ -368,19 +365,19 @@ ChessBoard boardFromString(const char *buffer) {
             case 'N':
             case 'B':
             case 'P':
-                outputChar(fen, BUFFERSIZE, &fenPos, c);
+                appendChar(fen, BUFFERSIZE, c);
                 break;
             case '-':
-                outputChar(fen, BUFFERSIZE, &fenPos, '1');
+                appendChar(fen, BUFFERSIZE, '1');
                 break;
         }
 
     }
-    if(fenPos > 0 && fenPos < 64)
-        outputChar(fen, BUFFERSIZE, &fenPos, '/');
 
-    outputStr(fen, BUFFERSIZE, &fenPos, " w KQkq - 0 1");
-    fen[fenPos] = '\0';
+    if(strlen(fen) < 64)
+        appendChar(fen, BUFFERSIZE, '/');
+
+    appendString(fen, BUFFERSIZE, " w KQkq - 0 1");
 
     board = boardFromFEN(fen);
 
@@ -413,10 +410,14 @@ ChessBoard boardFromString(const char *buffer) {
 }
 
 char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
+    //reinitialize buffer to empty string
+    if(bufferSize < 1) return buffer;
+    buffer[0] = 0;
+
+
     // get the pieces
     char data[BUFFERSIZE];
     board2str(board, 0, data, BUFFERSIZE);
-    int fenPos = 0;
 
     int len = strlen(data);
     int emptyCount = 0;
@@ -425,14 +426,14 @@ char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
     for (int i = 0; i < len; i++) {
         char piece = data[i];
 
-        if (piece == NO_PIECE) {
+        if (piece == '-') {
             // count empty fields
             emptyCount++;
         } else if(piece != '\n' && piece != ' ') {
             if (emptyCount > 0) {
-                outputChar(buffer, bufferSize, &fenPos, '0' + emptyCount);
+                appendChar(buffer, bufferSize, '0' + emptyCount);
             }
-            outputChar(buffer, bufferSize, &fenPos, piece);
+            appendChar(buffer, bufferSize, piece);
             emptyCount = 0;
         } else if (piece == '\n') {
 
@@ -440,73 +441,74 @@ char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
 
             // output empty fields at the end of rank
             if (emptyCount > 0) {
-                outputChar(buffer, bufferSize, &fenPos, '0' + emptyCount);
+                appendChar(buffer, bufferSize, '0' + emptyCount);
                 emptyCount = 0;
             }
             if(lines < 8)
-                outputChar(buffer, bufferSize, &fenPos, '/');
+                appendChar(buffer, bufferSize, '/');
         }
     }
+
     // output empty fields at the end of rank
     if (emptyCount > 0) {
-        outputChar(buffer, bufferSize, &fenPos, '0' + emptyCount);
+        appendChar(buffer, bufferSize, '0' + emptyCount);
         emptyCount = 0;
     }
 
     // next move
-    outputCharArray(buffer, bufferSize, &fenPos, 3, ' ', board->nextMove, ' ');
+    appendChars(buffer, bufferSize, 3, ' ', board->nextMove, ' ');
 
 
     // castling
-    if (board->castlingWhite & KING_SIDE)                   outputChar(buffer, bufferSize, &fenPos, 'K');
-    if (board->castlingWhite & QUEEN_SIDE)                  outputChar(buffer, bufferSize, &fenPos, 'Q');
-    if (board->castlingBlack & KING_SIDE)                   outputChar(buffer, bufferSize, &fenPos, 'k');
-    if (board->castlingBlack & QUEEN_SIDE)                  outputChar(buffer, bufferSize, &fenPos, 'q');
-    if ((board->castlingBlack | board->castlingWhite) == 0) outputChar(buffer, bufferSize, &fenPos, '-');
-    outputChar(buffer, bufferSize, &fenPos, ' ');
+    if (board->castlingWhite & KING_SIDE)                   appendChar(buffer, bufferSize, 'K');
+    if (board->castlingWhite & QUEEN_SIDE)                  appendChar(buffer, bufferSize, 'Q');
+    if (board->castlingBlack & KING_SIDE)                   appendChar(buffer, bufferSize, 'k');
+    if (board->castlingBlack & QUEEN_SIDE)                  appendChar(buffer, bufferSize, 'q');
+    if ((board->castlingBlack | board->castlingWhite) == 0) appendChar(buffer, bufferSize, '-');
+    appendChar(buffer, bufferSize, ' ');
 
     // enPassant
     if (board->enPassantIndex) {
-        outputStr(buffer, bufferSize, &fenPos, fieldNotation(board->enPassantIndex, data, 3));
+        appendString(buffer, bufferSize, fieldNotation(board->enPassantIndex, data, 3));
     } else {
-        outputChar(buffer, bufferSize, &fenPos, '-');
+        appendChar(buffer, bufferSize, '-');
     }
 
-    outputChar(buffer, bufferSize, &fenPos, ' ');
+    appendChar(buffer, bufferSize, ' ');
 
     sprintf(data, "%d", board->halfMoveClock);
-    outputStr(buffer, bufferSize, &fenPos, data);
+    appendString(buffer, bufferSize, data);
 
-    outputChar(buffer, bufferSize, &fenPos, ' ');
+    appendChar(buffer, bufferSize, ' ');
 
     sprintf(data, "%d", board->fullMoveNumber);
-    outputStr(buffer, bufferSize, &fenPos, data);
+    appendString(buffer, bufferSize, data);
 
-    buffer[fenPos] = 0;
     return buffer;
 }
 
-unsigned long long perft(const ChessBoard *board, const int depth)
-{
-    unsigned long long count = 0;
-    if(depth < 1) return 1;
+char *move2str(const Move *m, char *buffer, const int bufferSize) {
+    //reinitialize buffer to empty string
+    if(bufferSize < 1) return buffer;
+    buffer[0] = 0;
 
-    //compute directly
-    Move moves[MAX_MOVES_ARR_LENGTH];
-    Move *pointer = moves;
-    ChessBoardComputedInfo boardInfo = computeInfo(board);
+    char notation[3];
 
-    generateMoves(board, &boardInfo, &pointer);
+    fieldNotation(m->sourceIndex, notation, sizeof(notation) / sizeof(char));
+    appendString(buffer, bufferSize, notation);
 
-    if(depth == 1) return pointer - moves;
+    fieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
+    appendString(buffer, bufferSize, notation);
 
-    Move *iterator = moves;
-    ChessBoard nextBoard = *board;
-    while(iterator < pointer) {
-        makeMove(&nextBoard, boardInfo.allPieces, iterator ++);
-        count += perft(&nextBoard, depth -1);
-        nextBoard = *board;
+    if(m->promotionPiece) {
+        notation[0] = m->promotionPiece;
+        notation[1] = '\0';
+        appendString(buffer, bufferSize, notation);
     }
 
-    return count;
+    return buffer;
 }
+
+
+
+
