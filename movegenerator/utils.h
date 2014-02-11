@@ -27,6 +27,16 @@
 #define likely(x)       __builtin_expect((x),1)
 #define unlikely(x)     __builtin_expect((x),0)
 
+
+// Check windows
+#if _WIN32 || _WIN64
+#if _WIN64
+#define ENV_WIN_64
+#else
+#define ENV_WIN_32
+#endif
+#endif
+
 INLINE void appendString(char *buffer, const int bufferSize, const char *str)
 {
     int len1 = strlen(buffer);

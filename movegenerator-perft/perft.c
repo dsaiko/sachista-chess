@@ -20,6 +20,8 @@
 #include <sys/time.h>
 #include "chessboard.h"
 
+#include "omp.h"
+
 
 unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time)
 {
@@ -64,22 +66,46 @@ int main() {
 
    int depth = 6;
 
-    ChessBoard board = standardBoard;
+   ChessBoard board = standardBoard;
 
-    gettimeofday(&start, NULL);
 
-    unsigned long long n =  perft(&board, depth);
+   gettimeofday(&start, NULL);
 
-    gettimeofday(&end, NULL);
+   Move moves[MAX_MOVES_ARR_SIZE];
+   Move *pointer = moves;
+   ChessBoardComputedInfo boardInfo = computeInfo(&board);
+   generateMoves(&board, &boardInfo, &pointer);
 
-    double t = (timediff(&start, &end) +1 )/ 1000.0;
+   const int  count = pointer - moves;
+   unsigned long long results[count];
 
-    printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
+   #pragma omp parallel for
+   for(int i = 0; i < count; i++) {
+       ChessBoard nextBoard = board;
+       Move *move = moves + i;
+       makeMove(&nextBoard, boardInfo.allPieces, move);
+       if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
+           results[i] = perft(&nextBoard, depth -1);
+       } else {
+           results[i] = 0;
+       }
+   }
+
+   unsigned long long n =  0;
+   for(int i=0; i< count; i++) {
+       n += results[i];
+   }
+
+   gettimeofday(&end, NULL);
+
+   double t = (timediff(&start, &end) +1 )/ 1000.0;
+
+   printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
             depth,
             ((double) t / 1000.0),
             (unsigned long long) ((double) n / ((double) t / 1000.0)),
             n
-    );
+   );
 
-    return 0;
+   return 0;
 }

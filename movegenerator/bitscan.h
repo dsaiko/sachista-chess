@@ -25,7 +25,7 @@
 #include "bitboard.h"
 #include "utils.h"
 
-#ifdef _MSC_VER
+#if defined (__WIN32__)
 #include <intrin.h>
 #endif
 
@@ -33,14 +33,7 @@
 extern "C"{
 #endif
 
-
-#ifdef _MSC_VER
-INLINE int bitScan(const bitboard b) {
-    int r = 0;
-    _BitScanForward64(&r, b);
-    return r;
-}
-#elif defined(__x86_64__)
+#if defined(__x86_64__)
 INLINE int bitScan(const bitboard b) {
     bitboard r;
     __asm__("bsfq %1, %0" : "=r" (r) : "rm" (b));
