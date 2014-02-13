@@ -125,29 +125,3 @@ int isNotUnderCheck(const ChessBoard *board, const PieceColor nextMove) {
 
    return 1;
 }
-
-
-unsigned long long perft(const ChessBoard *board, const int depth)
-{
-    unsigned long long count = 0;
-    if(depth < 1) return 1;
-
-    //compute directly
-    Move moves[MAX_MOVES_ARR_SIZE];
-    Move *pointer = moves;
-    ChessBoardComputedInfo boardInfo = computeInfo(board);
-
-    generateMoves(board, &boardInfo, &pointer);
-
-    Move *iterator = moves;
-    ChessBoard nextBoard = *board;
-    while(iterator < pointer) {
-        makeMove(&nextBoard, boardInfo.allPieces, iterator ++);
-        if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            count += perft(&nextBoard, depth -1);
-        }
-        nextBoard = *board;
-    }
-
-    return count;
-}

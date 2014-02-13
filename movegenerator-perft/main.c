@@ -19,8 +19,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include "chessboard.h"
-
-#include "omp.h"
+#include <stdlib.h>
 
 
 unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time)
@@ -42,7 +41,8 @@ unsigned long long timediff(const struct timeval *start_time,  const struct time
 }
 
 
-int main() {
+int main(int argc, char **argv) {
+
 #if defined(__i386__)
     char architecture[] = "x86";
 #elif defined(__x86_64__)
@@ -56,55 +56,44 @@ int main() {
           IMPLEMENTATION_VERSION,
           IMPLEMENTATION_DATE
    );
-
-   printf("Running perft for standard board layout for 6 plies.\n");
    printf("See: http://chessprogramming.wikispaces.com/Perft\n\n");
+   printf("usage: [DEPTH]       - running standard layout perft to the given depth.\n");
+   printf("usage: [FEN] [DEPTH] - running custom layout perft to the given depth.\n\n");
+
+   if(argc < 2 || argc > 3) return 1;
+
+   int depth = atoi(argv[argc - 1]);
+   if(depth == 0) return 1;
+
+   ChessBoard board = standardBoard;
+
+   if(argc == 3) {
+        board = boardFromFEN(argv[1]);
+        char buffer[256];
+        printf("Running perft for custom board layout '%s' for %d plies.\n\n", board2fen(&board,buffer, 255), depth);
+   } else {
+       printf("Running perft for standard board layout for %d plies ...\n\n", depth);
+   }
+
+   fflush(stdout);
 
    initMovesGenerator();
 
    struct timeval start, end;
 
-   int depth = 6;
-
-   ChessBoard board = standardBoard;
-
-
    gettimeofday(&start, NULL);
+   unsigned long long result = 0;
 
-   Move moves[MAX_MOVES_ARR_SIZE];
-   Move *pointer = moves;
-   ChessBoardComputedInfo boardInfo = computeInfo(&board);
-   generateMoves(&board, &boardInfo, &pointer);
-
-   const int  count = pointer - moves;
-   unsigned long long results[count];
-
-   #pragma omp parallel for
-   for(int i = 0; i < count; i++) {
-       ChessBoard nextBoard = board;
-       Move *move = moves + i;
-       makeMove(&nextBoard, boardInfo.allPieces, move);
-       if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-           results[i] = perft(&nextBoard, depth -1);
-       } else {
-           results[i] = 0;
-       }
-   }
-
-   unsigned long long n =  0;
-   for(int i=0; i< count; i++) {
-       n += results[i];
-   }
+   result = perft(&board, depth);
 
    gettimeofday(&end, NULL);
-
    double t = (timediff(&start, &end) +1 )/ 1000.0;
 
    printf("Generated %d plies. Performance: %fs, %llu nodes / seconds. Total combinations: %llu\n",
             depth,
             ((double) t / 1000.0),
-            (unsigned long long) ((double) n / ((double) t / 1000.0)),
-            n
+            (unsigned long long) ((double) result / ((double) t / 1000.0)),
+            result
    );
 
    return 0;

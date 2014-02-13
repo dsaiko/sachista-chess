@@ -28,5 +28,6 @@ add_library (
     bitscan
     popcount
     makemove
+    perft
 )
 
