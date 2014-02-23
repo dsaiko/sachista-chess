@@ -161,7 +161,6 @@ INLINE bitboard generateAttacksRook(const ChessBoard *board, const Color color, 
 void generateMovesRook(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo)
 {
      bitboard rook = board->pieces[board->nextMove][ROOK];
-     bitboard queen = board->pieces[board->nextMove][QUEEN];
      Piece movingPiece = ROOK;
 
 
@@ -175,7 +174,8 @@ void generateMovesRook(const ChessBoard *board, Move **moves, const ChessBoardCo
               //for all moves
               while (movesBoard) GENERATE_MOVE(moves, movingPiece, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
           }
-          rook = queen;
+          //switch to queen
+          rook = board->pieces[board->nextMove][QUEEN];
           movingPiece = QUEEN;
       }
 }

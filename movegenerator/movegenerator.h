@@ -54,17 +54,17 @@ void        initMovesGeneratorKnight();
 void        initMovesGeneratorBishop();
 void        initMovesGeneratorPawn();
 
-bitboard    generateAttacksKing    (const ChessBoard *board, const Color color);
-bitboard    generateAttacksPawn    (const ChessBoard *board, const Color color);
-bitboard    generateAttacksKnight  (const ChessBoard *board, const Color color);
-bitboard    generateAttacksRook    (const ChessBoard *board, const Color color, const bitboard allPieces);
-bitboard    generateAttacksBishop  (const ChessBoard *board, const Color color, const bitboard allPieces);
+bitboard    generateAttacksKing     (const ChessBoard *board, const Color color);
+bitboard    generateAttacksPawn     (const ChessBoard *board, const Color color);
+bitboard    generateAttacksKnight   (const ChessBoard *board, const Color color);
+bitboard    generateAttacksRook     (const ChessBoard *board, const Color color, const bitboard allPieces);
+bitboard    generateAttacksBishop   (const ChessBoard *board, const Color color, const bitboard allPieces);
 
-void        generateMovesKing  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void        generateMovesPawn  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void        generateMovesRook  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void        generateMovesBishop(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
-void        generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesKing       (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesPawn       (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesRook       (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesBishop     (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
+void        generateMovesKnight     (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
 
 
 INLINE void GENERATE_MOVE(Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {

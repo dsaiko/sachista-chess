@@ -1,3 +1,21 @@
+/*
+  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
+
+  sachista-chess is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  sachista-chess is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 #include <omp.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,20 +32,34 @@ typedef struct {
     int      depth;
 } CacheEntry;
 
+/**
+ * @brief This is a perft worker
+ * @param board
+ * @param depth
+ * @param cache Shared cache, needs OMP synchronization
+ * @return number of legal moves
+ */
 uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
 {
     //compute directly
     if(depth < 1) return 1;
 
-    uint64_t hashCode = board->zobristKey;
-    int index = (CACHESIZE - 1) & hashCode;
+    const uint64_t hashCode = board->zobristKey;
 
-    CacheEntry cacheEntry = *(cache + index);
-
-    if(cacheEntry.hashCode == hashCode && cacheEntry.depth == depth)
-        return cacheEntry.nodeCount;
+    CacheEntry *cacheEntry = (cache + ((CACHESIZE - 1) & hashCode));
 
     uint64_t count = 0;
+
+    //retrieve info from cache
+    #pragma omp critical (cacheupdate)
+    {
+        if(cacheEntry->hashCode == hashCode && cacheEntry->depth == depth) {
+            count = cacheEntry->nodeCount;
+        }
+    }
+
+    //return cached value
+    if(count) return count;
 
     Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
@@ -40,26 +72,35 @@ uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
     ChessBoard nextBoard = *board;
 
     while(i < pointer) {
+        //make move
         makeMove(&nextBoard, boardInfo.allPieces, i ++);
+
+        //is move legal?
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
             count += minimax(&nextBoard, depth -1, cache);
         }
+
+        //undo move - reset the move back
         if(i < pointer)
             nextBoard = *board;
     }
 
-    CacheEntry *pCacheEntry = (cache +index);
-
-    #pragma omp critical
+    #pragma omp critical (cacheupdate)
     {
-        pCacheEntry->hashCode = hashCode;
-        pCacheEntry->nodeCount = count;
-        pCacheEntry->depth = depth;
+        cacheEntry->hashCode = hashCode;
+        cacheEntry->nodeCount = count;
+        cacheEntry->depth = depth;
     }
 
     return count;
 }
 
+/**
+ * @brief Method divides first moves into parallel tasks
+ * @param board
+ * @param depth
+ * @return legal move count
+ */
 uint64_t perft(const ChessBoard *board, const int depth)
 {
     if(depth < 1) return 1;
@@ -72,25 +113,25 @@ uint64_t perft(const ChessBoard *board, const int depth)
     ChessBoardComputedInfo boardInfo = computeInfo(board);
     generateMoves(board, &boardInfo, &pointer);
 
-    int  nMoves = pointer - moves;
+    const int nMoves = pointer - moves;
 
+    //create global shared cache - needs OMP synchronization
     CacheEntry    *cache = malloc(CACHESIZE * sizeof(CacheEntry));
 
     #pragma omp parallel for
-    for(int i=0; i< nMoves; i++)
-      {
-
+    for(int i=0; i < nMoves; i++)
+    {
         ChessBoard nextBoard = *board;
         makeMove(&nextBoard, boardInfo.allPieces, moves + i);
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-        uint64_t n = minimax(&nextBoard, depth -1, cache);
-        #pragma omp atomic
-        count += n;
-      }
+            uint64_t n = minimax(&nextBoard, depth -1, cache);
 
+            #pragma omp atomic
+            count += n;
+        }
     }
-
     free(cache);
+
 
     return count;
 }

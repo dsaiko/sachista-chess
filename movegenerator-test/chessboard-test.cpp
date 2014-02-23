@@ -24,8 +24,8 @@ TEST_GROUP(ChessBoardTest)
 
 TEST(ChessBoardTest, TestAssignments)
 {
-    ChessBoard board1 = emptyBoard;
-    ChessBoard board2 = emptyBoard;
+    ChessBoard board1 = emptyBoard();
+    ChessBoard board2 = emptyBoard();
 
     board1.nextMove = BLACK;
     board1.halfMoveClock = 2;
@@ -46,7 +46,7 @@ TEST(ChessBoardTest, TestAssignments)
 
 TEST(ChessBoardTest, TestStandardLayout)
 {
-    ChessBoard board = standardBoard;
+    ChessBoard board = standardBoard();
 
     LONGS_EQUAL(1, popCount(board.pieces[WHITE][KING]));
     LONGS_EQUAL(1, popCount(board.pieces[WHITE][QUEEN]));
@@ -72,6 +72,8 @@ TEST(ChessBoardTest, TestStandardLayout)
 
 TEST(ChessBoardTest, TestFromFEN)
 {
+    ChessBoard defaultBoard = standardBoard();
+
     //incomplete FEN
     ChessBoard board = boardFromFEN("8/1K6/1Q6/8/5r2/4rk2/8/8 w - -");
     LONGS_EQUAL(5, popCount(ALL_PIECES(&board)));
@@ -92,7 +94,7 @@ TEST(ChessBoardTest, TestFromFEN)
     LONGS_EQUAL(33, board.fullMoveNumber);
 
     board = boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    LONGS_EQUAL(0, boardCmp(&board, &standardBoard));
+    LONGS_EQUAL(0, boardCmp(&board, &defaultBoard));
 
     board = boardFromFEN("7B/6B1/5B2/4B3/3B4/2B5/1B6/B7 w - - 0 1");
     LONGS_EQUAL(BITMASK_A1H8[7], ALL_PIECES(&board));
@@ -123,7 +125,7 @@ TEST(ChessBoardTest, TestToString)
     LONGS_EQUAL(0, boardCmp(&board, &board2));
 
 
-    board = standardBoard;
+    board = standardBoard();
     board2fen(&board, buffer, sizeof(buffer) / sizeof(char));
     board2 = boardFromFEN(buffer);
     LONGS_EQUAL(0, boardCmp(&board, &board2));

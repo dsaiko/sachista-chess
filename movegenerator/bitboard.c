@@ -27,6 +27,13 @@ const bitboard BITMASK_FILE[8]      =   {72340172838076673ULL, 14468034567615334
 const bitboard BITMASK_A1H8[15]     =   {72057594037927936ULL, 144396663052566528ULL, 288794425616760832ULL, 577588855528488960ULL, 1155177711073755136ULL, 2310355422147575808ULL, 4620710844295151872ULL, 9241421688590303745ULL, 36099303471055874ULL, 141012904183812ULL, 550831656968ULL, 2151686160ULL, 8405024ULL, 32832ULL, 128ULL};
 const bitboard BITMASK_A8H1[15]     =   {1ULL, 258ULL, 66052ULL, 16909320ULL, 4328785936ULL, 1108169199648ULL, 283691315109952ULL, 72624976668147840ULL, 145249953336295424ULL, 290499906672525312ULL, 580999813328273408ULL, 1161999622361579520ULL, 2323998145211531264ULL, 4647714815446351872ULL, 9223372036854775808ULL};
 
+/**
+ * @brief bitboard2str
+ * @param b
+ * @param buffer
+ * @param bufferSize
+ * @return String representation of the bitboard
+ */
 char *bitboard2str(const bitboard b, char *buffer, const int bufferSize)
 {
     //reinitialize buffer to empty string
@@ -66,6 +73,13 @@ char *bitboard2str(const bitboard b, char *buffer, const int bufferSize)
     return buffer;
 }
 
+/**
+ * @brief Writes field notation into buffer
+ * @param index
+ * @param buffer
+ * @param bufferSize
+ * @return buffer
+ */
 char *fieldNotation(const int index, char *buffer, const int bufferSize) {
     if(bufferSize < 3) return buffer;
 
@@ -76,6 +90,11 @@ char *fieldNotation(const int index, char *buffer, const int bufferSize) {
     return buffer;
 }
 
+/**
+ * @brief bitmaskFromNotation
+ * @param notation - field notation
+ * @return bitboard with one field set
+ */
 bitboard bitmaskFromNotation(const char *notation) {
     if(strlen(notation) != 2) return 0;
     return BITMASK_SQUARE((notation[0] - 'a') + ((notation[1] - '1') << 3));

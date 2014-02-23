@@ -57,28 +57,32 @@ int main(int argc, char **argv) {
           IMPLEMENTATION_DATE
    );
    printf("See: http://chessprogramming.wikispaces.com/Perft\n\n");
-   printf("usage: [DEPTH]       - running standard layout perft to the given depth.\n");
-   printf("usage: [FEN] [DEPTH] - running custom layout perft to the given depth.\n\n");
 
-   if(argc < 2 || argc > 3) return 1;
+   if(argc < 2 || argc > 3) {
+       printf("usage: [DEPTH]       - running standard layout perft to the given depth.\n");
+       printf("usage: [FEN] [DEPTH] - running custom layout perft to the given depth.\n\n");
+       return 1;
+   }
+
+   printf("\n");
 
    int depth = atoi(argv[argc - 1]);
    if(depth == 0) return 1;
 
    initMovesGenerator();
 
-   ChessBoard board = standardBoard;
+   ChessBoard board = standardBoard();
 
    if(argc == 3) {
         board = boardFromFEN(argv[1]);
         char buffer[256];
-        printf("Running perft for custom board layout '%s' for %d plies.\n\n", board2fen(&board,buffer, 255), depth);
+        printf("Running perft for custom board layout '%s' for %d plies ...\n\n", board2fen(&board,buffer, 255), depth);
    } else {
        printf("Running perft for standard board layout for %d plies ...\n\n", depth);
    }
 
+   //flush stdout so we see the initial messages immediately
    fflush(stdout);
-
 
    struct timeval start, end;
 

@@ -220,7 +220,6 @@ typedef uint64_t bitboard;
 #define BITMASK_NOT_FILE_A  (~BITMASK_FILE_A)
 #define BITMASK_NOT_FILE_H  (~BITMASK_FILE_H)
 
-
 #define ONE_EAST(b)          (((b) << 1) & BITMASK_NOT_FILE_A)
 #define ONE_NORTH_EAST(b)    (((b) << 9) & BITMASK_NOT_FILE_A)
 #define ONE_SOUTH_EAST(b)    (((b) >> 7) & BITMASK_NOT_FILE_A)
@@ -295,7 +294,6 @@ INLINE bitboard  mirrorHorizontal(bitboard b0) {
 }
 
 bitboard bitmaskFromNotation(const char *notation);
-
 
 extern const bitboard   BITMASK_RANK[8];
 extern const bitboard   BITMASK_FILE[8];

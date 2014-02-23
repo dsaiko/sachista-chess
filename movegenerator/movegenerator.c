@@ -24,8 +24,6 @@ extern void initZobrist();
 void initMovesGenerator() {
     initZobrist();
 
-    standardBoard = boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
     initMovesGeneratorKnight();
     initMovesGeneratorPawn();
     initMovesGeneratorKing();
@@ -64,6 +62,9 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right) {
 }
 
 
+/**
+  * Checks if bitmask is not under attack from pieces on board
+  **/
 INLINE int isUnderAttack(const ChessBoard *board, const char color, const bitboard allPieces, const bitboard bitmask) {
 
     bitboard attacks = generateAttacksRook(board, color, allPieces);

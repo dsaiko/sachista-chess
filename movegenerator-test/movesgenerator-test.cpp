@@ -106,7 +106,7 @@ TEST(MovesGenerator, HashCode)
 
 TEST(MovesGenerator, PerfT)
 {
-    ChessBoard board = standardBoard;
+    ChessBoard board = standardBoard();
     LONGS_EQUAL(197281, perft(&board, 4));
 
     board = boardFromFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");

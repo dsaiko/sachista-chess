@@ -82,9 +82,6 @@ typedef struct Move {
 
 #define MAX_MOVES_ARR_SIZE    220
 
-extern const ChessBoard emptyBoard;
-extern ChessBoard       standardBoard;
-
 int         boardCmp(const ChessBoard *board1, const ChessBoard *board2);
 
 char*       board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize);
@@ -145,6 +142,23 @@ INLINE ChessBoardComputedInfo computeInfo(const ChessBoard *board) {
     return info;
 }
 
+INLINE ChessBoard emptyBoard() {
+    return (ChessBoard) {
+      WHITE,
+      {NONE, NONE},
+      {{0},{0}},
+      0,
+      1,
+      0,
+      0
+    };
+}
+
+INLINE ChessBoard standardBoard() {
+    return boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
+
+//Computes zobrist key for the chess board - board hash code (no fullMoveNumber and halfMoveClock info)
 uint64_t zobristKey(const ChessBoard *board);
 
 #ifdef __cplusplus

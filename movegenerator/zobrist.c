@@ -37,7 +37,7 @@ INLINE uint64_t rand64() {
   return d = e + a;
 }
 
-
+//Generate random values for all unique states
 void initZobrist() {
     int seed = 113;
     a = 0xF1EA5EED, b = c = d = 0xD4E12C77;
@@ -60,7 +60,7 @@ void initZobrist() {
     Z_SIDE = rand64();
 }
 
-
+//compute zobrist key for board
 uint64_t zobristKey(const ChessBoard *board) {
     uint64_t zobristKey = 0;
 

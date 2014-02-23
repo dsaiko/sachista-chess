@@ -23,19 +23,6 @@
 
 #define BUFFERSIZE 512
 
-const ChessBoard emptyBoard = {
-      WHITE,
-      {NONE, NONE},
-      {{0},{0}},
-      0,
-      1,
-      0,
-      0
-};
-
-ChessBoard standardBoard;
-
-
 int boardCmp(const ChessBoard *board1, const ChessBoard *board2)
 {
 
@@ -49,7 +36,7 @@ int boardCmp(const ChessBoard *board1, const ChessBoard *board2)
 }
 
 ChessBoard boardFromFEN(const char *fen) {
-    ChessBoard board = emptyBoard;
+    ChessBoard board = emptyBoard();
 
     //rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     //8/1K6/1Q6/8/5r2/4rk2/8/8 w - -
@@ -280,7 +267,8 @@ char*  board2str(const ChessBoard *board, const int decorated, char *buffer, con
 }
 
 ChessBoard boardFromString(const char *buffer) {
-    ChessBoard board = emptyBoard;
+    ChessBoard board = emptyBoard();
+
     if(strlen(buffer) > BUFFERSIZE) return board;
 
     char str[BUFFERSIZE] = {0};
