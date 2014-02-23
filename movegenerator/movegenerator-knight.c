@@ -40,9 +40,9 @@ void initMovesGeneratorKnight() {
 }
 
 
-INLINE bitboard generateAttacksKnight(const ChessBoard *board, const PieceColor color)
+INLINE bitboard generateAttacksKnight(const ChessBoard *board, const Color color)
 {
-    bitboard pieces = color == WHITE ? board->whiteKnight : board->blackKnight;
+    bitboard pieces = board->pieces[color][KNIGHT];
     bitboard attacks = 0;
 
     // while there are knight pieces
@@ -53,16 +53,7 @@ INLINE bitboard generateAttacksKnight(const ChessBoard *board, const PieceColor 
 
 void generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo)
 {
-    bitboard knight;
-    Piece movingPiece;
-
-    if(board->nextMove == WHITE) {
-        knight = board->whiteKnight;
-        movingPiece = WHITE_KNIGHT;
-    } else {
-        knight = board->blackKnight;
-        movingPiece = BLACK_KNIGHT;
-    }
+    bitboard knight = board->pieces[board->nextMove][KNIGHT];
 
     // while there are knight pieces
     while (knight) {
@@ -70,6 +61,6 @@ void generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoard
          // get possible moves - moves minus my onw color
          bitboard movesBoard = KNIGHT_MOVES[sourceIndex] & boardInfo->boardAvailable;
          // for all moves
-         while (movesBoard) GENERATE_MOVE(moves, movingPiece, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
+         while (movesBoard) GENERATE_MOVE(moves, KNIGHT, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
     }
 }

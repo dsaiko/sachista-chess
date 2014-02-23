@@ -15,30 +15,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <CppUTest/CommandLineTestRunner.h>
-#include "chessboard.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include "utils.h"
 
-TEST_GROUP(ChessPieceTest)
-{
-};
+#ifndef SACHISTA_CHESS_ZOBRIST_H
+#define SACHISTA_CHESS_ZOBRIST_H
 
-TEST(ChessPieceTest, TestPieces)
-{
-    Move m;
-    m.piece = PAWN;
-    m.sourceIndex = INDEX_A1;
-    m.targetIndex = INDEX_H8;
-    m.promotionPiece = KING;
+uint64_t Z_PIECES[2][7][64];
+uint64_t Z_CASTLING[2][4];
+uint64_t Z_ENPASSANT[64];
+uint64_t Z_SIDE[2];
 
-    char moveNotation[16];
-    STRCMP_EQUAL("a1h8K", move2str(&m, moveNotation, sizeof(moveNotation) / sizeof(char)));
-
-    m.piece = PAWN;
-    m.sourceIndex = INDEX_A2;
-    m.targetIndex = INDEX_A1;
-    m.promotionPiece = QUEEN;
-
-    STRCMP_EQUAL("a2a1Q", move2str(&m, moveNotation, sizeof(moveNotation) / sizeof(char)));
-
-}
-
+#endif

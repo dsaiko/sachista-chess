@@ -147,10 +147,9 @@ INLINE bitboard ROOK_ATTACKS(const int sourceIndex, const ChessBoard *board, con
     return MOVE_RANK_ATTACKS[sourceIndex][stateIndexRank] | MOVE_FILE_ATTACKS[sourceIndex][stateIndexFile];
 }
 
-INLINE bitboard generateAttacksRook(const ChessBoard *board, const PieceColor color, const bitboard allPieces)
+INLINE bitboard generateAttacksRook(const ChessBoard *board, const Color color, const bitboard allPieces)
 {
-    bitboard rook = (color == WHITE) ? (board->whiteRook | board->whiteQueen) : (board->blackRook | board->blackQueen);
-
+    bitboard rook = board->pieces[color][ROOK] | board->pieces[color][QUEEN];
     bitboard attacks = 0;
 
     //for all rooks
@@ -161,21 +160,10 @@ INLINE bitboard generateAttacksRook(const ChessBoard *board, const PieceColor co
 
 void generateMovesRook(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo)
 {
-     bitboard rook;
-     bitboard queen;
-     Piece movingPiece;
+     bitboard rook = board->pieces[board->nextMove][ROOK];
+     bitboard queen = board->pieces[board->nextMove][QUEEN];
+     Piece movingPiece = ROOK;
 
-
-      //configure color
-      if (board->nextMove == WHITE) {
-          rook = board->whiteRook;
-          queen  = board->whiteQueen;
-          movingPiece = WHITE_ROOK;
-      } else {
-          rook = board->blackRook;
-          queen  = board->blackQueen;
-          movingPiece = BLACK_ROOK;
-      }
 
       for(int i=0; i<2; i++) {
           //for all rooks
@@ -188,6 +176,6 @@ void generateMovesRook(const ChessBoard *board, Move **moves, const ChessBoardCo
               while (movesBoard) GENERATE_MOVE(moves, movingPiece, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
           }
           rook = queen;
-          movingPiece = (board->nextMove == WHITE) ? WHITE_QUEEN : BLACK_QUEEN;
+          movingPiece = QUEEN;
       }
 }

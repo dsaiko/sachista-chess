@@ -46,9 +46,9 @@ INLINE int popCount(bitboard b) {
 #else
 
 INLINE int popCount(bitboard b) {
-    static const unsigned long long k1 = 0x5555555555555555ULL; /*  -1/3   */
-    static const unsigned long long k2 = 0x3333333333333333ULL; /*  -1/5   */
-    static const unsigned long long k4 = 0x0f0f0f0f0f0f0f0fULL; /*  -1/17  */
+    static const uint64_t k1 = 0x5555555555555555ULL; /*  -1/3   */
+    static const uint64_t k2 = 0x3333333333333333ULL; /*  -1/5   */
+    static const uint64_t k4 = 0x0f0f0f0f0f0f0f0fULL; /*  -1/17  */
 
     b =  b       - ((b >> 1)  & k1); /* put count of each 2 bits into those 2 bits */
     b = (b & k2) + ((b >> 2)  & k2); /* put count of each 4 bits into those 4 bits */

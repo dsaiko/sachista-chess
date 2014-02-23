@@ -19,158 +19,125 @@
 #include "bitboard.h"
 #include "movegenerator.h"
 
+#define abs(x) ((x) > 0 ? (x) : (-(x)))
+
 void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
 
     const bitboard source = BITMASK_SQUARE(m->sourceIndex);
     const bitboard target = BITMASK_SQUARE(m->targetIndex);
     const int isCapture = (target & allPieces) || unlikely(m->isEnPassant);
+    const Color opponentColor = board->nextMove == WHITE ? BLACK : WHITE;
+
+    bitboard *pieces = (bitboard *) board->pieces[board->nextMove];
 
     board->halfMoveClock++;
 
     //en passant target
-    board->enPassantIndex = 0;
+    board->enPassantTargetIndex = 0;
 
-    if(board->nextMove == WHITE) {
-        if(m->piece == WHITE_KNIGHT) {
-                board->whiteKnight ^= source | target;
-        } else if(m->piece == WHITE_BISHOP) {
-                board->whiteBishop ^= source | target;
-        } else if(m->piece == WHITE_ROOK) {
-                board->whiteRook ^= source | target;
-                if (m->sourceIndex == INDEX_A1) {
-                    board->castlingWhite &= ~QUEEN_SIDE;
-                }
-                if (m->sourceIndex == INDEX_H1) {
-                    board->castlingWhite &= ~KING_SIDE;
-                }
-        } else if(m->piece == WHITE_QUEEN) {
-                board->whiteQueen ^= source | target;
-        } else if(m->piece == WHITE_KING) {
-                board->whiteKing ^= source | target;
-                board->castlingWhite = 0;
-                if (m->sourceIndex == INDEX_E1) {
-                    if (m->targetIndex == INDEX_C1) {
-                        board->whiteRook ^= BITMASK_A1 | BITMASK_D1;
-                    } else if(m->targetIndex == INDEX_G1) {
-                        board->whiteRook ^= BITMASK_H1 | BITMASK_F1;
-                    }
-                }
-        } else if(likely(m->piece == WHITE_PAWN)) {
-                board->halfMoveClock = 0;
-                board->whitePawn ^= source | target;
-                if ((m->targetIndex - m->sourceIndex) > 10) {
-                    board->enPassantIndex = m->sourceIndex + 8;
-                } else if (m->promotionPiece) {
-                    board->whitePawn ^= target;
-                    if (m->promotionPiece == WHITE_QUEEN) {
-                        board->whiteQueen |= target;
-                    } else if (m->promotionPiece == WHITE_ROOK) {
-                        board->whiteRook |= target;
-                    } else if (m->promotionPiece == WHITE_BISHOP) {
-                        board->whiteBishop |= target;
-                    } else if (m->promotionPiece == WHITE_KNIGHT) {
-                        board->whiteKnight |= target;
-                    }
-                }
-        }
-
-        //reset halfmoveClock if piece was captured
-        if (unlikely(isCapture)) {
-            board->halfMoveClock = 0;
-
-            //check capture
-            if (unlikely(m->isEnPassant)) {
-                board->blackPawn ^= ONE_SOUTH(target);
-            } else if (board->blackBishop & target) {
-                board->blackBishop ^= target;
-            } else if (board->blackKnight & target) {
-                board->blackKnight ^= target;
-            } else if (board->blackPawn & target) {
-                board->blackPawn ^= target;
-            } else if (board->blackQueen & target) {
-                board->blackQueen ^= target;
-            } else if (board->blackRook & target) {
-                board->blackRook ^= target;
-                if (m->targetIndex == INDEX_A8) {
-                    board->castlingBlack &= ~QUEEN_SIDE;
-                } else if (m->targetIndex == INDEX_H8) {
-                    board->castlingBlack &= ~KING_SIDE;
+    if(m->piece == KNIGHT) {
+            pieces[KNIGHT] ^= source | target;
+    } else if(m->piece == BISHOP) {
+            pieces[BISHOP] ^= source | target;
+    } else if(m->piece == ROOK) {
+            pieces[ROOK] ^= source | target;
+            if(unlikely(board->castling[board->nextMove])) {
+                if(unlikely(m->sourceIndex == INDEX_A1) && board->nextMove == WHITE)
+                    board->castling[board->nextMove] &= ~QUEEN_SIDE;
+                if(unlikely(m->sourceIndex == INDEX_H1) && board->nextMove == WHITE)
+                    board->castling[board->nextMove] &= ~KING_SIDE;
+                if(unlikely(m->sourceIndex == INDEX_A8) && board->nextMove == BLACK)
+                    board->castling[board->nextMove] &= ~QUEEN_SIDE;
+                if(unlikely(m->sourceIndex == INDEX_H8) && board->nextMove == BLACK)
+                    board->castling[board->nextMove] &= ~KING_SIDE;
+            }
+    } else if(m->piece == QUEEN) {
+            pieces[QUEEN] ^= source | target;
+    } else if(m->piece == KING) {
+            pieces[KING] ^= source | target;
+            board->castling[board->nextMove] = 0;
+            if (unlikely(m->sourceIndex == INDEX_E1) && board->nextMove == WHITE) {
+                //castling
+                if (m->targetIndex == INDEX_C1) {
+                    pieces[ROOK] ^= BITMASK_A1 | BITMASK_D1;
+                } else if(m->targetIndex == INDEX_G1) {
+                    pieces[ROOK] ^= BITMASK_H1 | BITMASK_F1;
                 }
             }
-        }
-
-        board->nextMove = BLACK;
-    } else {
-        if(m->piece == BLACK_KNIGHT) {
-                board->blackKnight ^= source | target;
-        } else if(m->piece == BLACK_BISHOP) {
-                board->blackBishop ^= source | target;
-        } else if(m->piece == BLACK_ROOK) {
-                board->blackRook ^= source | target;
-                if (m->sourceIndex == INDEX_A8) {
-                    board->castlingBlack &= ~QUEEN_SIDE;
-                }
-                if (m->sourceIndex == INDEX_H8) {
-                    board->castlingBlack &= ~KING_SIDE;
-                }
-        } else if(m->piece == BLACK_QUEEN) {
-                board->blackQueen ^= source | target;
-        } else if(m->piece == BLACK_KING) {
-                board->blackKing ^= source | target;
-                board->castlingBlack = 0;
-                if (m->sourceIndex == INDEX_E8) {
-                    if (m->targetIndex == INDEX_C8) {
-                        board->blackRook ^= BITMASK_A8 | BITMASK_D8;
-                    } else if(m->targetIndex == INDEX_G8) {
-                        board->blackRook ^= BITMASK_H8 | BITMASK_F8;
-                    }
-                }
-        } else if(likely(m->piece == BLACK_PAWN)) {
-                board->halfMoveClock = 0;
-                board->blackPawn ^= source | target;
-                if ((m->sourceIndex - m->targetIndex) > 10) { // double move
-                    board->enPassantIndex = m->sourceIndex - 8;
-                } else if (m->promotionPiece) {
-                    board->blackPawn ^= target;
-                    if (m->promotionPiece == BLACK_QUEEN) {
-                        board->blackQueen |= target;
-                    } else if (m->promotionPiece == BLACK_ROOK) {
-                        board->blackRook |= target;
-                    } else if (m->promotionPiece == BLACK_BISHOP) {
-                        board->blackBishop |= target;
-                    } else if (m->promotionPiece == BLACK_KNIGHT) {
-                        board->blackKnight |= target;
-                    }
-                }
-        }
-
-
-        //reset halfmoveClock if piece was captured
-        if (unlikely(isCapture)) {
-            board->halfMoveClock = 0;
-
-            if (unlikely(m->isEnPassant)) {
-                board->whitePawn ^= ONE_NORTH(target);
-            } else if (board->whiteBishop & target) {
-                board->whiteBishop ^= target;
-            } else if (board->whiteKnight & target) {
-                board->whiteKnight ^= target;
-            } else if (board->whitePawn & target) {
-                board->whitePawn ^= target;
-            } else if (board->whiteQueen & target) {
-                board->whiteQueen ^= target;
-            } else if (board->whiteRook & target) {
-                board->whiteRook ^= target;
-                if (m->targetIndex == INDEX_A1) {
-                    board->castlingWhite &= ~QUEEN_SIDE;
-                } else if (m->targetIndex == INDEX_H1) {
-                    board->castlingWhite &= ~KING_SIDE;
+            if (unlikely(m->sourceIndex == INDEX_E8) && board->nextMove == BLACK) {
+                //castling
+                if (m->targetIndex == INDEX_C8) {
+                    pieces[ROOK] ^= BITMASK_A8 | BITMASK_D8;
+                } else if(m->targetIndex == INDEX_G8) {
+                    pieces[ROOK] ^= BITMASK_H8 | BITMASK_F8;
                 }
             }
-        }
 
-        board->fullMoveNumber++;
-        board->nextMove = WHITE;
+    } else if(likely(m->piece == PAWN)) {
+            board->halfMoveClock = 0;
+            pieces[PAWN] ^= source | target;
+            int step = m->targetIndex - m->sourceIndex;
+            if (abs(step) > 10) {
+                board->enPassantTargetIndex = m->sourceIndex + (board->nextMove == WHITE ? 8 : -8);
+            } else
+            if (m->promotionPiece) {
+                pieces[PAWN] ^= target;
+                if (m->promotionPiece == QUEEN) {
+                    pieces[QUEEN] |= target;
+                } else if (m->promotionPiece == ROOK) {
+                    pieces[ROOK] |= target;
+                } else if (m->promotionPiece == BISHOP) {
+                    pieces[BISHOP] |= target;
+                } else if (m->promotionPiece == KNIGHT) {
+                    pieces[KNIGHT] |= target;
+                }
+            }
     }
+
+    //reset halfmoveClock if piece was captured
+    if (unlikely(isCapture)) {
+        board->halfMoveClock = 0;
+
+        //check capture
+        if (unlikely(m->isEnPassant)) {
+            if(board->nextMove == WHITE) {
+                board->pieces[opponentColor][PAWN] ^= ONE_SOUTH(target);
+            } else {
+                board->pieces[opponentColor][PAWN] ^= ONE_NORTH(target);
+            }
+        } else if (board->pieces[opponentColor][BISHOP] & target) {
+            board->pieces[opponentColor][BISHOP] ^= target;
+        } else if (board->pieces[opponentColor][KNIGHT] & target) {
+            board->pieces[opponentColor][KNIGHT] ^= target;
+        } else if (board->pieces[opponentColor][PAWN] & target) {
+            board->pieces[opponentColor][PAWN] ^= target;
+        } else if (board->pieces[opponentColor][QUEEN] & target) {
+            board->pieces[opponentColor][QUEEN] ^= target;
+        } else if (board->pieces[opponentColor][ROOK] & target) {
+            board->pieces[opponentColor][ROOK] ^= target;
+            if(board->nextMove == WHITE) {
+                if (m->targetIndex == INDEX_A8) {
+                                  board->castling[BLACK] &= ~QUEEN_SIDE;
+                              } else if (m->targetIndex == INDEX_H8) {
+                                  board->castling[BLACK] &= ~KING_SIDE;
+                              }
+
+            } else {
+                if (m->targetIndex == INDEX_A1) {
+                        board->castling[WHITE] &= ~QUEEN_SIDE;
+                    } else if (m->targetIndex == INDEX_H1) {
+                        board->castling[WHITE] &= ~KING_SIDE;
+                    }
+
+            }
+        }
+    }
+
+    if(board->nextMove == BLACK)
+        board->fullMoveNumber++;
+
+    board->nextMove = opponentColor;
+
+    board->zobristKey = zobristKey(board);
 }
 

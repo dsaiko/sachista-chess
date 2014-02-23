@@ -43,12 +43,9 @@ bitboard MOVE_A1H8_ATTACKS[64][64];
 bitboard MOVE_A8H1_ATTACKS[64][64];
 
 bitboard KING_MOVES[64];
-bitboard WHITE_PAWN_MOVES[64];
-bitboard WHITE_PAWN_DOUBLE_MOVES[64];
-bitboard WHITE_PAWN_ATTACKS[64];
-bitboard BLACK_PAWN_MOVES[64];
-bitboard BLACK_PAWN_DOUBLE_MOVES[64];
-bitboard BLACK_PAWN_ATTACKS[64];
+bitboard PAWN_MOVES[2][64];
+bitboard PAWN_DOUBLE_MOVES[2][64];
+bitboard PAWN_ATTACKS[2][64];
 bitboard KNIGHT_MOVES[64];
 
 void        initMovesGeneratorKing();
@@ -57,11 +54,11 @@ void        initMovesGeneratorKnight();
 void        initMovesGeneratorBishop();
 void        initMovesGeneratorPawn();
 
-bitboard    generateAttacksKing    (const ChessBoard *board, const PieceColor color);
-bitboard    generateAttacksPawn    (const ChessBoard *board, const PieceColor color);
-bitboard    generateAttacksKnight  (const ChessBoard *board, const PieceColor color);
-bitboard    generateAttacksRook    (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
-bitboard    generateAttacksBishop  (const ChessBoard *board, const PieceColor color, const bitboard allPieces);
+bitboard    generateAttacksKing    (const ChessBoard *board, const Color color);
+bitboard    generateAttacksPawn    (const ChessBoard *board, const Color color);
+bitboard    generateAttacksKnight  (const ChessBoard *board, const Color color);
+bitboard    generateAttacksRook    (const ChessBoard *board, const Color color, const bitboard allPieces);
+bitboard    generateAttacksBishop  (const ChessBoard *board, const Color color, const bitboard allPieces);
 
 void        generateMovesKing  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
 void        generateMovesPawn  (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);

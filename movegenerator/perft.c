@@ -4,6 +4,7 @@
 
 #include "chessboard.h"
 #include "utils.h"
+<<<<<<< HEAD
 
 #define HASHMAPSIZE     (128*1024)
 
@@ -43,10 +44,23 @@ unsigned long long computeHashCode(const ChessBoard *board) {
  }
 
 unsigned long long minimax(const ChessBoard *board, const int depth, CacheEntry cache[HASHMAPSIZE], CacheUsage *cacheUsage)
+=======
+#include "zobrist.h"
+
+#define CACHESIZE     (128*1024)
+
+typedef struct {
+    uint64_t hashCode;
+    uint64_t nodeCount;
+} CacheEntry;
+
+uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
+>>>>>>> zobrist key
 {
     //compute directly
     if(depth < 1) return 1;
 
+<<<<<<< HEAD
     unsigned int hashCode = computeHashCode(board);
     int index = (HASHMAPSIZE - 1) & hashCode;
 
@@ -61,6 +75,21 @@ unsigned long long minimax(const ChessBoard *board, const int depth, CacheEntry 
 
 
     unsigned long long count = 0;
+=======
+    uint64_t hashCode = board->zobristKey;
+    int index = (CACHESIZE - 1) & hashCode;
+
+    CacheEntry *cacheEntry = cache + (depth * CACHESIZE + index);
+
+    if(cacheEntry->hashCode == hashCode) {
+        return cacheEntry->nodeCount;
+    }
+
+    cacheEntry->hashCode = hashCode;
+
+
+    uint64_t count = 0;
+>>>>>>> zobrist key
 
     Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
@@ -75,9 +104,16 @@ unsigned long long minimax(const ChessBoard *board, const int depth, CacheEntry 
     while(i < pointer) {
         makeMove(&nextBoard, boardInfo.allPieces, i ++);
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
+<<<<<<< HEAD
             count += minimax(&nextBoard, depth -1, cache, cacheUsage);
         }
         nextBoard = *board;
+=======
+            count += minimax(&nextBoard, depth -1, cache);
+        }
+        if(i < pointer)
+            nextBoard = *board;
+>>>>>>> zobrist key
     }
 
 
@@ -86,35 +122,58 @@ unsigned long long minimax(const ChessBoard *board, const int depth, CacheEntry 
     return count;
 }
 
+<<<<<<< HEAD
 unsigned long long perft(const ChessBoard *board, const int depth)
 {
     if(depth < 1) return 1;
 
     unsigned long long count = 0;
+=======
+uint64_t perft(const ChessBoard *board, const int depth)
+{
+    if(depth < 1) return 1;
+
+    uint64_t count = 0;
+>>>>>>> zobrist key
 
     Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
 
     ChessBoardComputedInfo boardInfo = computeInfo(board);
     generateMoves(board, &boardInfo, &pointer);
+<<<<<<< HEAD
 
+=======
+>>>>>>> zobrist key
     int  nMoves = pointer - moves;
 
     #pragma omp parallel for
     for(int i=0; i< nMoves; i++)
       {
+<<<<<<< HEAD
         CacheUsage    cacheUsage = {0};
         CacheEntry    cache[HASHMAPSIZE] = {{0, 0}};
+=======
+        CacheEntry    *cache = malloc(depth * CACHESIZE * sizeof(CacheEntry));
+>>>>>>> zobrist key
 
         ChessBoard nextBoard = *board;
         makeMove(&nextBoard, boardInfo.allPieces, moves + i);
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
+<<<<<<< HEAD
             unsigned long long n = minimax(&nextBoard, depth -1, cache, &cacheUsage);
+=======
+            uint64_t n = minimax(&nextBoard, depth -1, cache);
+>>>>>>> zobrist key
             #pragma omp atomic
             count += n;
         }
 
+<<<<<<< HEAD
         printf("Cache bad hits: %llu\n", cacheUsage.hits);
+=======
+        free(cache);
+>>>>>>> zobrist key
     }
 
     return count;

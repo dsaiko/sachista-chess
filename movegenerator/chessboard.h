@@ -27,57 +27,40 @@
 extern "C"{
 #endif
 
-typedef enum CastlingState {
-    KING_SIDE   = 1,
-    QUEEN_SIDE  = 2,
-    BOTH_SIDES  = KING_SIDE | QUEEN_SIDE
+typedef enum {
+    NONE        = 0,
+    KING_SIDE   = 0b01,
+    QUEEN_SIDE  = 0b10,
+    BOTH_SIDES  = 0b11
 } CastlingState;
 
-typedef enum Piece {
+typedef enum {
     NO_PIECE        = 0,
-    WHITE_KING      = 'K',
-    WHITE_QUEEN     = 'Q',
-    WHITE_BISHOP    = 'B',
-    WHITE_KNIGHT    = 'N',
-    WHITE_PAWN      = 'P',
-    WHITE_ROOK      = 'R',
-    BLACK_KING      = 'k',
-    BLACK_QUEEN     = 'q',
-    BLACK_BISHOP    = 'b',
-    BLACK_KNIGHT    = 'n',
-    BLACK_PAWN      = 'p',
-    BLACK_ROOK      = 'r'
+    KING            = 1,
+    QUEEN           = 2,
+    BISHOP          = 3,
+    KNIGHT          = 4,
+    ROOK            = 5,
+    PAWN            = 6
 } Piece;
 
-typedef enum PieceColor {
-    WHITE           = 'w',
-    BLACK           = 'b'
-} PieceColor;
+typedef enum {
+    WHITE           = 0,
+    BLACK           = 1
+} Color;
 
 typedef struct ChessBoard {
-    PieceColor nextMove;
-    CastlingState   castlingWhite;
-    CastlingState   castlingBlack;
+    Color           nextMove;
+
+    CastlingState   castling[2];
+    bitboard        pieces[2][7];
 
     int             halfMoveClock;
     int             fullMoveNumber;
+    int             enPassantTargetIndex;
 
-    bitboard        whiteKing,
-                    whiteQueen,
-                    whiteRook,
-                    whiteKnight,
-                    whiteBishop,
-                    whitePawn;
-
-    bitboard        blackKing,
-                    blackQueen,
-                    blackRook,
-                    blackKnight,
-                    blackBishop,
-                    blackPawn;
-
-    int             enPassantIndex;
-
+    //zobrist key is a hashcode of the beard (without halfMoveClock and fullMoveNumber info)
+    uint64_t        zobristKey;
 } ChessBoard;
 
 
@@ -100,11 +83,7 @@ typedef struct Move {
 #define MAX_MOVES_ARR_SIZE    220
 
 extern const ChessBoard emptyBoard;
-extern const ChessBoard standardBoard;
-
-#define WHITE_PIECES(b)     ((b)->whiteKing | (b)->whiteQueen | (b)->whiteRook | (b)->whiteKnight | (b)->whiteBishop | (b)->whitePawn)
-#define BLACK_PIECES(b)     ((b)->blackKing | (b)->blackQueen | (b)->blackRook | (b)->blackKnight | (b)->blackBishop | (b)->blackPawn)
-#define ALL_PIECES(b)       (WHITE_PIECES(b) | BLACK_PIECES(b))
+extern ChessBoard       standardBoard;
 
 int         boardCmp(const ChessBoard *board1, const ChessBoard *board2);
 
@@ -119,8 +98,36 @@ void        generateMoves(const ChessBoard *board, const ChessBoardComputedInfo 
 char *      move2str(const Move *m, char *buffer, const int bufferSize);
 void        makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
 
-unsigned long long perft(const ChessBoard *board, const int depth);
-int         isNotUnderCheck(const ChessBoard *board, const PieceColor nextMove);
+uint64_t    perft(const ChessBoard *board, const int depth);
+int         isNotUnderCheck(const ChessBoard *board, const Color nextMove);
+
+INLINE bitboard WHITE_PIECES(const ChessBoard *board) {
+    //no for loop for performance reasons
+    return
+            board->pieces[WHITE][QUEEN]     |
+            board->pieces[WHITE][KING]      |
+            board->pieces[WHITE][ROOK]      |
+            board->pieces[WHITE][BISHOP]    |
+            board->pieces[WHITE][KNIGHT]    |
+            board->pieces[WHITE][PAWN]
+    ;
+}
+
+INLINE bitboard BLACK_PIECES(const ChessBoard *board) {
+    return
+            board->pieces[BLACK][QUEEN]     |
+            board->pieces[BLACK][KING]      |
+            board->pieces[BLACK][ROOK]      |
+            board->pieces[BLACK][BISHOP]    |
+            board->pieces[BLACK][KNIGHT]    |
+            board->pieces[BLACK][PAWN]
+    ;
+}
+
+INLINE bitboard ALL_PIECES(const ChessBoard *board) {
+    return WHITE_PIECES(board) | BLACK_PIECES(board);
+}
+
 
 INLINE ChessBoardComputedInfo computeInfo(const ChessBoard *board) {
     ChessBoardComputedInfo info;
@@ -137,6 +144,8 @@ INLINE ChessBoardComputedInfo computeInfo(const ChessBoard *board) {
 
     return info;
 }
+
+uint64_t zobristKey(const ChessBoard *board);
 
 #ifdef __cplusplus
 }

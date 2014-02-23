@@ -25,34 +25,33 @@ void initMovesGeneratorPawn() {
      bitboard piece = BITMASK_SQUARE(i);
 
      //generate move
-     WHITE_PAWN_MOVES[i]         = moveBitBoard0(piece, 1, 0);
+     PAWN_MOVES[WHITE][i]         = moveBitBoard0(piece, 1, 0);
 
      //generate move
-     WHITE_PAWN_DOUBLE_MOVES[i]  = moveBitBoard0(piece, 2, 0);
+     PAWN_DOUBLE_MOVES[WHITE][i]  = moveBitBoard0(piece, 2, 0);
 
      //generate attacks
-     WHITE_PAWN_ATTACKS[i]       = moveBitBoard0(piece, 1, 1) | moveBitBoard0(piece, 1, -1);
+     PAWN_ATTACKS[WHITE][i]       = moveBitBoard0(piece, 1, 1) | moveBitBoard0(piece, 1, -1);
 
      //generate move
-     BLACK_PAWN_MOVES[i]         = moveBitBoard0(piece, -1, 0);
+     PAWN_MOVES[BLACK][i]         = moveBitBoard0(piece, -1, 0);
 
      //generate move
-     BLACK_PAWN_DOUBLE_MOVES[i]  = moveBitBoard0(piece, -2, 0);
+     PAWN_DOUBLE_MOVES[BLACK][i]  = moveBitBoard0(piece, -2, 0);
 
      //generate attacks
-     BLACK_PAWN_ATTACKS[i]       = moveBitBoard0(piece, -1, 1) | moveBitBoard0(piece, -1, -1);
-
+     PAWN_ATTACKS[BLACK][i]       = moveBitBoard0(piece, -1, 1) | moveBitBoard0(piece, -1, -1);
     }
 
 }
 
 
-INLINE bitboard generateAttacksPawn(const ChessBoard *board, const PieceColor color)
+INLINE bitboard generateAttacksPawn(const ChessBoard *board, const Color color)
 {
     if(color == WHITE) {
-        return ONE_NORTH_EAST(board->whitePawn) | ONE_NORTH_WEST(board->whitePawn);
+        return ONE_NORTH_EAST(board->pieces[color][PAWN]) | ONE_NORTH_WEST(board->pieces[color][PAWN]);
     } else {
-        return ONE_SOUTH_EAST(board->blackPawn) | ONE_SOUTH_WEST(board->blackPawn);
+        return ONE_SOUTH_EAST(board->pieces[color][PAWN]) | ONE_SOUTH_WEST(board->pieces[color][PAWN]);
     }
 }
 
@@ -61,96 +60,71 @@ void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardCo
 {
     const bitboard emptyBoard = ~boardInfo->allPieces;
 
-    if(board->nextMove == WHITE)
-    {
-        bitboard pieces = board->whitePawn;
+    int whiteBaseRank;
+    int blackBaseRank;
 
-        //while there are pieces
-        while (pieces) {
-            //get next piece
-            const int sourceIndex = bitPop(&pieces);
+    int whitePromotionRank;
+    int blackPromotionRank;
 
-            //get possible moves - moves minus my onw color
-            //one step forward
-            bitboard movesBoard = WHITE_PAWN_MOVES[sourceIndex] & emptyBoard;
+    if(board->nextMove == WHITE) {
+        whiteBaseRank = 16;
+        blackBaseRank = 999;
 
-            //if one step forward was sucessful and we are on base rank, try double move
-            if ((movesBoard) && (sourceIndex < 16)) {
-                movesBoard |=  ONE_NORTH(movesBoard) & emptyBoard;
-            }
-
-            //get attacks, only against oponent pieces
-            const bitboard attacks = WHITE_PAWN_ATTACKS[sourceIndex];
-            movesBoard |=  attacks & boardInfo->opponentPieces;
-
-            //for all moves
-            while (movesBoard) {
-                //get next move
-                const int targetIndex = bitPop(&movesBoard);
-
-                //white promotion?
-                if (targetIndex > 55) {
-                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_BISHOP, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_KNIGHT, sourceIndex,  targetIndex, 0);
-                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_QUEEN, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(moves, WHITE_PAWN, WHITE_ROOK,  sourceIndex, targetIndex, 0);
-                } else {
-                    //normal move/capture
-                    GENERATE_MOVE(moves, WHITE_PAWN, NO_PIECE, sourceIndex, targetIndex, 0);
-                }
-
-            }
-
-            //check enpassant capture
-            if(board->enPassantIndex) {
-                movesBoard = attacks & BITMASK_SQUARE(board->enPassantIndex);
-                if (movesBoard) GENERATE_MOVE(moves, WHITE_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
-            }
-
-        }
+        whitePromotionRank = 55;
+        blackPromotionRank = 0;
     } else {
-        bitboard pieces = board->blackPawn;
+        whiteBaseRank = 0;
+        blackBaseRank = 47;
 
-        //while there are pieces
-        while (pieces) {
-            //get next piece
-            const int sourceIndex = bitPop(&pieces);
+        whitePromotionRank = 999;
+        blackPromotionRank = 8;
+    }
 
-            //get possible moves - moves minus my onw color
-            //one step forward
-            bitboard movesBoard = BLACK_PAWN_MOVES[sourceIndex] & emptyBoard;
+    bitboard pawns = board->pieces[board->nextMove][PAWN];
 
-            //if one step forward was sucessful and we are on base rank, try double move
-            if ((movesBoard) && (sourceIndex > 47)) {
-                movesBoard |=  ONE_SOUTH(movesBoard) & emptyBoard;
-            }
+    //while there are pieces
+    while (pawns) {
+        //get next piece
+        const int sourceIndex = bitPop(&pawns);
 
-            //get attacks, only against oponent pieces
-            const bitboard attacks = BLACK_PAWN_ATTACKS[sourceIndex];
-            movesBoard |=  attacks & boardInfo->opponentPieces;
+        //get possible moves - moves minus my onw color
+        //one step forward
+        bitboard movesBoard = PAWN_MOVES[board->nextMove][sourceIndex] & emptyBoard;
 
-            //for all moves
-            while (movesBoard) {
-                //get next move
-                const int targetIndex = bitPop(&movesBoard);
-
-                //white promotion?
-                if (targetIndex < 8) {
-                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_BISHOP, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_KNIGHT, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_QUEEN, sourceIndex, targetIndex, 0);
-                    GENERATE_MOVE(moves, BLACK_PAWN, BLACK_ROOK, sourceIndex, targetIndex, 0);
-                } else {
-                    //normal move/capture
-                    GENERATE_MOVE(moves, BLACK_PAWN, NO_PIECE,  sourceIndex, targetIndex, 0);
-                }
-            }
-
-            //check enpassant capture
-            if(board->enPassantIndex) {
-                movesBoard = attacks & BITMASK_SQUARE(board->enPassantIndex);
-                if (movesBoard) GENERATE_MOVE(moves, BLACK_PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
-            }
+        //if one step forward was sucessful and we are on base rank, try double move
+        if(unlikely(sourceIndex < whiteBaseRank) && movesBoard) {
+            movesBoard |=  ONE_NORTH(movesBoard) & emptyBoard;
+        } else if(unlikely(sourceIndex > blackBaseRank) && movesBoard) {
+            movesBoard |=  ONE_SOUTH(movesBoard) & emptyBoard;
         }
+
+        //get attacks, only against oponent pieces
+        const bitboard attacks = PAWN_ATTACKS[board->nextMove][sourceIndex];
+        movesBoard |=  attacks & boardInfo->opponentPieces;
+
+        //for all moves
+        while (movesBoard) {
+            //get next move
+            const int targetIndex = bitPop(&movesBoard);
+
+            //promotion?
+            if (unlikely(targetIndex > whitePromotionRank || targetIndex < blackPromotionRank)) {
+                GENERATE_MOVE(moves, PAWN, BISHOP, sourceIndex, targetIndex, 0);
+                GENERATE_MOVE(moves, PAWN, KNIGHT, sourceIndex,  targetIndex, 0);
+                GENERATE_MOVE(moves, PAWN, QUEEN, sourceIndex, targetIndex, 0);
+                GENERATE_MOVE(moves, PAWN, ROOK,  sourceIndex, targetIndex, 0);
+            } else {
+                //normal move/capture
+                GENERATE_MOVE(moves, PAWN, NO_PIECE, sourceIndex, targetIndex, 0);
+            }
+
+        }
+
+        //check enpassant capture
+        if(unlikely(board->enPassantTargetIndex)) {
+            movesBoard = attacks & BITMASK_SQUARE(board->enPassantTargetIndex);
+            if (movesBoard) GENERATE_MOVE(moves, PAWN, NO_PIECE, sourceIndex, bitScan(movesBoard), 1);
+        }
+
     }
 }

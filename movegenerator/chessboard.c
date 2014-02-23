@@ -15,6 +15,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
+#include <ctype.h>
+
 #include "chessboard.h"
 #include "utils.h"
 
@@ -22,63 +25,27 @@
 
 const ChessBoard emptyBoard = {
       WHITE,
-      0,
-      0,
-      0,
-      1,
-      0,0,0,0,0,0,
-      0,0,0,0,0,0,
-      0,
-};
-
-const ChessBoard standardBoard = {
-      WHITE,
-      BOTH_SIDES,
-      BOTH_SIDES,
+      {NONE, NONE},
+      {{0},{0}},
       0,
       1,
-      BITMASK_E1,
-      BITMASK_D1,
-      BITMASK_A1 | BITMASK_H1,
-      BITMASK_B1 | BITMASK_G1,
-      BITMASK_C1 | BITMASK_F1,
-      BITMASK_A2 | BITMASK_B2 | BITMASK_C2 | BITMASK_D2 | BITMASK_E2 | BITMASK_F2 | BITMASK_G2 | BITMASK_H2,
-      BITMASK_E8,
-      BITMASK_D8,
-      BITMASK_A8 | BITMASK_H8,
-      BITMASK_B8 | BITMASK_G8,
-      BITMASK_C8 | BITMASK_F8,
-      BITMASK_A7 | BITMASK_B7 | BITMASK_C7 | BITMASK_D7 | BITMASK_E7 | BITMASK_F7 | BITMASK_G7 | BITMASK_H7,
+      0,
       0
 };
+
+ChessBoard standardBoard;
+
 
 int boardCmp(const ChessBoard *board1, const ChessBoard *board2)
 {
 
-    if(board1->nextMove         !=      board2->nextMove)       return -1;
-    if(board1->castlingWhite    !=      board2->castlingWhite)  return -1;
-    if(board1->castlingWhite    !=      board2->castlingWhite)  return -1;
-    if(board1->castlingBlack    !=      board2->castlingBlack)  return -1;
-    if(board1->halfMoveClock    !=      board2->halfMoveClock)  return -1;
-    if(board1->fullMoveNumber   !=      board2->fullMoveNumber) return -1;
+    if(board1->nextMove             !=      board2->nextMove)       return -1;
+    if(board1->halfMoveClock        !=      board2->halfMoveClock)  return -1;
+    if(board1->fullMoveNumber       !=      board2->fullMoveNumber) return -1;
+    if(board1->enPassantTargetIndex !=      board2->enPassantTargetIndex) return -1;
 
-    if(board1->whiteKing        !=      board2->whiteKing)      return -1;
-    if(board1->whiteQueen       !=      board2->whiteQueen)     return -1;
-    if(board1->whiteRook        !=      board2->whiteRook)      return -1;
-    if(board1->whiteKnight      !=      board2->whiteKnight)    return -1;
-    if(board1->whiteBishop      !=      board2->whiteBishop)    return -1;
-    if(board1->whitePawn        !=      board2->whitePawn)      return -1;
-
-    if(board1->blackKing        !=      board2->blackKing)      return -1;
-    if(board1->blackQueen       !=      board2->blackQueen)     return -1;
-    if(board1->blackRook        !=      board2->blackRook)      return -1;
-    if(board1->blackKnight      !=      board2->blackKnight)    return -1;
-    if(board1->blackBishop      !=      board2->blackBishop)    return -1;
-    if(board1->blackPawn        !=      board2->blackPawn)      return -1;
-
-    if(board1->enPassantIndex   !=      board2->enPassantIndex) return -1;
-
-    return 0;
+    if(memcmp(board1->castling, board2->castling, sizeof(board1->castling))) return -1;
+    return memcmp(board1->pieces, board2->pieces, sizeof(board1->pieces));
 }
 
 ChessBoard boardFromFEN(const char *fen) {
@@ -103,72 +70,55 @@ ChessBoard boardFromFEN(const char *fen) {
             const char i = c - '0';
 
             //output number of empty fields
-            board.whiteKing   <<= i;
-            board.whiteQueen  <<= i;
-            board.whiteRook   <<= i;
-            board.whiteKnight <<= i;
-            board.whiteBishop <<= i;
-            board.whitePawn   <<= i;
-
-            board.blackKing   <<= i;
-            board.blackQueen  <<= i;
-            board.blackRook   <<= i;
-            board.blackKnight <<= i;
-            board.blackBishop <<= i;
-            board.blackPawn   <<= i;
+            for(int color = WHITE; color <= BLACK; color ++) {
+                for(int piece = KING; piece <= PAWN; piece ++) {
+                    board.pieces[color][piece] <<= i;
+                }
+            }
         } else {
             //output a piece
 
-            board.whiteKing     =   (board.whiteKing    << 1) | (c == WHITE_KING      ? 1 : 0);
-            board.whiteQueen    =   (board.whiteQueen   << 1) | (c == WHITE_QUEEN     ? 1 : 0);
-            board.whiteRook     =   (board.whiteRook    << 1) | (c == WHITE_ROOK      ? 1 : 0);
-            board.whiteKnight   =   (board.whiteKnight  << 1) | (c == WHITE_KNIGHT    ? 1 : 0);
-            board.whiteBishop   =   (board.whiteBishop  << 1) | (c == WHITE_BISHOP    ? 1 : 0);
-            board.whitePawn     =   (board.whitePawn    << 1) | (c == WHITE_PAWN      ? 1 : 0);
+            board.pieces[WHITE][KING]   = (board.pieces[WHITE][KING] << 1)  | (c == 'K' ? 1 : 0);
+            board.pieces[WHITE][QUEEN]  = (board.pieces[WHITE][QUEEN] << 1) | (c == 'Q' ? 1 : 0);
+            board.pieces[WHITE][ROOK]   = (board.pieces[WHITE][ROOK] << 1)  | (c == 'R' ? 1 : 0);
+            board.pieces[WHITE][KNIGHT] = (board.pieces[WHITE][KNIGHT] << 1)| (c == 'N' ? 1 : 0);
+            board.pieces[WHITE][BISHOP] = (board.pieces[WHITE][BISHOP] << 1)| (c == 'B' ? 1 : 0);
+            board.pieces[WHITE][PAWN]   = (board.pieces[WHITE][PAWN] << 1)  | (c == 'P' ? 1 : 0);
 
-            board.blackKing     =   (board.blackKing    << 1) | (c == BLACK_KING      ? 1 : 0);
-            board.blackQueen    =   (board.blackQueen   << 1) | (c == BLACK_QUEEN     ? 1 : 0);
-            board.blackRook     =   (board.blackRook    << 1) | (c == BLACK_ROOK      ? 1 : 0);
-            board.blackKnight   =   (board.blackKnight  << 1) | (c == BLACK_KNIGHT    ? 1 : 0);
-            board.blackBishop   =   (board.blackBishop  << 1) | (c == BLACK_BISHOP    ? 1 : 0);
-            board.blackPawn     =   (board.blackPawn    << 1) | (c == BLACK_PAWN      ? 1 : 0);
+            board.pieces[BLACK][KING]   = (board.pieces[BLACK][KING] << 1)  | (c == 'k' ? 1 : 0);
+            board.pieces[BLACK][QUEEN]  = (board.pieces[BLACK][QUEEN] << 1) | (c == 'q' ? 1 : 0);
+            board.pieces[BLACK][ROOK]   = (board.pieces[BLACK][ROOK] << 1)  | (c == 'r' ? 1 : 0);
+            board.pieces[BLACK][KNIGHT] = (board.pieces[BLACK][KNIGHT] << 1)| (c == 'n' ? 1 : 0);
+            board.pieces[BLACK][BISHOP] = (board.pieces[BLACK][BISHOP] << 1)| (c == 'b' ? 1 : 0);
+            board.pieces[BLACK][PAWN]   = (board.pieces[BLACK][PAWN] << 1)  | (c == 'p' ? 1 : 0);
         }
 
         pos++;
     }
 
-    board.whiteKing     =   mirrorHorizontal(board.whiteKing);
-    board.whiteQueen    =   mirrorHorizontal(board.whiteQueen);
-    board.whiteRook     =   mirrorHorizontal(board.whiteRook);
-    board.whiteKnight   =   mirrorHorizontal(board.whiteKnight);
-    board.whiteBishop   =   mirrorHorizontal(board.whiteBishop);
-    board.whitePawn     =   mirrorHorizontal(board.whitePawn);
-
-    board.blackKing     =   mirrorHorizontal(board.blackKing);
-    board.blackQueen    =   mirrorHorizontal(board.blackQueen);
-    board.blackRook     =   mirrorHorizontal(board.blackRook);
-    board.blackKnight   =   mirrorHorizontal(board.blackKnight);
-    board.blackBishop   =   mirrorHorizontal(board.blackBishop);
-    board.blackPawn     =   mirrorHorizontal(board.blackPawn);
+    for(int color = WHITE; color <= BLACK; color ++) {
+        for(int piece = KING; piece <= PAWN; piece ++) {
+            board.pieces[color][piece] = mirrorHorizontal(board.pieces[color][piece]);
+        }
+    }
 
     pos++; //skip space
     if(pos < len)
-        board.nextMove = fen[pos++];
+        board.nextMove = fen[pos++] == 'w' ? WHITE : BLACK;
 
     pos++; //skip space
     while(pos < len) {
         const char c = fen[pos];
         if(c == ' ') break;
 
-        switch(c) {
-        case 'k':   board.castlingBlack |= KING_SIDE;
-                    break;
-        case 'q':   board.castlingBlack |= QUEEN_SIDE;
-                    break;
-        case 'K':   board.castlingWhite |= KING_SIDE;
-                    break;
-        case 'Q':   board.castlingWhite |= QUEEN_SIDE;
-                    break;
+        if(c == 'k') {
+            board.castling[BLACK] |= KING_SIDE;
+        } else if(c == 'q') {
+            board.castling[BLACK] |= QUEEN_SIDE;
+        } else if(c == 'K') {
+            board.castling[WHITE] |= KING_SIDE;
+        } else if(c == 'Q') {
+            board.castling[WHITE] |= QUEEN_SIDE;
         }
 
         pos++;
@@ -186,7 +136,7 @@ ChessBoard boardFromFEN(const char *fen) {
 
 
         if(strPos == 2) {
-            board.enPassantIndex = (enPassantNotation[0] - 'a') + ((enPassantNotation[1] - '1') << 3);
+            board.enPassantTargetIndex = (enPassantNotation[0] - 'a') + ((enPassantNotation[1] - '1') << 3);
         }
 
         pos++;
@@ -223,28 +173,29 @@ ChessBoard boardFromFEN(const char *fen) {
 
 
     //tune castling availability according to board setup
-    if ((board.whiteRook & BITMASK_A1) == 0) {
-        board.castlingWhite &= ~QUEEN_SIDE;
+    if ((board.pieces[WHITE][ROOK] & BITMASK_A1) == 0) {
+        board.castling[WHITE] &= ~QUEEN_SIDE;
     }
-    if ((board.whiteRook & BITMASK_H1) == 0) {
-        board.castlingWhite &= ~KING_SIDE;
+    if ((board.pieces[WHITE][ROOK] & BITMASK_H1) == 0) {
+        board.castling[WHITE] &= ~KING_SIDE;
     }
 
-    if ((board.blackRook & BITMASK_A8) == 0) {
-        board.castlingBlack &= ~QUEEN_SIDE;
+    if ((board.pieces[BLACK][ROOK] & BITMASK_A8) == 0) {
+        board.castling[BLACK] &= ~QUEEN_SIDE;
     }
-    if ((board.blackRook & BITMASK_H8) == 0) {
-        board.castlingBlack &= ~KING_SIDE;
+    if ((board.pieces[BLACK][ROOK] & BITMASK_H8) == 0) {
+        board.castling[BLACK] &= ~KING_SIDE;
     }
 
     //if king is misplaced, remove castling availability
-    if ((board.whiteKing & BITMASK_E1) == 0) {
-        board.castlingWhite = 0;
+    if ((board.pieces[WHITE][KING] & BITMASK_E1) == 0) {
+        board.castling[WHITE] = 0;
     }
-    if ((board.blackKing & BITMASK_E8) == 0) {
-        board.castlingBlack = 0;
+    if ((board.pieces[BLACK][KING] & BITMASK_E8) == 0) {
+        board.castling[BLACK] = 0;
     }
 
+    board.zobristKey = zobristKey(&board);
     return board;
 }
 
@@ -260,18 +211,18 @@ char*  board2str(const ChessBoard *board, const int decorated, char *buffer, con
     if(decorated)
         appendString(buffer, bufferSize, header);
 
-    bitboard  whiteKingReversed      = reverseRanks(board->whiteKing);
-    bitboard  whiteQueenReversed     = reverseRanks(board->whiteQueen);
-    bitboard  whiteRookReversed      = reverseRanks(board->whiteRook);
-    bitboard  whiteKnightReversed    = reverseRanks(board->whiteKnight);
-    bitboard  whiteBishopReversed    = reverseRanks(board->whiteBishop);
-    bitboard  whitePawnReversed      = reverseRanks(board->whitePawn);
-    bitboard  blackKingReversed      = reverseRanks(board->blackKing);
-    bitboard  blackQueenReversed     = reverseRanks(board->blackQueen);
-    bitboard  blackRookReversed      = reverseRanks(board->blackRook);
-    bitboard  blackKnightReversed    = reverseRanks(board->blackKnight);
-    bitboard  blackBishopReversed    = reverseRanks(board->blackBishop);
-    bitboard  blackPawnReversed      = reverseRanks(board->blackPawn);
+    bitboard  whiteKingReversed      = reverseRanks(board->pieces[WHITE][KING]);
+    bitboard  whiteQueenReversed     = reverseRanks(board->pieces[WHITE][QUEEN]);
+    bitboard  whiteRookReversed      = reverseRanks(board->pieces[WHITE][ROOK]);
+    bitboard  whiteKnightReversed    = reverseRanks(board->pieces[WHITE][KNIGHT]);
+    bitboard  whiteBishopReversed    = reverseRanks(board->pieces[WHITE][BISHOP]);
+    bitboard  whitePawnReversed      = reverseRanks(board->pieces[WHITE][PAWN]);
+    bitboard  blackKingReversed      = reverseRanks(board->pieces[BLACK][KING]);
+    bitboard  blackQueenReversed     = reverseRanks(board->pieces[BLACK][QUEEN]);
+    bitboard  blackRookReversed      = reverseRanks(board->pieces[BLACK][ROOK]);
+    bitboard  blackKnightReversed    = reverseRanks(board->pieces[BLACK][KNIGHT]);
+    bitboard  blackBishopReversed    = reverseRanks(board->pieces[BLACK][BISHOP]);
+    bitboard  blackPawnReversed      = reverseRanks(board->pieces[BLACK][PAWN]);
 
     // print all 64 pieces
     for (int i = 0; i < 64; i++) {
@@ -288,29 +239,29 @@ char*  board2str(const ChessBoard *board, const int decorated, char *buffer, con
         bitboard test = (1ULL << i);
 
         if (whiteKingReversed & test) {
-            c = WHITE_KING;
+            c = 'K';
         } else if (whiteQueenReversed & test) {
-            c = WHITE_QUEEN;
+            c = 'Q';
         } else if (whiteRookReversed & test) {
-            c = WHITE_ROOK;
+            c = 'R';
         } else if (whiteKnightReversed & test) {
-            c = WHITE_KNIGHT;
+            c = 'N';
         } else if (whiteBishopReversed & test) {
-            c = WHITE_BISHOP;
+            c = 'B';
         } else if (whitePawnReversed & test) {
-            c = WHITE_PAWN;
+            c = 'P';
         } else if (blackKingReversed & test) {
-            c = BLACK_KING;
+            c = 'k';
         } else if (blackQueenReversed & test) {
-            c = BLACK_QUEEN;
+            c = 'q';
         } else if (blackRookReversed & test) {
-            c = BLACK_ROOK;
+            c = 'r';
         } else if (blackKnightReversed & test) {
-            c = BLACK_KNIGHT;
+            c = 'n';
         } else if (blackBishopReversed & test) {
-            c = BLACK_BISHOP;
+            c = 'b';
         } else if (blackPawnReversed & test) {
-            c = BLACK_PAWN;
+            c = 'p';
         }
 
         appendChar(buffer, bufferSize, c);
@@ -383,29 +334,30 @@ ChessBoard boardFromString(const char *buffer) {
 
 
     //tune castling availability according to board setup
-    if ((board.whiteRook & BITMASK_A1) == 0) {
-        board.castlingWhite &= ~QUEEN_SIDE;
+    if ((board.pieces[WHITE][ROOK] & BITMASK_A1) == 0) {
+        board.castling[WHITE] &= ~QUEEN_SIDE;
     }
-    if ((board.whiteRook & BITMASK_H1) == 0) {
-        board.castlingWhite &= ~KING_SIDE;
+    if ((board.pieces[WHITE][ROOK] & BITMASK_H1) == 0) {
+        board.castling[WHITE] &= ~KING_SIDE;
     }
 
-    if ((board.blackRook & BITMASK_A8) == 0) {
-        board.castlingBlack &= ~QUEEN_SIDE;
+    if ((board.pieces[BLACK][ROOK] & BITMASK_A8) == 0) {
+        board.castling[BLACK] &= ~QUEEN_SIDE;
     }
-    if ((board.blackRook & BITMASK_H8) == 0) {
-        board.castlingBlack &= ~KING_SIDE;
+    if ((board.pieces[BLACK][ROOK] & BITMASK_H8) == 0) {
+        board.castling[BLACK] &= ~KING_SIDE;
     }
 
 
     //if king is misplaced, remove castling availability
-    if ((board.whiteKing & BITMASK_E1) == 0) {
-        board.castlingWhite = 0;
+    if ((board.pieces[WHITE][KING] & BITMASK_E1) == 0) {
+        board.castling[WHITE] = 0;
     }
-    if ((board.blackKing & BITMASK_E8) == 0) {
-        board.castlingBlack = 0;
+    if ((board.pieces[BLACK][KING] & BITMASK_E8) == 0) {
+        board.castling[BLACK] = 0;
     }
 
+    board.zobristKey = zobristKey(&board);
     return board;
 }
 
@@ -456,20 +408,20 @@ char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
     }
 
     // next move
-    appendChars(buffer, bufferSize, 3, ' ', board->nextMove, ' ');
+    appendChars(buffer, bufferSize, 3, ' ', board->nextMove == WHITE ? 'w' : 'b', ' ');
 
 
     // castling
-    if (board->castlingWhite & KING_SIDE)                   appendChar(buffer, bufferSize, 'K');
-    if (board->castlingWhite & QUEEN_SIDE)                  appendChar(buffer, bufferSize, 'Q');
-    if (board->castlingBlack & KING_SIDE)                   appendChar(buffer, bufferSize, 'k');
-    if (board->castlingBlack & QUEEN_SIDE)                  appendChar(buffer, bufferSize, 'q');
-    if ((board->castlingBlack | board->castlingWhite) == 0) appendChar(buffer, bufferSize, '-');
+    if (board->castling[WHITE] & KING_SIDE)                   appendChar(buffer, bufferSize, 'K');
+    if (board->castling[WHITE] & QUEEN_SIDE)                  appendChar(buffer, bufferSize, 'Q');
+    if (board->castling[BLACK] & KING_SIDE)                   appendChar(buffer, bufferSize, 'k');
+    if (board->castling[BLACK] & QUEEN_SIDE)                  appendChar(buffer, bufferSize, 'q');
+    if ((board->castling[BLACK] | board->castling[WHITE]) == 0) appendChar(buffer, bufferSize, '-');
     appendChar(buffer, bufferSize, ' ');
 
     // enPassant
-    if (board->enPassantIndex) {
-        appendString(buffer, bufferSize, fieldNotation(board->enPassantIndex, data, 3));
+    if (board->enPassantTargetIndex) {
+        appendString(buffer, bufferSize, fieldNotation(board->enPassantTargetIndex, data, 3));
     } else {
         appendChar(buffer, bufferSize, '-');
     }
@@ -501,7 +453,16 @@ char *move2str(const Move *m, char *buffer, const int bufferSize) {
     appendString(buffer, bufferSize, notation);
 
     if(m->promotionPiece) {
-        notation[0] = m->promotionPiece;
+        switch(m->promotionPiece) {
+        case QUEEN:     notation[0] = 'Q'; break;
+        case KING:      notation[0] = 'K'; break;
+        case ROOK:      notation[0] = 'R'; break;
+        case BISHOP:    notation[0] = 'B'; break;
+        case KNIGHT:    notation[0] = 'N'; break;
+        case PAWN:      notation[0] = 'P'; break;
+        default:        ;
+        }
+
         notation[1] = '\0';
         appendString(buffer, bufferSize, notation);
     }

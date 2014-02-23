@@ -17,8 +17,15 @@
 
 #include "chessboard.h"
 #include "movegenerator.h"
+#include "zobrist.h"
+
+extern void initZobrist();
 
 void initMovesGenerator() {
+    initZobrist();
+
+    standardBoard = boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
     initMovesGeneratorKnight();
     initMovesGeneratorPawn();
     initMovesGeneratorKing();
@@ -57,70 +64,56 @@ bitboard moveBitBoard0(bitboard b, const int up, const int right) {
 }
 
 
-int isNotUnderCheck(const ChessBoard *board, const PieceColor nextMove) {
+INLINE int isUnderAttack(const ChessBoard *board, const char color, const bitboard allPieces, const bitboard bitmask) {
+
+    bitboard attacks = generateAttacksRook(board, color, allPieces);
+    if(attacks & bitmask) return 1;
+    attacks  =  generateAttacksBishop(board, color, allPieces);
+    if(attacks & bitmask) return 1;
+    attacks  =  generateAttacksKnight(board, color);
+    if(attacks & bitmask) return 1;
+    attacks  =  generateAttacksPawn(board, color);
+    if(attacks & bitmask) return 1;
+    attacks  =  generateAttacksKing(board, color);
+    if(attacks & bitmask) return 1;
+
+    return 0;
+}
+
+
+int isNotUnderCheck(const ChessBoard *board, const Color nextMove) {
+
    const bitboard allPieces = ALL_PIECES(board);
-   bitboard rooks;
-   bitboard bishops;
-   int kingIndex;
 
-   if (nextMove == BLACK) {
-       //check if white king is not under check
-       if(board->whiteKing == 0) return 0;
-       kingIndex = bitScan(board->whiteKing);
+   const Color opponentColor = nextMove == BLACK ? WHITE : BLACK;
 
-       if (board->blackPawn & WHITE_PAWN_ATTACKS[kingIndex]) {
+   //check if my king is not under check by opponent pieces
+   const bitboard king = board->pieces[opponentColor][KING];
+   if(!king) return 0;
+   int kingIndex = bitScan(king);
+
+   const bitboard *pieces = (bitboard *) board->pieces[nextMove];
+
+   if (pieces[PAWN]   & PAWN_ATTACKS[opponentColor][kingIndex]) return 0;
+   if (pieces[KNIGHT] & KNIGHT_MOVES[kingIndex])                return 0;
+   if (pieces[KING]   & KING_MOVES[kingIndex])                  return 0;
+
+   const bitboard rooks   = pieces[QUEEN] | pieces[ROOK];
+   if(rooks) {
+
+       if (MOVE_RANK_ATTACKS[kingIndex][(int) (((allPieces & MOVE_RANK_MASK[kingIndex]) >> MOVE_RANK_SHIFT[kingIndex]))] & rooks)
            return 0;
-       }
-
-       if (board->blackKnight & KNIGHT_MOVES[kingIndex]) {
+       if (MOVE_FILE_ATTACKS[kingIndex][(int) (((allPieces & MOVE_FILE_MASK[kingIndex]) * MOVE_FILE_MAGIC[kingIndex]) >> 57)] & rooks)
            return 0;
-       }
-
-       if (board->blackKing & KING_MOVES[kingIndex]) {
-           return 0;
-       }
-
-       rooks = board->blackQueen | board->blackRook;
-       bishops = board->blackQueen | board->blackBishop;
-
-   } else {
-       //check if black king is not under check
-       if(board->blackKing == 0) return 0;
-       kingIndex = bitScan(board->blackKing);
-
-       if (board->whitePawn & BLACK_PAWN_ATTACKS[kingIndex]) {
-           return 0;
-       }
-
-       if (board->whiteKnight & KNIGHT_MOVES[kingIndex]) {
-           return 0;
-       }
-
-       if (board->whiteKing & KING_MOVES[kingIndex]) {
-           return 0;
-       }
-
-       rooks = board->whiteQueen | board->whiteRook;
-       bishops = board->whiteQueen | board->whiteBishop;
-
    }
 
-   if (rooks) {
-       if (MOVE_RANK_ATTACKS[kingIndex][(int) (((allPieces & MOVE_RANK_MASK[kingIndex]) >> MOVE_RANK_SHIFT[kingIndex]))] & rooks) {
-           return 0;
-       }
-       if (MOVE_FILE_ATTACKS[kingIndex][(int) (((allPieces & MOVE_FILE_MASK[kingIndex]) * MOVE_FILE_MAGIC[kingIndex]) >> 57)] & rooks) {
-           return 0;
-       }
-   }
+   const bitboard bishops = pieces[QUEEN] | pieces[BISHOP];
+   if(bishops) {
 
-   if (bishops) {
-       if (MOVE_A8H1_ATTACKS[kingIndex][(int) (((allPieces & MOVE_A8H1_MASK[kingIndex]) * MOVE_A8H1_MAGIC[kingIndex]) >> 57)] & bishops) {
+       if (MOVE_A8H1_ATTACKS[kingIndex][(int) (((allPieces & MOVE_A8H1_MASK[kingIndex]) * MOVE_A8H1_MAGIC[kingIndex]) >> 57)] & bishops)
            return 0;
-       }
-       if (MOVE_A1H8_ATTACKS[kingIndex][(int) (((allPieces & MOVE_A1H8_MASK[kingIndex]) * MOVE_A1H8_MAGIC[kingIndex]) >> 57)] & bishops) {
+       if (MOVE_A1H8_ATTACKS[kingIndex][(int) (((allPieces & MOVE_A1H8_MASK[kingIndex]) * MOVE_A1H8_MAGIC[kingIndex]) >> 57)] & bishops)
            return 0;
-       }
    }
 
    return 1;
