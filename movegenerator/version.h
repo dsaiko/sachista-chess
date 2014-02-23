@@ -3,11 +3,7 @@
 #define SACHISTA_CHESS_VERSION_H
 
 #define IMPLEMENTATION_VERSION "0.01-41-gcde8b15"
-<<<<<<< HEAD
 #define IMPLEMENTATION_DATE "2014-02-13 01:43"
-=======
-#define IMPLEMENTATION_DATE "2014-02-23 01:38"
->>>>>>> zobrist key
 
 #endif
 

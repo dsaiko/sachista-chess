@@ -28,10 +28,7 @@ add_library (
     bitscan
     popcount
     makemove
-<<<<<<< HEAD
-=======
     zobrist
->>>>>>> zobrist key
     perft
 )
 

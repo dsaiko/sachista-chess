@@ -65,6 +65,8 @@ int main(int argc, char **argv) {
    int depth = atoi(argv[argc - 1]);
    if(depth == 0) return 1;
 
+   initMovesGenerator();
+
    ChessBoard board = standardBoard;
 
    if(argc == 3) {
@@ -77,7 +79,6 @@ int main(int argc, char **argv) {
 
    fflush(stdout);
 
-   initMovesGenerator();
 
    struct timeval start, end;
 
