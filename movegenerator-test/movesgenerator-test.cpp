@@ -22,7 +22,7 @@
 void testMoves(const int expectedCount, const char *boardString)
 {
     ChessBoard board = boardFromString(boardString);
-    Move moves[256];
+    Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
 
     ChessBoardComputedInfo boardInfo = computeInfo(&board);
@@ -35,7 +35,7 @@ void testMoves(const int expectedCount, const char *boardString)
 void testMovesFromFen(const int expectedCount, const char *boardString)
 {
     ChessBoard board = boardFromFEN(boardString);
-    Move moves[256];
+    Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
 
     ChessBoardComputedInfo boardInfo = computeInfo(&board);
@@ -74,6 +74,34 @@ TEST(MovesGenerator, HashCode)
     key1 = zobristKey(&board);
     key2 = zobristKey(&board2);
     CHECK_FALSE(key1 == key2);
+
+
+    Move moves[MAX_MOVES_ARR_SIZE];
+
+    //do 15 legal moves on the board
+    for(int n=0; n<15; n++) {
+        Move *pointer = moves;
+
+        ChessBoardComputedInfo boardInfo = computeInfo(&board);
+        generateMoves(&board, &boardInfo, &pointer);
+
+        Move *i = moves;
+
+        while(i < pointer) {
+            ChessBoard boardBackup = board;
+            makeMove(&board, boardInfo.allPieces, i ++);
+            if(isNotUnderCheck(&board, board.nextMove)) {
+                //find first legal move
+                break;
+            }
+            board = boardBackup;
+        }
+    }
+
+    //check the keys are the same as computed
+    key1 = zobristKey(&board);
+    key2 = board.zobristKey;
+    CHECK(key1 == key2);
 }
 
 TEST(MovesGenerator, PerfT)

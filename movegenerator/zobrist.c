@@ -39,7 +39,7 @@ INLINE uint64_t rand64() {
 
 
 void initZobrist() {
-    int seed = 73;
+    int seed = 113;
     a = 0xF1EA5EED, b = c = d = 0xD4E12C77;
     for (int i = 0; i < seed; ++i) rand64();
 
@@ -57,32 +57,30 @@ void initZobrist() {
         Z_CASTLING[BLACK][i] = rand64();
     }
 
-    Z_SIDE[0] = rand64();
-    Z_SIDE[1] = rand64();
+    Z_SIDE = rand64();
 }
 
 
 uint64_t zobristKey(const ChessBoard *board) {
-    uint64_t hash = 0;
+    uint64_t zobristKey = 0;
 
     if(board->nextMove)
-        hash ^= Z_SIDE[board->nextMove];
+        zobristKey ^= Z_SIDE;
 
     if(board->castling[WHITE])
-        hash ^= Z_CASTLING[WHITE][board->castling[WHITE]];
+        zobristKey ^= Z_CASTLING[WHITE][board->castling[WHITE]];
 
     if(board->castling[BLACK])
-        hash ^= Z_CASTLING[BLACK][board->castling[BLACK]];
+        zobristKey ^= Z_CASTLING[BLACK][board->castling[BLACK]];
 
     if(board->enPassantTargetIndex)
-        hash ^= Z_ENPASSANT[board->enPassantTargetIndex];
+        zobristKey ^= Z_ENPASSANT[board->enPassantTargetIndex];
 
     for(int color = 0; color <= 1; color ++) {
-        for(int piece = 1; piece <= 7; piece ++) {
+        for(int piece = 1; piece <= 6; piece ++) {
             bitboard pieces = board->pieces[color][piece];
-            while(pieces) hash ^= Z_PIECES[color][piece][bitPop(&pieces)];
+            while(pieces) zobristKey ^= Z_PIECES[color][piece][bitPop(&pieces)];
         }
     }
-
-    return hash;
+    return zobristKey;
 }

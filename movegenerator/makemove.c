@@ -18,6 +18,7 @@
 #include "chessboard.h"
 #include "bitboard.h"
 #include "movegenerator.h"
+#include "zobrist.h"
 
 #define abs(x) ((x) > 0 ? (x) : (-(x)))
 
@@ -33,14 +34,27 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
     board->halfMoveClock++;
 
     //en passant target
-    board->enPassantTargetIndex = 0;
+    if(board->enPassantTargetIndex) {
+        board->zobristKey ^= Z_ENPASSANT[board->enPassantTargetIndex];
+        board->enPassantTargetIndex = 0;
+    }
+
+    if(board->castling[WHITE])
+        board->zobristKey ^= Z_CASTLING[WHITE][board->castling[WHITE]];
+
+    if(board->castling[BLACK])
+        board->zobristKey ^= Z_CASTLING[BLACK][board->castling[BLACK]];
+
 
     if(m->piece == KNIGHT) {
             pieces[KNIGHT] ^= source | target;
+            board->zobristKey ^= Z_PIECES[board->nextMove][m->piece][m->sourceIndex] ^ Z_PIECES[board->nextMove][m->piece][m->targetIndex];
     } else if(m->piece == BISHOP) {
             pieces[BISHOP] ^= source | target;
+            board->zobristKey ^= Z_PIECES[board->nextMove][m->piece][m->sourceIndex] ^ Z_PIECES[board->nextMove][m->piece][m->targetIndex];
     } else if(m->piece == ROOK) {
             pieces[ROOK] ^= source | target;
+            board->zobristKey ^= Z_PIECES[board->nextMove][m->piece][m->sourceIndex] ^ Z_PIECES[board->nextMove][m->piece][m->targetIndex];
             if(unlikely(board->castling[board->nextMove])) {
                 if(unlikely(m->sourceIndex == INDEX_A1) && board->nextMove == WHITE)
                     board->castling[board->nextMove] &= ~QUEEN_SIDE;
@@ -53,43 +67,57 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
             }
     } else if(m->piece == QUEEN) {
             pieces[QUEEN] ^= source | target;
+            board->zobristKey ^= Z_PIECES[board->nextMove][m->piece][m->sourceIndex] ^ Z_PIECES[board->nextMove][m->piece][m->targetIndex];
     } else if(m->piece == KING) {
             pieces[KING] ^= source | target;
+            board->zobristKey ^= Z_PIECES[board->nextMove][m->piece][m->sourceIndex] ^ Z_PIECES[board->nextMove][m->piece][m->targetIndex];
+
             board->castling[board->nextMove] = 0;
             if (unlikely(m->sourceIndex == INDEX_E1) && board->nextMove == WHITE) {
                 //castling
                 if (m->targetIndex == INDEX_C1) {
                     pieces[ROOK] ^= BITMASK_A1 | BITMASK_D1;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][ROOK][INDEX_A1] ^ Z_PIECES[board->nextMove][ROOK][INDEX_D1];
                 } else if(m->targetIndex == INDEX_G1) {
                     pieces[ROOK] ^= BITMASK_H1 | BITMASK_F1;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][ROOK][INDEX_H1] ^ Z_PIECES[board->nextMove][ROOK][INDEX_F1];
                 }
             }
             if (unlikely(m->sourceIndex == INDEX_E8) && board->nextMove == BLACK) {
                 //castling
                 if (m->targetIndex == INDEX_C8) {
                     pieces[ROOK] ^= BITMASK_A8 | BITMASK_D8;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][ROOK][INDEX_A8] ^ Z_PIECES[board->nextMove][ROOK][INDEX_D8];
                 } else if(m->targetIndex == INDEX_G8) {
                     pieces[ROOK] ^= BITMASK_H8 | BITMASK_F8;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][ROOK][INDEX_H8] ^ Z_PIECES[board->nextMove][ROOK][INDEX_F8];
                 }
             }
 
     } else if(likely(m->piece == PAWN)) {
             board->halfMoveClock = 0;
             pieces[PAWN] ^= source | target;
+            board->zobristKey ^= Z_PIECES[board->nextMove][m->piece][m->sourceIndex] ^ Z_PIECES[board->nextMove][m->piece][m->targetIndex];
+
             int step = m->targetIndex - m->sourceIndex;
             if (abs(step) > 10) {
                 board->enPassantTargetIndex = m->sourceIndex + (board->nextMove == WHITE ? 8 : -8);
             } else
-            if (m->promotionPiece) {
+            if (unlikely(m->promotionPiece)) {
                 pieces[PAWN] ^= target;
+                board->zobristKey ^= Z_PIECES[board->nextMove][PAWN][m->targetIndex];
                 if (m->promotionPiece == QUEEN) {
                     pieces[QUEEN] |= target;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][QUEEN][m->targetIndex];
                 } else if (m->promotionPiece == ROOK) {
                     pieces[ROOK] |= target;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][ROOK][m->targetIndex];
                 } else if (m->promotionPiece == BISHOP) {
                     pieces[BISHOP] |= target;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][BISHOP][m->targetIndex];
                 } else if (m->promotionPiece == KNIGHT) {
                     pieces[KNIGHT] |= target;
+                    board->zobristKey ^= Z_PIECES[board->nextMove][KNIGHT][m->targetIndex];
                 }
             }
     }
@@ -102,33 +130,39 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
         if (unlikely(m->isEnPassant)) {
             if(board->nextMove == WHITE) {
                 board->pieces[opponentColor][PAWN] ^= ONE_SOUTH(target);
+                board->zobristKey ^= Z_PIECES[opponentColor][PAWN][m->targetIndex - 8];
             } else {
                 board->pieces[opponentColor][PAWN] ^= ONE_NORTH(target);
+                board->zobristKey ^= Z_PIECES[opponentColor][PAWN][m->targetIndex + 8];
             }
         } else if (board->pieces[opponentColor][BISHOP] & target) {
             board->pieces[opponentColor][BISHOP] ^= target;
+            board->zobristKey ^= Z_PIECES[opponentColor][BISHOP][m->targetIndex];
         } else if (board->pieces[opponentColor][KNIGHT] & target) {
             board->pieces[opponentColor][KNIGHT] ^= target;
+            board->zobristKey ^= Z_PIECES[opponentColor][KNIGHT][m->targetIndex];
         } else if (board->pieces[opponentColor][PAWN] & target) {
             board->pieces[opponentColor][PAWN] ^= target;
+            board->zobristKey ^= Z_PIECES[opponentColor][PAWN][m->targetIndex];
         } else if (board->pieces[opponentColor][QUEEN] & target) {
             board->pieces[opponentColor][QUEEN] ^= target;
+            board->zobristKey ^= Z_PIECES[opponentColor][QUEEN][m->targetIndex];
         } else if (board->pieces[opponentColor][ROOK] & target) {
             board->pieces[opponentColor][ROOK] ^= target;
+            board->zobristKey ^= Z_PIECES[opponentColor][ROOK][m->targetIndex];
+
             if(board->nextMove == WHITE) {
                 if (m->targetIndex == INDEX_A8) {
-                                  board->castling[BLACK] &= ~QUEEN_SIDE;
-                              } else if (m->targetIndex == INDEX_H8) {
-                                  board->castling[BLACK] &= ~KING_SIDE;
-                              }
-
+                  board->castling[BLACK] &= ~QUEEN_SIDE;
+                } else if (m->targetIndex == INDEX_H8) {
+                  board->castling[BLACK] &= ~KING_SIDE;
+                }
             } else {
                 if (m->targetIndex == INDEX_A1) {
-                        board->castling[WHITE] &= ~QUEEN_SIDE;
-                    } else if (m->targetIndex == INDEX_H1) {
-                        board->castling[WHITE] &= ~KING_SIDE;
-                    }
-
+                   board->castling[WHITE] &= ~QUEEN_SIDE;
+                } else if (m->targetIndex == INDEX_H1) {
+                   board->castling[WHITE] &= ~KING_SIDE;
+                }
             }
         }
     }
@@ -137,7 +171,15 @@ void makeMove(ChessBoard *board, const bitboard allPieces, const Move *m) {
         board->fullMoveNumber++;
 
     board->nextMove = opponentColor;
+    board->zobristKey ^= Z_SIDE;
 
-    board->zobristKey = zobristKey(board);
+    if(board->castling[WHITE])
+        board->zobristKey ^= Z_CASTLING[WHITE][board->castling[WHITE]];
+
+    if(board->castling[BLACK])
+        board->zobristKey ^= Z_CASTLING[BLACK][board->castling[BLACK]];
+
+    if(board->enPassantTargetIndex)
+        board->zobristKey ^= Z_ENPASSANT[board->enPassantTargetIndex];
 }
 

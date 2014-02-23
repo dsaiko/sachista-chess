@@ -6,11 +6,12 @@
 #include "utils.h"
 #include "zobrist.h"
 
-#define CACHESIZE     (128*1024)
+#define CACHESIZE     (16*1024*1024)
 
 typedef struct {
     uint64_t hashCode;
     uint64_t nodeCount;
+    int      depth;
 } CacheEntry;
 
 uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
@@ -21,14 +22,10 @@ uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
     uint64_t hashCode = board->zobristKey;
     int index = (CACHESIZE - 1) & hashCode;
 
-    CacheEntry *cacheEntry = cache + (depth * CACHESIZE + index);
+    CacheEntry cacheEntry = *(cache + index);
 
-    if(cacheEntry->hashCode == hashCode) {
-        return cacheEntry->nodeCount;
-    }
-
-    cacheEntry->hashCode = hashCode;
-
+    if(cacheEntry.hashCode == hashCode && cacheEntry.depth == depth)
+        return cacheEntry.nodeCount;
 
     uint64_t count = 0;
 
@@ -51,8 +48,14 @@ uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
             nextBoard = *board;
     }
 
+    CacheEntry *pCacheEntry = (cache +index);
 
-    cacheEntry->nodeCount = count;
+    #pragma omp critical
+    {
+        pCacheEntry->hashCode = hashCode;
+        pCacheEntry->nodeCount = count;
+        pCacheEntry->depth = depth;
+    }
 
     return count;
 }
@@ -71,10 +74,11 @@ uint64_t perft(const ChessBoard *board, const int depth)
 
     int  nMoves = pointer - moves;
 
+    CacheEntry    *cache = malloc(CACHESIZE * sizeof(CacheEntry));
+
     #pragma omp parallel for
     for(int i=0; i< nMoves; i++)
       {
-        CacheEntry    *cache = malloc(depth * CACHESIZE * sizeof(CacheEntry));
 
         ChessBoard nextBoard = *board;
         makeMove(&nextBoard, boardInfo.allPieces, moves + i);
@@ -84,8 +88,9 @@ uint64_t perft(const ChessBoard *board, const int depth)
         count += n;
       }
 
-        free(cache);
     }
+
+    free(cache);
 
     return count;
 }

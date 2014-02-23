@@ -26,6 +26,6 @@
 uint64_t Z_PIECES[2][7][64];
 uint64_t Z_CASTLING[2][4];
 uint64_t Z_ENPASSANT[64];
-uint64_t Z_SIDE[2];
+uint64_t Z_SIDE;
 
 #endif
