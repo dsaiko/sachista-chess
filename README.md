@@ -39,6 +39,8 @@ Adding OpenMP Multithreading and perft caching boosted my perft results to the s
 Generator in a nutshell:
 
 - C language, C99 standard, CMake
+- magic bitboards
+- zobrist keys
 - tested on x64 and x86 Linux and Windows platforms, compiled by GCC and ICC
 - OpenMP multi threading
 - CppUTest unit testing suite
