@@ -38,21 +38,23 @@ Adding OpenMP Multithreading and perft caching boosted my perft results to the s
 
 Generator in a nutshell:
 
-C language, C99 standard, CMake
-tested on x64 and x86 Linux and Windows platforms, compiled by GCC and ICC
-OpenMP multi threading
-CppUTest unit testing suite
-valid perft with multithreading and position cache
-no unmake-move, using board-copy for perft
-posible future paths: chess gui or chess engine
+- C language, C99 standard, CMake
+- tested on x64 and x86 Linux and Windows platforms, compiled by GCC and ICC
+- OpenMP multi threading
+- CppUTest unit testing suite
+- valid perft with multithreading and position cache
+- no unmake-move, using board-copy for perft
+- posible future paths: chess gui or chess engine
+
+
 Would like to give a credit to following sources which were my (technical or motivation) inspiration:
 
-Mediocre Chess blog
-Chess programming wiki
-Stockfish
-Phalanx
+- Mediocre Chess blog
+- Chess programming wiki
+- Stockfish
+- Phalanx
 
-note on unmake move: I have implemented unmake move, but that code is not very clear and it still required 
+*note on unmake move: I have implemented unmake move, but that code is not very clear and it still required 
 additional arrays where non-recoverable info would be stored. 
 Then I deleted unmake move and replaced it simply with currentBoard=*boardBackup; board backuping. 
 Code is cleaner, performance the same in my case.
