@@ -32,6 +32,7 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 enable_language             (C)
+enable_language		    (CXX)
 
 find_package(OpenMP REQUIRED)
 if (OPENMP_FOUND)
@@ -41,8 +42,8 @@ endif()
 
 add_subdirectory            (movegenerator)
 add_subdirectory            (movegenerator-perft)
+add_subdirectory	    (engine-uci)
 
-enable_language             (CXX)
 
 add_subdirectory            (movegenerator-test)
 

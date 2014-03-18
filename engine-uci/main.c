@@ -15,30 +15,38 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <CppUTest/CommandLineTestRunner.h>
-#include "chessboard.h"
+#include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+#include <stdlib.h>
+#include "version.h"
+#include "commands.h"
 
-TEST_GROUP(ChessPieceTest)
-{
-};
 
-TEST(ChessPieceTest, TestPieces)
-{
-    Move m;
-    m.piece = PAWN;
-    m.sourceIndex = INDEX_A1;
-    m.targetIndex = INDEX_H8;
-    m.promotionPiece = KING;
 
-    char moveNotation[16];
-    STRCMP_EQUAL("a1h8k", move2str(&m, moveNotation, sizeof(moveNotation) / sizeof(char)));
+int main(int argc, char **argv) {
 
-    m.piece = PAWN;
-    m.sourceIndex = INDEX_A2;
-    m.targetIndex = INDEX_A1;
-    m.promotionPiece = QUEEN;
+#if defined(__i386__)
+    char architecture[] = "x86";
+#elif defined(__x86_64__)
+    char architecture[] = "x64";
+#else
+    char architecture[] = "UnknownArchitecture";
+#endif
 
-    STRCMP_EQUAL("a2a1q", move2str(&m, moveNotation, sizeof(moveNotation) / sizeof(char)));
+   printf("Welcome to %s sachista-chess %s (%s)!\n\n",
+          architecture,
+          IMPLEMENTATION_VERSION,
+          IMPLEMENTATION_DATE
+   );
 
+   #pragma omp parallel sections // starts a new team
+   {
+        #pragma omp section
+        {
+            processCommands();
+        }
+    }
+
+   return 0;
 }
-

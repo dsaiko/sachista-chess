@@ -442,12 +442,12 @@ char *move2str(const Move *m, char *buffer, const int bufferSize) {
 
     if(m->promotionPiece) {
         switch(m->promotionPiece) {
-        case QUEEN:     notation[0] = 'Q'; break;
-        case KING:      notation[0] = 'K'; break;
-        case ROOK:      notation[0] = 'R'; break;
-        case BISHOP:    notation[0] = 'B'; break;
-        case KNIGHT:    notation[0] = 'N'; break;
-        case PAWN:      notation[0] = 'P'; break;
+        case QUEEN:     notation[0] = 'q'; break;
+        case KING:      notation[0] = 'k'; break;
+        case ROOK:      notation[0] = 'r'; break;
+        case BISHOP:    notation[0] = 'b'; break;
+        case KNIGHT:    notation[0] = 'n'; break;
+        case PAWN:      notation[0] = 'p'; break;
         default:        ;
         }
 
