@@ -19,19 +19,19 @@
 #include <string.h>
 #include <sys/time.h>
 #include <stdlib.h>
-#include "version.h"
-#include "commands.h"
+#include <ctype.h>
+#include <unistd.h>
 #include "chessboard.h"
+#include "commands.h"
 #include "utils.h"
-#include <omp.h>
 
-int main(int argc, char **argv) {
-
-   printf("Welcome to ");
-   printVersion();
-   initMovesGenerator();
-
-   processCommands();
-
-   return 0;
+void commandUci(char *args) {
+    #pragma omp critical (print)
+    {
+        printf("id name ");
+        printVersion();
+        printf("id author Dusan Saiko\n");
+        printf("\n");
+        printf("uciok\n");
+    }
 }

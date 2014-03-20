@@ -19,19 +19,12 @@
 #include <string.h>
 #include <sys/time.h>
 #include <stdlib.h>
-#include "version.h"
-#include "commands.h"
+#include <ctype.h>
+#include <unistd.h>
 #include "chessboard.h"
-#include "utils.h"
-#include <omp.h>
+#include "commands.h"
 
-int main(int argc, char **argv) {
-
-   printf("Welcome to ");
-   printVersion();
-   initMovesGenerator();
-
-   processCommands();
-
-   return 0;
+void commandIsReady(char *args) {
+    #pragma omp critical (print)
+    printf("readyok\n");
 }

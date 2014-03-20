@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <sys/time.h>
 
 #ifndef SACHISTA_CHESS_UTILS_H
 #define SACHISTA_CHESS_UTILS_H
@@ -37,6 +38,8 @@
 #endif
 #endif
 
+void printVersion();
+
 INLINE void appendString(char *buffer, const int bufferSize, const char *str)
 {
     int len1 = strlen(buffer);
@@ -47,6 +50,7 @@ INLINE void appendString(char *buffer, const int bufferSize, const char *str)
         buffer[len1 + len2] = 0;
     }
 }
+
 
 
 INLINE void appendChar(char *buffer, const int bufferSize, const char c) {
@@ -70,5 +74,9 @@ static inline void appendChars(char *buffer, const int bufferSize, const int cou
 
     va_end(ap);
 }
+
+
+unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time);
+size_t getMemorySize();
 
 #endif

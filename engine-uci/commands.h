@@ -25,6 +25,16 @@ extern "C"{
 
 void processCommands();
 
+void trim(char * s);
+void compressSpaces(char *str);
+char *readLine();
+char *readArg(char **args);
+
+void commandUci(char *args);
+void commandIsReady(char *args);
+void commandUciNewGame(char *args);
+void commandPerfT(char *args);
+
 #ifdef __cplusplus
 }
 #endif

@@ -22,27 +22,9 @@
 #include <ctype.h>
 #include <unistd.h>
 #include "chessboard.h"
-
+#include "commands.h"
 
 volatile int running = 1;
-
-void commandIsReady(char *args) {
-    #pragma omp critical (print)
-    printf("AAAAA!\n");
-}
-
-
-void commandCompute(char *args) {
-
-    for(int i=0; i< 5; i++) {
-        #pragma omp critical (print)
-        printf("Computing ... %d!\n", i);
-        #pragma omp flush (running)
-        if(!running) break;
-        sleep(2);
-    }
-}
-
 
 typedef void (*CommandFce)(char *args);
 
@@ -52,114 +34,53 @@ typedef struct UCICommand {
 } UCICommand;
 
 
-void trim(char * s) {
-    char * p = s;
-    int l = strlen(p);
-
-    while(isspace(p[l - 1])) p[--l] = 0;
-    while(* p && isspace(* p)) ++p, --l;
-
-    memmove(s, p, l + 1);
-}
-
-void compressSpaces(char *str)
-{
-    char *dst = str;
-    for (; *str; ++str) {
-        *dst++ = *str;
-
-        if (isspace(*str)) {
-            do ++str;
-
-            while (isspace(*str));
-
-            --str;
-        }
-    }
-
-    *dst = 0;
-}
-
-/**
- * @brief readLine
- * @return line with terminating \n
- */
-char *readLine() {
-    int  bufferSize = 2;
-    char *line = malloc(bufferSize);
-    char *p = line;
-
-    int c;
-
-    if(!line) return NULL;
-
-    while(1) {
-        c = fgetc(stdin);
-        if(c == EOF) break;
-
-        if((p - line) + 1 >= bufferSize) {
-            char *line2 = realloc(line, bufferSize *= 2);
-
-            if(!line2) {
-                free(line);
-                return NULL;
-            }
-
-            p = line2 + (p - line);
-            line = line2;
-        }
-
-        if((*p++ = c) == '\n') break;
-    }
-    *p = '\0';
-
-    trim(line);
-    compressSpaces(line);
-
-    return line;
-}
-
 void processCommands() {
     UCICommand commands[] = {
-        { "uci", &commandIsReady },
-        { "compute", &commandCompute }
+        { "isready", &commandIsReady },
+        { "ucinewgame", &commandUciNewGame },
+        { "uci", &commandUci },
+        { "perft", &commandPerfT }
     };
 
-    while(running) {
-        char *line = readLine();
+    #pragma omp parallel
+    {
+        #pragma omp single
+        {
 
-        //get first word
-        char *w_end = line;
-        while(*w_end) {
-            if(isspace(*w_end)) {
-                *w_end=0;
-            } else {
-                w_end++;
+            while(running) {
+                char *line = readLine();
+
+                //get first word
+                char *args = line;
+                readArg(&args);
+
+                UCICommand *command = NULL;
+                for(int i=0; i < sizeof(commands) / sizeof(UCICommand); i++) {
+                    if(strcmp(commands[i].command, line) == 0) {
+                        command = &commands[i];
+                        break;
+                    }
+                }
+                if(command) {
+                            #pragma omp task
+                            {
+                                command->fce(args);
+                                free(line);
+                            }
+                } else {
+                    if(strcmp("quit", line) == 0) {
+                        running = 0;
+                        #pragma omp flush(running)
+                    } else {
+                        if(strlen(line) > 0) {
+                            #pragma omp critical (print)
+                            printf("Unknown command: %s\n", line);
+                        }
+                    }
+                    free(line);
+                }
             }
         }
-
-        UCICommand *command = NULL;
-        for(int i=0; i < sizeof(commands) / sizeof(UCICommand); i++) {
-            if(strcmp(commands[i].command, line) == 0) {
-                command = &commands[i];
-                break;
-            }
-        }
-        if(command) {
-           #pragma omp task
-            {
-                command->fce(w_end + 1);
-                free(line);
-            }
-        } else {
-            if(strcmp("quit", line) == 0) {
-                running = 0;
-            } else {
-                #pragma omp critical (print)
-                printf("Unknown command: %s\n", line);
-            }
-            free(line);
-        }
-
     }
+
 }

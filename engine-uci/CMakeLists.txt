@@ -17,9 +17,15 @@ include_directories     (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
 add_executable (
-    sachista-chess
+    sachista
     main 
     commands
+    utils
+    command-isready
+    command-ucinewgame
+    command-uci
+    command-perft
 )
 
-target_link_libraries(sachista-chess movegenerator)
+#target_link_libraries(sachista movegenerator ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(sachista movegenerator)

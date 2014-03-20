@@ -17,45 +17,16 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/time.h>
 #include "chessboard.h"
 #include <stdlib.h>
-
-
-unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time)
-{
-  struct timeval difference;
-
-  difference.tv_sec = (end_time->tv_sec)  - (start_time->tv_sec);
-  difference.tv_usec= (end_time->tv_usec) - (start_time->tv_usec);
-
-  /* Using while instead of if below makes the code slightly more robust. */
-
-  while(difference.tv_usec < 0)
-  {
-    difference.tv_usec+=1000000;
-    difference.tv_sec -=1;
-  }
-
-  return 1000000ULL * difference.tv_sec + difference.tv_usec;
-}
+#include "utils.h"
 
 
 int main(int argc, char **argv) {
 
-#if defined(__i386__)
-    char architecture[] = "x86";
-#elif defined(__x86_64__)
-    char architecture[] = "x64";
-#else
-    char architecture[] = "UnknownArchitecture";
-#endif
+   printf("Welcome to ");
+   printVersion();
 
-   printf("Welcome to %s sachista-chess %s (%s) perft!\n\n",
-          architecture,
-          IMPLEMENTATION_VERSION,
-          IMPLEMENTATION_DATE
-   );
    printf("See: http://chessprogramming.wikispaces.com/Perft\n\n");
 
    if(argc < 2 || argc > 3) {

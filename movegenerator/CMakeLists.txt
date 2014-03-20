@@ -30,5 +30,6 @@ add_library (
     makemove
     zobrist
     perft
+    memfree
 )
 

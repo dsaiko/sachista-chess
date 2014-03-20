@@ -21,4 +21,5 @@ add_executable (
     main
 )
 
+#target_link_libraries(movegenerator-perft movegenerator ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(movegenerator-perft movegenerator)

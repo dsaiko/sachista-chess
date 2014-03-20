@@ -16,9 +16,26 @@
 */
 
 #include "version.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 char implementationVersion[] = IMPLEMENTATION_VERSION;
 char implementationDate[]    = IMPLEMENTATION_DATE;
 
+void printVersion() {
 
+#if defined(__i386__)
+    char architecture[] = "x86";
+#elif defined(__x86_64__)
+    char architecture[] = "x64";
+#else
+    char architecture[] = "UnknownArchitecture";
+#endif
 
+    printf("sachista-chess %s %s (%s)\n",
+          architecture,
+          IMPLEMENTATION_VERSION,
+          IMPLEMENTATION_DATE
+    );
+}

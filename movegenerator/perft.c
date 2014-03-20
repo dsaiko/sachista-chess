@@ -19,12 +19,11 @@
 #include <omp.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "chessboard.h"
 #include "utils.h"
 #include "zobrist.h"
-
-#define CACHESIZE     (16*1024*1024)
 
 typedef struct {
     uint64_t hashCode;
@@ -39,14 +38,14 @@ typedef struct {
  * @param cache Shared cache, needs OMP synchronization
  * @return number of legal moves
  */
-uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
+uint64_t minimax(const int cacheSize, const ChessBoard *board, const int depth, CacheEntry *cache)
 {
     //compute directly
     if(depth < 1) return 1;
 
     const uint64_t hashCode = board->zobristKey;
 
-    CacheEntry *cacheEntry = (cache + ((CACHESIZE - 1) & hashCode));
+    CacheEntry *cacheEntry = (cache + ((cacheSize - 1) & hashCode));
 
     uint64_t count = 0;
 
@@ -77,7 +76,7 @@ uint64_t minimax(const ChessBoard *board, const int depth, CacheEntry *cache)
 
         //is move legal?
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            count += minimax(&nextBoard, depth -1, cache);
+            count += minimax(cacheSize, &nextBoard, depth -1, cache);
         }
 
         //undo move - reset the move back
@@ -116,22 +115,56 @@ uint64_t perft(const ChessBoard *board, const int depth)
     const int nMoves = pointer - moves;
 
     //create global shared cache - needs OMP synchronization
-    CacheEntry    *cache = malloc(CACHESIZE * sizeof(CacheEntry));
+    int cacheSize = 16*1024*1024;
+    long memSize = getMemorySize();
 
-    #pragma omp parallel for
-    for(int i=0; i < nMoves; i++)
+    if(cacheSize * sizeof(CacheEntry) > (memSize / 3)) cacheSize = (memSize / 3) / sizeof(CacheEntry);
+
+    CacheEntry    *cache = malloc(cacheSize * sizeof(CacheEntry));
+
+    #pragma omp parallel
     {
-        ChessBoard nextBoard = *board;
-        makeMove(&nextBoard, boardInfo.allPieces, moves + i);
-        if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            uint64_t n = minimax(&nextBoard, depth -1, cache);
+#pragma omp single
+        {
+            for(int i=0; i < nMoves; i++)
+            {
+                #pragma omp task untied
+                {
+                    ChessBoard nextBoard = *board;
+                    makeMove(&nextBoard, boardInfo.allPieces, moves + i);
+                    if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
+                        uint64_t n = minimax(cacheSize, &nextBoard, depth -1, cache);
 
-            #pragma omp atomic
-            count += n;
+                        #pragma omp atomic
+                        count += n;
+                    }
+                }
+            }
         }
     }
+
+
     free(cache);
 
 
     return count;
+}
+
+
+unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time)
+{
+  struct timeval difference;
+
+  difference.tv_sec = (end_time->tv_sec)  - (start_time->tv_sec);
+  difference.tv_usec= (end_time->tv_usec) - (start_time->tv_usec);
+
+  /* Using while instead of if below makes the code slightly more robust. */
+
+  while(difference.tv_usec < 0)
+  {
+    difference.tv_usec+=1000000;
+    difference.tv_sec -=1;
+  }
+
+  return 1000000ULL * difference.tv_sec + difference.tv_usec;
 }
