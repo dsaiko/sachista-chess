@@ -16,18 +16,29 @@
 */
 
 
+#include <iostream>
 #include <stdio.h>
-#include <string.h>
-#include <sys/time.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <unistd.h>
+#include <thread>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+
+#include "utils.h"
+#include "chessboard.h"
+#include "uci.h"
+
 
 void trim(char * s) {
+    if(!s) return;
+
     char * p = s;
     int l = strlen(p);
+    if(l == 0) return;
 
-    while(isspace(p[l - 1])) p[--l] = 0;
+    while(l > 0 && isspace(p[l - 1])) p[--l] = 0;
     while(* p && isspace(* p)) ++p, --l;
 
     memmove(s, p, l + 1);
@@ -55,9 +66,9 @@ void compressSpaces(char *str)
  * @brief readLine
  * @return line with terminating \n
  */
-char *readLine() {
+std::string readLine() {
     int  bufferSize = 2;
-    char *line = malloc(bufferSize);
+    char *line = (char *)malloc(bufferSize);
     char *p = line;
 
     int c;
@@ -69,7 +80,7 @@ char *readLine() {
         if(c == EOF) break;
 
         if((p - line) + 1 >= bufferSize) {
-            char *line2 = realloc(line, bufferSize *= 2);
+            char *line2 = (char *)realloc(line, bufferSize *= 2);
 
             if(!line2) {
                 free(line);
@@ -87,23 +98,21 @@ char *readLine() {
     trim(line);
     compressSpaces(line);
 
-    return line;
+    std::string result(line);
+    free(line);
+
+    return result;
 }
 
-char *readArg(char **args) {
-    if(**args == 0) return 0;
+using namespace std;
 
-    char *head = *args;
+std::vector<std::string> split(const std::string &txt)
+{
+    istringstream iss(txt);
+    vector<string> tokens;
+    copy(istream_iterator<string>(iss),
+             istream_iterator<string>(),
+             back_inserter<vector<string> >(tokens));
 
-    while(**args) {
-        if(isspace(**args)) {
-            **args=0;
-        } else {
-            (*args)++;
-        }
-    }
-    (*args)++;
-
-    return head;
+    return tokens;
 }
-

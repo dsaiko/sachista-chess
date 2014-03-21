@@ -17,7 +17,7 @@
 
 #include <CppUTest/CommandLineTestRunner.h>
 #include "chessboard.h"
-
+#include "perft.h"
 
 void testMoves(const int expectedCount, const char *boardString)
 {

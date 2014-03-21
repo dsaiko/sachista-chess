@@ -1,3 +1,5 @@
+. /opt/intel/bin/iccvars.sh intel64
+
 export CC="icc"
 export CXX="icpc"
 export CFLAGS="-march=native -O3 -no-prec-div -fno-alias -pipe"

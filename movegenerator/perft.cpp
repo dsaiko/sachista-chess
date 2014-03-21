@@ -15,21 +15,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#include <omp.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <thread>
+#include <string>
+#include <vector>
 
 #include "chessboard.h"
 #include "utils.h"
 #include "zobrist.h"
 
 typedef struct {
-    uint64_t hashCode;
-    uint64_t nodeCount;
-    int      depth;
+    uint64_t hashCode = 0;
+    uint64_t nodeCount = 0;
+    int      depth = 0;
 } CacheEntry;
+
+typedef struct {
+    CacheEntry       *cache;
+    const int        cacheSize;
+    const ChessBoard *board;
+    const int        depth;
+} MinimaxTask;
 
 /**
  * @brief This is a perft worker
@@ -38,7 +46,7 @@ typedef struct {
  * @param cache Shared cache, needs OMP synchronization
  * @return number of legal moves
  */
-uint64_t minimax(const int cacheSize, const ChessBoard *board, const int depth, CacheEntry *cache)
+uint64_t minimax(CacheEntry *cache, const int cacheSize, const ChessBoard *board, const int depth)
 {
     //compute directly
     if(depth < 1) return 1;
@@ -50,7 +58,7 @@ uint64_t minimax(const int cacheSize, const ChessBoard *board, const int depth, 
     uint64_t count = 0;
 
     //retrieve info from cache
-    #pragma omp critical (cacheupdate)
+    //#pragma omp critical (cacheupdate)
     {
         if(cacheEntry->hashCode == hashCode && cacheEntry->depth == depth) {
             count = cacheEntry->nodeCount;
@@ -76,7 +84,7 @@ uint64_t minimax(const int cacheSize, const ChessBoard *board, const int depth, 
 
         //is move legal?
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            count += minimax(cacheSize, &nextBoard, depth -1, cache);
+            count += minimax(cache, cacheSize, &nextBoard, depth -1);
         }
 
         //undo move - reset the move back
@@ -84,7 +92,7 @@ uint64_t minimax(const int cacheSize, const ChessBoard *board, const int depth, 
             nextBoard = *board;
     }
 
-    #pragma omp critical (cacheupdate)
+    //#pragma omp critical (cacheupdate)
     {
         cacheEntry->hashCode = hashCode;
         cacheEntry->nodeCount = count;
@@ -115,38 +123,27 @@ uint64_t perft(const ChessBoard *board, const int depth)
     const int nMoves = pointer - moves;
 
     //create global shared cache - needs OMP synchronization
-    int cacheSize = 16*1024*1024;
-    long memSize = getMemorySize();
+    uint cacheSize = 16*1024*1024;
+    ulong memSize = getMemorySize();
 
     if(cacheSize * sizeof(CacheEntry) > (memSize / 3)) cacheSize = (memSize / 3) / sizeof(CacheEntry);
 
-    CacheEntry    *cache = malloc(cacheSize * sizeof(CacheEntry));
+    CacheEntry    *cache = new CacheEntry[cacheSize];
 
-    #pragma omp parallel
+    for(int i=0; i < nMoves; i++)
     {
-#pragma omp single
-        {
-            for(int i=0; i < nMoves; i++)
-            {
-                #pragma omp task untied
-                {
-                    ChessBoard nextBoard = *board;
-                    makeMove(&nextBoard, boardInfo.allPieces, moves + i);
-                    if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-                        uint64_t n = minimax(cacheSize, &nextBoard, depth -1, cache);
+        ChessBoard nextBoard = *board;
+        makeMove(&nextBoard, boardInfo.allPieces, moves + i);
+        if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
+            uint64_t n = minimax(cache, cacheSize, &nextBoard, depth -1);
 
-                        #pragma omp atomic
-                        count += n;
-                    }
-                }
-            }
+            //#pragma omp atomic
+            count += n;
         }
     }
 
 
-    free(cache);
-
-
+    delete[] cache;
     return count;
 }
 

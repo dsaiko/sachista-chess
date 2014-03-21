@@ -22,16 +22,8 @@
 #include <ctype.h>
 #include <unistd.h>
 #include "chessboard.h"
-#include "commands.h"
-#include "utils.h"
+#include "uci.h"
 
-void commandUci(char *args) {
-    #pragma omp critical (print)
-    {
-        printf("id name ");
-        printVersion();
-        printf("id author Dusan Saiko\n");
-        printf("\n");
-        printf("uciok\n");
-    }
+void commandIsReady(std::vector<std::string> args) {
+    printf("readyok\n");
 }

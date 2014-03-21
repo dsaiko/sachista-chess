@@ -15,28 +15,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SACHISTA_CHESS_COMMANDS_H
-#define SACHISTA_CHESS_COMMANDS_H
+#ifndef SACHISTA_CHESS_PERFT_H
+#define SACHISTA_CHESS_PERFT_H
 
 
-#ifdef __cplusplus
-extern "C"{
-#endif
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include "utils.h"
 
-void processCommands();
-
-void trim(char * s);
-void compressSpaces(char *str);
-char *readLine();
-char *readArg(char **args);
-
-void commandUci(char *args);
-void commandIsReady(char *args);
-void commandUciNewGame(char *args);
-void commandPerfT(char *args);
-
-#ifdef __cplusplus
-}
-#endif
+uint64_t    perft(const ChessBoard *board, const int depth);
 
 #endif
+

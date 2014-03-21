@@ -22,20 +22,18 @@
 #include <ctype.h>
 #include <unistd.h>
 #include "chessboard.h"
-#include "commands.h"
+#include "uci.h"
+#include "utils.h"
+#include "perft.h"
 
-void commandPerfT(char *args) {
-    char *depth_ = readArg(&args);
+void commandPerfT(std::vector<std::string> args) {
     int depth = 6;
-    if(depth_) {
-        depth = atoi(depth_);
+    if(args.size() > 1) {
+        depth = atoi(args[1].c_str());
     }
 
-    #pragma omp critical (print)
-    {
-        printf("Running standard layout perft for depth %d\n", depth);
-        fflush(stdout);
-    }
+    printf("Running standard layout perft for depth %d\n", depth);
+    fflush(stdout);
 
     struct timeval start, end;
 
@@ -44,21 +42,15 @@ void commandPerfT(char *args) {
     ChessBoard board = standardBoard();
     unsigned long long result = 0;
 
-    #pragma omp parallel
-    {
-        result = perft(&board, depth);
-    }
+    result = perft(&board, depth);
 
     gettimeofday(&end, NULL);
     double t = (timediff(&start, &end) +1 )/ 1000.0;
 
-    #pragma omp critical (print)
-    {
-        printf("Total nodes at depth %d: %llu. Time: %fs. %llu nodes/seconds.\n",
+    printf("Total nodes at depth %d: %llu. Time: %fs. %llu nodes/seconds.\n",
              depth,
              result,
              ((double) t / 1000.0),
              (unsigned long long) ((double) result / ((double) t / 1000.0))
-        );
-    }
+    );
 }

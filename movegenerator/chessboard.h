@@ -95,7 +95,6 @@ void        generateMoves(const ChessBoard *board, const ChessBoardComputedInfo 
 char *      move2str(const Move *m, char *buffer, const int bufferSize);
 void        makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
 
-uint64_t    perft(const ChessBoard *board, const int depth);
 int         isNotUnderCheck(const ChessBoard *board, const Color nextMove);
 
 INLINE bitboard WHITE_PIECES(const ChessBoard *board) {

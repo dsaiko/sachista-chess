@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <sys/time.h>
+#include "version.h"
 
 #ifndef SACHISTA_CHESS_UTILS_H
 #define SACHISTA_CHESS_UTILS_H
@@ -28,6 +29,9 @@
 #define likely(x)       __builtin_expect((x),1)
 #define unlikely(x)     __builtin_expect((x),0)
 
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 // Check windows
 #if _WIN32 || _WIN64
@@ -38,7 +42,6 @@
 #endif
 #endif
 
-void printVersion();
 
 INLINE void appendString(char *buffer, const int bufferSize, const char *str)
 {
@@ -78,5 +81,17 @@ static inline void appendChars(char *buffer, const int bufferSize, const int cou
 
 unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time);
 size_t getMemorySize();
+
+#if defined(__i386__)
+    #define PLATFORM "x86"
+#elif defined(__x86_64__)
+    #define PLATFORM "x64"
+#else
+    #define PLATFORM "UnknownPlatform"
+#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

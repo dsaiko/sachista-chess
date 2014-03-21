@@ -15,14 +15,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <sys/time.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <unistd.h>
-#include "chessboard.h"
-#include "commands.h"
+#ifndef SACHISTA_CHESS_UCI_H
+#define SACHISTA_CHESS_UCI_H
 
-void commandUciNewGame(char *args) {
-}
+#include <vector>
+#include <string>
+
+typedef void (*CommandFce)(std::vector<std::string> args);
+
+typedef struct UCICommand {
+    std::string command;
+    CommandFce fce;
+} UCICommand;
+
+
+void commandUci(std::vector<std::string> args);
+void commandUciNewGame(std::vector<std::string> args);
+void commandIsReady(std::vector<std::string> args);
+void commandPerfT(std::vector<std::string> args);
+
+std::string readLine();
+std::vector<std::string> split(const std::string &txt);
+
+#endif
