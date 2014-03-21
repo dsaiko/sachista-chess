@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
+
 #include "chessboard.h"
 #include "uci.h"
 #include "utils.h"

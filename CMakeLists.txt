@@ -17,25 +17,11 @@
 cmake_minimum_required      (VERSION 2.8.7)
 project                     (SACHISTA_CHESS)
 
-#SET(CMAKE_BUILD_TYPE RELEASE)
-
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
-if(MSVC)
-  # Force to always compile with W4
-#  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /W4 /O3")
-#  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} /W4 /O3")
-elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-  # Update if necessary
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -O3")
-#  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-long-long -O3")
-endif()
-
 enable_language             (C)
 enable_language		    (CXX)
-
-find_package(Threads REQUIRED)
 
 add_subdirectory            (movegenerator)
 add_subdirectory	    (engine-uci)

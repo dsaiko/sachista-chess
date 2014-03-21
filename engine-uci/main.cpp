@@ -19,16 +19,15 @@
 #include <iostream>
 #include <stdio.h>
 #include <thread>
-#include "utils.h"
-#include "chessboard.h"
-#include "uci.h"
-#include <thread>
 #include <vector>
-#include <iostream>
 #include <string>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+
+#include "utils.h"
+#include "chessboard.h"
+#include "uci.h"
 
 volatile int running = 1;
 
@@ -56,22 +55,23 @@ int main()
         std::string line = readLine();
         std::vector<std::string> args = split(line);
 
-        UCICommand *command = NULL;
-        for(uint i=0; i < sizeof(commands) / sizeof(UCICommand); i++) {
-            if(commands[i].command == args[0]) {
-                command = &commands[i];
-                break;
+        if(args.size() > 0) {
+            UCICommand *command = NULL;
+            for(uint i=0; i < sizeof(commands) / sizeof(UCICommand); i++) {
+                if(commands[i].command == args[0]) {
+                    command = &commands[i];
+                    std::thread(command->fce, args).detach();
+                    break;
+                }
             }
-        }
 
-        if(command) {
-            std::thread(command->fce, args).detach();
-        } else {
-            if(args[0] == "quit") {
-                running = 0;
-            } else {
-                if(line.length() > 0) {
-                    printf("Unknown command: %s\n", line.c_str());
+            if(!command) {
+                if(args[0] == "quit" || args[0] == "exit") {
+                    running = 0;
+                } else {
+                    if(line.length() > 0) {
+                        printf("Unknown command: %s\n", line.c_str());
+                    }
                 }
             }
         }

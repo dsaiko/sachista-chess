@@ -21,23 +21,58 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include <mutex>
+#include <atomic>
+
 
 #include "chessboard.h"
 #include "utils.h"
 #include "zobrist.h"
 
-typedef struct {
-    uint64_t hashCode = 0;
-    uint64_t nodeCount = 0;
-    int      depth = 0;
-} CacheEntry;
+struct CacheEntry {
+    uint64_t              hash;
+    uint64_t              count;
+    int                   depth;
 
-typedef struct {
-    CacheEntry       *cache;
-    const int        cacheSize;
-    const ChessBoard *board;
-    const int        depth;
-} MinimaxTask;
+    CacheEntry(): hash(0), count(0), depth(0) {}
+};
+
+
+struct Cache {
+    const int                       cacheSize;
+    CacheEntry                      *data;
+    std::mutex                      mutex;
+
+    Cache(int size): cacheSize(size) {
+        data = new CacheEntry[cacheSize];
+    }
+
+    ~Cache() {
+        delete[] data;
+    }
+
+    uint64_t get(const uint64_t &hash, int depth) {
+        CacheEntry *entry = (data + ((cacheSize - 1) & hash));
+
+       // std::lock_guard<std::mutex> lock(mutex);
+
+        if(entry->hash == hash && entry->depth == depth) {
+            return entry->count;
+        }
+        return 0;
+    }
+
+    void set(uint64_t hash, int depth, uint64_t count) {
+        CacheEntry *entry = (data + ((cacheSize - 1) & hash));
+
+        if(entry->hash == 0) {
+            std::lock_guard<std::mutex> lock(mutex);
+            entry->hash = hash;
+            entry->depth = depth;
+            entry->count = count;
+        }
+    }
+};
 
 /**
  * @brief This is a perft worker
@@ -46,37 +81,23 @@ typedef struct {
  * @param cache Shared cache, needs OMP synchronization
  * @return number of legal moves
  */
-uint64_t minimax(CacheEntry *cache, const int cacheSize, const ChessBoard *board, const int depth)
+uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth)
 {
     //compute directly
     if(depth < 1) return 1;
 
-    const uint64_t hashCode = board->zobristKey;
-
-    CacheEntry *cacheEntry = (cache + ((cacheSize - 1) & hashCode));
-
-    uint64_t count = 0;
-
-    //retrieve info from cache
-    //#pragma omp critical (cacheupdate)
-    {
-        if(cacheEntry->hashCode == hashCode && cacheEntry->depth == depth) {
-            count = cacheEntry->nodeCount;
-        }
-    }
-
-    //return cached value
+    uint64_t count = cache.get(board.zobristKey, depth);
     if(count) return count;
 
     Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
 
-    ChessBoardComputedInfo boardInfo = computeInfo(board);
-    generateMoves(board, &boardInfo, &pointer);
+    ChessBoardComputedInfo boardInfo = computeInfo(&board);
+    generateMoves(&board, &boardInfo, &pointer);
 
     Move *i = moves;
 
-    ChessBoard nextBoard = *board;
+    ChessBoard nextBoard = board;
 
     while(i < pointer) {
         //make move
@@ -84,21 +105,19 @@ uint64_t minimax(CacheEntry *cache, const int cacheSize, const ChessBoard *board
 
         //is move legal?
         if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            count += minimax(cache, cacheSize, &nextBoard, depth -1);
+            if(depth > 1) {
+                count += minimax(cache, nextBoard, depth -1);
+            } else {
+                count += 1;
+            }
         }
 
         //undo move - reset the move back
         if(i < pointer)
-            nextBoard = *board;
+            nextBoard = board;
     }
 
-    //#pragma omp critical (cacheupdate)
-    {
-        cacheEntry->hashCode = hashCode;
-        cacheEntry->nodeCount = count;
-        cacheEntry->depth = depth;
-    }
-
+    cache.set(board.zobristKey, depth, count);
     return count;
 }
 
@@ -112,7 +131,6 @@ uint64_t perft(const ChessBoard *board, const int depth)
 {
     if(depth < 1) return 1;
 
-    uint64_t count = 0;
 
     Move moves[MAX_MOVES_ARR_SIZE];
     Move *pointer = moves;
@@ -122,29 +140,30 @@ uint64_t perft(const ChessBoard *board, const int depth)
 
     const int nMoves = pointer - moves;
 
-    //create global shared cache - needs OMP synchronization
-    uint cacheSize = 16*1024*1024;
     ulong memSize = getMemorySize();
+    uint cacheSize = 128*1024*1024;
+    if(cacheSize * sizeof(CacheEntry) > (memSize / 4)) cacheSize = (memSize / 4) / sizeof(CacheEntry);
 
-    if(cacheSize * sizeof(CacheEntry) > (memSize / 3)) cacheSize = (memSize / 3) / sizeof(CacheEntry);
-
-    CacheEntry    *cache = new CacheEntry[cacheSize];
+    std::vector<std::thread> threads;
+    std::atomic<uint64_t> count(0);
+    Cache cache(cacheSize);
 
     for(int i=0; i < nMoves; i++)
     {
-        ChessBoard nextBoard = *board;
-        makeMove(&nextBoard, boardInfo.allPieces, moves + i);
-        if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            uint64_t n = minimax(cache, cacheSize, &nextBoard, depth -1);
-
-            //#pragma omp atomic
-            count += n;
-        }
+        threads.push_back(std::thread([board, &boardInfo, i, moves, depth, &count, &cache](){
+            ChessBoard nextBoard = *board;
+            makeMove(&nextBoard, boardInfo.allPieces, moves + i);
+            if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
+                count += minimax(cache, nextBoard, depth -1);
+            }
+        }));
     }
 
+    for(auto& thread : threads){
+           thread.join();
+    }
 
-    delete[] cache;
-    return count;
+    return count.load();
 }
 
 

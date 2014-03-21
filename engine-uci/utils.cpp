@@ -23,14 +23,17 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <algorithm>
 #include <iterator>
+#include <cstring>
 
 #include "utils.h"
 #include "chessboard.h"
 #include "uci.h"
 
-
+/**
+ * @brief Trims the string from both sides
+ * @param s
+ */
 void trim(char * s) {
     if(!s) return;
 
@@ -44,6 +47,10 @@ void trim(char * s) {
     memmove(s, p, l + 1);
 }
 
+/**
+ * @brief Removes double spaces from string
+ * @param str
+ */
 void compressSpaces(char *str)
 {
     char *dst = str;
@@ -63,51 +70,33 @@ void compressSpaces(char *str)
 }
 
 /**
- * @brief readLine
- * @return line with terminating \n
+ * @brief Read input line, trims it, removes double spaces
+ * @return line with terminating
  */
 std::string readLine() {
-    int  bufferSize = 2;
-    char *line = (char *)malloc(bufferSize);
-    char *p = line;
 
-    int c;
+    std::string input;
+    std::getline (std::cin, input);
 
-    if(!line) return NULL;
 
-    while(1) {
-        c = fgetc(stdin);
-        if(c == EOF) break;
-
-        if((p - line) + 1 >= bufferSize) {
-            char *line2 = (char *)realloc(line, bufferSize *= 2);
-
-            if(!line2) {
-                free(line);
-                return NULL;
-            }
-
-            p = line2 + (p - line);
-            line = line2;
-        }
-
-        if((*p++ = c) == '\n') break;
-    }
-    *p = '\0';
+    char line[input.length()+1];
+    std::strcpy (line, input.c_str());
 
     trim(line);
     compressSpaces(line);
 
-    std::string result(line);
-    free(line);
-
-    return result;
+    return std::string(line);
 }
 
-using namespace std;
 
+/**
+ * @brief split
+ * @param txt
+ * @return vector of string tokens
+ */
 std::vector<std::string> split(const std::string &txt)
 {
+    using namespace std;
     istringstream iss(txt);
     vector<string> tokens;
     copy(istream_iterator<string>(iss),
