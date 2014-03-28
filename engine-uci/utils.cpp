@@ -18,8 +18,6 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <thread>
-#include <algorithm>
 #include <iostream>
 #include <string>
 #include <sstream>

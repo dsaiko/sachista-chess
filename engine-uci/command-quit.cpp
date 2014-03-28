@@ -15,8 +15,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "uci.h"
 
-void commandIsReady(std::vector<std::string> args) {
-    println("readyok");
+#include "uci.h"
+#include <atomic>
+
+extern std::atomic<int>  isAppRunning;
+
+void commandQuit(std::vector<std::string> args) {
+    isAppRunning = 0;
 }

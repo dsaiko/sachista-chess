@@ -142,12 +142,14 @@ uint64_t perft(const ChessBoard *board, const int depth)
 
     ulong memSize = getMemorySize();
     uint cacheSize = 128*1024*1024;
+    //get maximum of total_memory / 4 cache size
     if(cacheSize * sizeof(CacheEntry) > (memSize / 4)) cacheSize = (memSize / 4) / sizeof(CacheEntry);
 
     std::vector<std::thread> threads;
     std::atomic<uint64_t> count(0);
     Cache cache(cacheSize);
 
+    //create thread for each position
     for(int i=0; i < nMoves; i++)
     {
         threads.push_back(std::thread([board, &boardInfo, i, moves, depth, &count, &cache](){
@@ -159,6 +161,7 @@ uint64_t perft(const ChessBoard *board, const int depth)
         }));
     }
 
+    //join threads
     for(auto& thread : threads){
            thread.join();
     }

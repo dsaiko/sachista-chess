@@ -15,8 +15,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "uci.h"
+#include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <atomic>
 
-void commandIsReady(std::vector<std::string> args) {
-    println("readyok");
+#include "chessboard.h"
+#include "uci.h"
+#include "utils.h"
+#include "perft.h"
+
+
+extern std::atomic<int>  isDebugMode;
+
+void commandDebug(std::vector<std::string> args) {
+
+    if(args.size() > 1) {
+        std::string flag = args[1];
+        if("on" == flag) {
+            isDebugMode = 1;
+        } else {
+            isDebugMode = 0;
+        }
+    }
+
+    println("info debug %s", isDebugMode.load() ? "on" : "off");
 }

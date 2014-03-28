@@ -15,8 +15,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "uci.h"
 
-void commandIsReady(std::vector<std::string> args) {
-    println("readyok");
+
+extern std::vector<UCICommand> commands;
+
+void commandHelp(std::vector<std::string> args) {
+    std::lock_guard<std::mutex> guard(mutex_print);
+
+    for(auto &command : commands) {
+        printf("info help command %s\n", command.command.c_str());
+    }
+    fflush(stdout);
 }

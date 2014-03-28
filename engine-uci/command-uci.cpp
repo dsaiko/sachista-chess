@@ -21,15 +21,14 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
-
 #include "chessboard.h"
 #include "utils.h"
 #include "uci.h"
 
 void commandUci(std::vector<std::string> args) {
-    printf("id name ");
+    std::lock_guard<std::mutex> guard(mutex_print);
     printf("id name sachista-chess v. %s (%s) %s\n", IMPLEMENTATION_VERSION, IMPLEMENTATION_DATE, PLATFORM);
     printf("id author Dusan Saiko\n");
-    printf("\n");
-    printf("uciok\n");
+    printf("\nuciok\n");
+    fflush(stdout);
 }

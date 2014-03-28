@@ -28,51 +28,75 @@
 #include "utils.h"
 #include "chessboard.h"
 #include "uci.h"
+#include <atomic>
 
-volatile int running = 1;
 
-UCICommand commands[] = {
+std::mutex mutex_print;
+
+
+std::atomic<int>  isAppRunning(1);
+std::atomic<int>  isDebugMode(0);
+
+std::vector<UCICommand> commands = {
+    { "debug", commandDebug},
+    { "help", commandHelp},
     { "isready", commandIsReady},
-    { "ucinewgame", commandUciNewGame},
+    { "perft", commandPerfT},
+    { "quit", commandQuit},
     { "uci", commandUci},
-    { "perft", commandPerfT}
+    { "ucinewgame", commandUciNewGame},
 };
 
-void hello(char *args){
-    printf("%s\n",args);
-    std::cout << "Hello from thread: " << args << "!" << std::endl;
-}
 
+#define info_command_message(msg) {                     \
+ if(isDebugMode.load()) {                                \
+      std::lock_guard<std::mutex> guard(mutex_print);   \
+      printf("info debug command %s %s [", (msg), args[0].c_str());\
+      for(int i=1; i<args.size(); i++) {\
+          printf("%s", args[i].c_str());\
+          if(i < args.size() - 1)\
+              printf(",");\
+      }\
+      printf("]\n");\
+      fflush(stdout);\
+ }\
+}
 
 int main()
 {
-    printf("Welcome to sachista-chess v. %s (%s) %s\n", IMPLEMENTATION_VERSION, IMPLEMENTATION_DATE, PLATFORM);
+    println("Welcome to sachista-chess v. %s (%s) %s", IMPLEMENTATION_VERSION, IMPLEMENTATION_DATE, PLATFORM);
 
     initMovesGenerator();
 
-    while(running) {
+    while(isAppRunning.load()) {
 
         std::string line = readLine();
         std::vector<std::string> args = split(line);
 
         if(args.size() > 0) {
-            UCICommand *command = NULL;
-            for(uint i=0; i < sizeof(commands) / sizeof(UCICommand); i++) {
-                if(commands[i].command == args[0]) {
-                    command = &commands[i];
-                    std::thread(command->fce, args).detach();
+            bool unknown = true;
+
+            for(auto& command : commands){
+                if(command.command == args[0]) {
+                    unknown = false;
+                    if(command.fce == commandQuit) {
+                        command.fce(args);
+                    } else {
+                        std::thread([command, args](){
+
+                            info_command_message("begin");
+
+                            command.fce(args);
+
+                            info_command_message("end");
+                        }).detach();
+                    }
                     break;
                 }
             }
 
-            if(!command) {
-                if(args[0] == "quit" || args[0] == "exit") {
-                    running = 0;
-                } else {
-                    if(line.length() > 0) {
-                        printf("Unknown command: %s\n", line.c_str());
-                    }
-                }
+            if(unknown) {
+                println("info unknown command: %s", line.c_str());
             }
         }
     }

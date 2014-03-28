@@ -42,7 +42,9 @@ extern "C"{
 #endif
 #endif
 
-
+/**
+  * Appends string to the string in buffer
+  */
 INLINE void appendString(char *buffer, const int bufferSize, const char *str)
 {
     int len1 = strlen(buffer);
@@ -55,7 +57,9 @@ INLINE void appendString(char *buffer, const int bufferSize, const char *str)
 }
 
 
-
+/**
+  * Appends character to string in buffer
+  */
 INLINE void appendChar(char *buffer, const int bufferSize, const char c) {
     int len1 = strlen(buffer);
 
@@ -65,6 +69,13 @@ INLINE void appendChar(char *buffer, const int bufferSize, const char c) {
     }
 }
 
+/**
+ * @brief Appends multiple chars to string in buffer
+ * @param buffer
+ * @param bufferSize
+ * @param count
+ * @param chars
+ */
 static inline void appendChars(char *buffer, const int bufferSize, const int count, const int chars, ...)
 {
     va_list ap;
@@ -78,8 +89,18 @@ static inline void appendChars(char *buffer, const int bufferSize, const int cou
     va_end(ap);
 }
 
-
+/**
+ * @brief gets time diference in milisseconds
+ * @param start_time
+ * @param end_time
+ * @return
+ */
 unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time);
+
+/**
+ * @brief Return total memory size
+ * @return
+ */
 size_t getMemorySize();
 
 #if defined(__i386__)

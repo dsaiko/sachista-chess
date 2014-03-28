@@ -33,7 +33,7 @@ void commandPerfT(std::vector<std::string> args) {
         depth = atoi(args[1].c_str());
     }
 
-    printf("Running standard layout perft for depth %d\n", depth);
+    println("info perft running standard layout perft for depth %d", depth);
     fflush(stdout);
 
     struct timeval start, end;
@@ -48,7 +48,7 @@ void commandPerfT(std::vector<std::string> args) {
     gettimeofday(&end, NULL);
     double t = (timediff(&start, &end) +1 )/ 1000.0;
 
-    printf("Total nodes at depth %d: %llu. Time: %fs. %llu nodes/seconds.\n",
+    println("info perft total nodes at depth %d: %llu; time: %fs; %llu nodes/seconds.",
              depth,
              result,
              ((double) t / 1000.0),

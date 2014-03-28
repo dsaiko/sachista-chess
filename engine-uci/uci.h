@@ -20,21 +20,51 @@
 
 #include <vector>
 #include <string>
+#include <thread>
+#include <mutex>
 
+/**
+ *Command handler function
+ */
 typedef void (*CommandFce)(std::vector<std::string> args);
 
-typedef struct UCICommand {
+/**
+  * Command definition structure
+  */
+struct UCICommand {
     std::string command;
     CommandFce fce;
-} UCICommand;
+};
 
+extern std::mutex mutex_print;
 
-void commandUci(std::vector<std::string> args);
-void commandUciNewGame(std::vector<std::string> args);
-void commandIsReady(std::vector<std::string> args);
-void commandPerfT(std::vector<std::string> args);
+#define println(...) {                              \
+    std::lock_guard<std::mutex> guard(mutex_print); \
+    printf(__VA_ARGS__);                            \
+    printf("\n");                                   \
+    fflush(stdout);                                 \
+}
 
-std::string readLine();
+/** UCI COMMAND HANDLERS **/
+void commandUci         (std::vector<std::string> args);
+void commandUciNewGame  (std::vector<std::string> args);
+void commandIsReady     (std::vector<std::string> args);
+void commandPerfT       (std::vector<std::string> args);
+void commandQuit        (std::vector<std::string> args);
+void commandHelp        (std::vector<std::string> args);
+void commandDebug        (std::vector<std::string> args);
+
+/**
+ * @brief readLine
+ * @return trimmed line from stdin
+ */
+std::string             readLine();
+
+/**
+ * @brief split
+ * @param txt
+ * @return vector of string tokens
+ */
 std::vector<std::string> split(const std::string &txt);
 
 #endif

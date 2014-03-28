@@ -25,6 +25,9 @@ add_executable (
     command-uci
     command-ucinewgame
     command-isready
+    command-quit
+    command-help
+    command-debug
 )
 
 target_link_libraries(sachista movegenerator)
