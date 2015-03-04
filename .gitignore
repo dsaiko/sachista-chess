@@ -1,3 +1,4 @@
 CMakeLists.txt.user
 BUILD-RELEASE
 BUILD-DEBUG
+.idea

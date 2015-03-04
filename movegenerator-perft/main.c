@@ -138,24 +138,6 @@ uint64_t perft(const ChessBoard *board, const int depth)
     return count;
 }
 
-unsigned long long timediff(const struct timeval *start_time,  const struct timeval *end_time)
-{
-  struct timeval difference;
-
-  difference.tv_sec = (end_time->tv_sec)  - (start_time->tv_sec);
-  difference.tv_usec= (end_time->tv_usec) - (start_time->tv_usec);
-
-  /* Using while instead of if below makes the code slightly more robust. */
-
-  while(difference.tv_usec < 0)
-  {
-    difference.tv_usec+=1000000;
-    difference.tv_sec -=1;
-  }
-
-  return 1000000ULL * difference.tv_sec + difference.tv_usec;
-}
-
 /*
  * This is optimized multithreaded perftest
  */
