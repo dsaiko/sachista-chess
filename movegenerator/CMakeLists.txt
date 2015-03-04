@@ -14,7 +14,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 add_library (
-    movegenerator
+    sachista-movegenerator
     utils
     version
     bitboard

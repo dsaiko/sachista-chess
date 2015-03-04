@@ -16,8 +16,9 @@
 include_directories     (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
+
 add_executable (
-    sachista
+    sachista-chess
     main
     uci
     utils
@@ -30,4 +31,5 @@ add_executable (
     command-debug
 )
 
-target_link_libraries(sachista movegenerator)
+target_link_libraries(sachista-chess sachista-movegenerator)
+

@@ -14,11 +14,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_directories     (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
-
 link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
 add_executable          (
-    movegenerator-test
+    sachista-movegenerator-tests
     bitboard-test
     chesspiece-test
     chessboard-test
@@ -32,6 +31,6 @@ add_executable          (
     main
 )
 
-target_link_libraries   (movegenerator-test CppUTest CppUTestExt movegenerator)
+target_link_libraries   (sachista-movegenerator-tests CppUTest CppUTestExt sachista-movegenerator)
 
 

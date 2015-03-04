@@ -21,11 +21,12 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 enable_language             (C)
-enable_language		    (CXX)
+enable_language		        (CXX)
 
 add_subdirectory            (movegenerator)
-add_subdirectory	    (engine-uci)
+add_subdirectory	        (engine-uci)
 
 add_subdirectory            (movegenerator-test)
 add_subdirectory            (movegenerator-perft)
+
 

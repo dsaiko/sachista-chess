@@ -17,8 +17,8 @@ include_directories     (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
 add_executable (
-    movegenerator-perft
+    sachista-movegenerator-perft
     main
 )
 
-target_link_libraries(movegenerator-perft movegenerator)
+target_link_libraries(sachista-movegenerator-perft sachista-movegenerator)
