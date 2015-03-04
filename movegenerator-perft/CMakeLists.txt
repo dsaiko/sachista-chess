@@ -13,19 +13,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include_directories     (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
+link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 
-cmake_minimum_required      (VERSION 2.8.7)
-project                     (SACHISTA_CHESS)
+add_executable (
+    movegenerator-perft
+    main
+)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
-
-enable_language             (C)
-enable_language		    (CXX)
-
-add_subdirectory            (movegenerator)
-add_subdirectory	    (engine-uci)
-
-add_subdirectory            (movegenerator-test)
-add_subdirectory            (movegenerator-perft)
-
+target_link_libraries(movegenerator-perft movegenerator)

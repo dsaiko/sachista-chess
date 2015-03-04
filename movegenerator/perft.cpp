@@ -140,8 +140,8 @@ uint64_t perft(const ChessBoard *board, const int depth)
 
     const int nMoves = pointer - moves;
 
-    ulong memSize = getMemorySize();
-    uint cacheSize = 128*1024*1024;
+    unsigned long memSize = getMemorySize();
+    unsigned long cacheSize = 128*1024*1024;
     //get maximum of total_memory / 4 cache size
     if(cacheSize * sizeof(CacheEntry) > (memSize / 4)) cacheSize = (memSize / 4) / sizeof(CacheEntry);
 
