@@ -1,4 +1,4 @@
-#  sachista-chess copyright (C) 2014 dusan.saiko@gmail.com
+#  sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
 #  sachista-chess is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
