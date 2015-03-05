@@ -28,22 +28,21 @@ bitmask BitBoard::reverseRanks(const bitmask b) {
             ((b             & (bitmask) BitMask::RANK_1) << 56ULL);
 }
 
-bitmask BitBoard::flipDiagA1H8(const bitmask b) {
+bitmask BitBoard::flipDiagA1H8(const bitmask b_) {
     //Flips around A1H8 diagonal
     static const bitmask k1 = 0x5500550055005500ULL;
     static const bitmask k2 = 0x3333000033330000ULL;
     static const bitmask k4 = 0x0f0f0f0f00000000ULL;
 
-    bitmask r = b;
-    bitmask t = k4 & (r ^ (r << 28));
+    bitmask b = b_;
 
-    r ^= t ^ (t >> 28);
-    r = k2 & (r ^ (r << 14));
-    r ^= t ^ (t >> 14);
-    r = k1 & (r ^ (r << 7));
-    r ^= t ^ (t >> 7);
-
-    return r;
+    bitmask t = k4 & (b ^ (b << 28));
+    b ^= t ^ (t >> 28);
+    t = k2 & (b ^ (b << 14));
+    b ^= t ^ (t >> 14);
+    t = k1 & (b ^ (b << 7));
+    b ^= t ^ (t >> 7);
+    return b;
 }
 
 bitmask BitBoard::mirrorHorizontal(const bitmask b) {
