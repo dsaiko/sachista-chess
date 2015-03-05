@@ -16,7 +16,10 @@
 */
 
 #include <CppUTest/CommandLineTestRunner.h>
+#include <iostream>
 #include "version.h"
+#include "chessboard.h"
+
 
 extern void testMoves(const int expectedCount, const char *boardString);
 extern void testMovesFromFen(const int expectedCount, const char *boardString);
@@ -25,20 +28,16 @@ extern void testValidMoves(const int expectedCount, const char *boardString);
 
 int main(int argc, char** args) {
 
-#if defined(__i386__)
-    char architecture[] = "x86";
-#elif defined(__x86_64__)
-    char architecture[] = "x64";
-#else
-    char architecture[] = "UnknownArchitecture";
-#endif
+    std::cout
+            << "Welcome to "
+            << ARCHITECTURE
+            << " sachista-chess "
+            << IMPLEMENTATION_VERSION
+            << " (" << IMPLEMENTATION_DATE << ") unit tests!\n"
+    ;
 
-   printf("Welcome to %s sachista-chess %s (%s) unit tests!\n",
-          architecture,
-          IMPLEMENTATION_VERSION,
-          IMPLEMENTATION_DATE
-   );
+    ChessBoard board;
+    std::cout << board.toString();
 
-//   initMovesGenerator();
    return CommandLineTestRunner::RunAllTests(argc, args);
 }

@@ -1,4 +1,3 @@
-#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -16,20 +15,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdint.h>
+#include <iostream>
+#include <set>
+#include <CppUTest/CommandLineTestRunner.h>
+#include "rand64.h"
 
-class ChessBoard;
-
-class Zobrist {
-
-public:
-    Zobrist();
-    uint64_t getKey(const ChessBoard &board) const;
-
-private:
-    uint64_t Z_PIECES[2][7][64];
-    uint64_t Z_CASTLING[2][4];
-    uint64_t Z_ENPASSANT[64];
-    uint64_t Z_SIDE;
+TEST_GROUP(Random64Test)
+{
 };
+
+TEST(Random64Test, TestRandom64)
+{
+    Rand64 rnd;
+
+    std::set<uint64_t> usedValues;
+    for(int i=0; i<100; i++) {
+        uint64_t val = rnd.rnd();
+        if(usedValues.count(val)) {
+            FAIL("Random value already used!");
+        }
+
+        //check random value is 64 bit
+        CHECK((val >> 32) != 0);
+        CHECK((val << 32) != 0);
+    }
+}
 

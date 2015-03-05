@@ -1,4 +1,3 @@
-#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -16,20 +15,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdint.h>
+#include <iostream>
+#include <CppUTest/CommandLineTestRunner.h>
+#include "chessboard.h"
+#include "zobrist.h"
 
-class ChessBoard;
-
-class Zobrist {
-
-public:
-    Zobrist();
-    uint64_t getKey(const ChessBoard &board) const;
-
-private:
-    uint64_t Z_PIECES[2][7][64];
-    uint64_t Z_CASTLING[2][4];
-    uint64_t Z_ENPASSANT[64];
-    uint64_t Z_SIDE;
+TEST_GROUP(ZobristTest)
+{
 };
+
+TEST(ZobristTest, TestZobrist)
+{
+    ChessBoard board;
+}
 

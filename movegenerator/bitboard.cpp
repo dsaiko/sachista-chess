@@ -18,14 +18,14 @@
 
 bitmask BitBoard::reverseRanks(const bitmask b) {
     //return board with ranks (rows) in reverse order
-    return  ((b >> 56ULL)   & (bitmask) BitMask::RANK_1)                |
-            (((b >> 48ULL)  & (bitmask) BitMask::RANK_1) << 8ULL)       |
-            (((b >> 40ULL)  & (bitmask) BitMask::RANK_1) << 16ULL)      |
-            (((b >> 32ULL)  & (bitmask) BitMask::RANK_1) << 24ULL)      |
-            (((b >> 24ULL)  & (bitmask) BitMask::RANK_1) << 32ULL)      |
-            (((b >> 16ULL)  & (bitmask) BitMask::RANK_1) << 40ULL)      |
-            (((b >> 8ULL)   & (bitmask) BitMask::RANK_1) << 48ULL)      |
-            ((b             & (bitmask) BitMask::RANK_1) << 56ULL);
+    return  ((b >> 56ULL)   &  BitMask::RANK_1)                |
+            (((b >> 48ULL)  &  BitMask::RANK_1) << 8ULL)       |
+            (((b >> 40ULL)  &  BitMask::RANK_1) << 16ULL)      |
+            (((b >> 32ULL)  &  BitMask::RANK_1) << 24ULL)      |
+            (((b >> 24ULL)  &  BitMask::RANK_1) << 32ULL)      |
+            (((b >> 16ULL)  &  BitMask::RANK_1) << 40ULL)      |
+            (((b >> 8ULL)   &  BitMask::RANK_1) << 48ULL)      |
+            ((b             &  BitMask::RANK_1) << 56ULL);
 }
 
 bitmask BitBoard::flipDiagA1H8(const bitmask b_) {
@@ -61,15 +61,15 @@ bitmask BitBoard::mirrorHorizontal(const bitmask b) {
 bitmask BitBoard::fromNotation(const std::string &notation)
 {
     if(notation.length() != 2) return 0;
-    BoardIndex index = (BoardIndex) ((notation[0] - 'a') + ((notation[1] - '1') << 3));
+    int index = ((notation[0] - 'a') + ((notation[1] - '1') << 3));
     return squareBitmask(index);
 }
 
-std::string BitBoard::fieldNotation(const BoardIndex index) {
+std::string BitBoard::fieldNotation(const int index) {
     std::string notation;
 
-    notation += 'a' + ((int) index % 8);
-    notation += '1' + ((int) index / 8);
+    notation += 'a' + (index % 8);
+    notation += '1' + (index / 8);
     return notation;
 }
 

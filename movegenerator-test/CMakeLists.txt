@@ -19,6 +19,8 @@ link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 add_executable          (
     sachista-movegenerator-tests
     bitboard-test
+    random64-test
+    zobrist-test
    # chesspiece-test
    # chessboard-test
    # movesgenerator-test

@@ -138,14 +138,6 @@ uint64_t perft(const ChessBoard *board, const int depth)
  */
 int main(int argc, char **argv) {
 
-#if defined(__i386__)
-    char architecture[] = "x86";
-#elif defined(__x86_64__)
-    char architecture[] = "x64";
-#else
-    char architecture[] = "UnknownArchitecture";
-#endif
-
    printf("Welcome to %s sachista-chess %s (%s) perft!\n\n",
           architecture,
           IMPLEMENTATION_VERSION,

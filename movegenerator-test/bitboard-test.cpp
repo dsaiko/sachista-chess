@@ -34,12 +34,12 @@ TEST(BitBoardTest, Test64BitLong)
         b <<= 1;
     }
 
-    LONGS_EQUAL(64, size);
+    CHECK(64 == size);
 }
 
 TEST(BitBoardTest, TestUniverse)
 {
-    bitmask b = (bitmask) BitMask::UNIVERSE;
+    bitmask b =  BitMask::UNIVERSE;
 
     int count = 0;
     while (b) {
@@ -47,258 +47,267 @@ TEST(BitBoardTest, TestUniverse)
         b >>= 1;
     }
 
-    LONGS_EQUAL(64, count);
+    CHECK(64 == count);
 }
 
 
 TEST(BitBoardTest, TestOneEast)
 {
-    bitmask b = (bitmask) BitMask::A1; b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::B1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::C1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::D1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::E1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::F1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::G1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(BitMask::H1, b); b = BitBoard::oneEast(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::A1; b = BitBoard::oneEast(b);
+    CHECK(BitMask::B1 == b); b = BitBoard::oneEast(b);
+    CHECK(BitMask::C1 == b); b = BitBoard::oneEast(b);
+    CHECK(BitMask::D1 == b); b = BitBoard::oneEast(b);
+    CHECK(BitMask::E1 == b); b = BitBoard::oneEast(b);
+    CHECK(BitMask::F1 == b); b = BitBoard::oneEast(b);
+    CHECK(BitMask::G1 == b); b = BitBoard::oneEast(b);
+    CHECK(BitMask::H1 == b); b = BitBoard::oneEast(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestOneWest)
 {
-    bitmask b = (bitmask) BitMask::H8; b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::G8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::F8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::E8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::D8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::C8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::B8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(BitMask::A8, b); b = BitBoard::oneWest(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::H8; b = BitBoard::oneWest(b);
+    CHECK(BitMask::G8 == b); b = BitBoard::oneWest(b);
+    CHECK(BitMask::F8 == b); b = BitBoard::oneWest(b);
+    CHECK(BitMask::E8 == b); b = BitBoard::oneWest(b);
+    CHECK(BitMask::D8 == b); b = BitBoard::oneWest(b);
+    CHECK(BitMask::C8 == b); b = BitBoard::oneWest(b);
+    CHECK(BitMask::B8 == b); b = BitBoard::oneWest(b);
+    CHECK(BitMask::A8 == b); b = BitBoard::oneWest(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestOneSouth)
 {
-    bitmask b = (bitmask) BitMask::H8; b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H7, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H6, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H5, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H4, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H3, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H2, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(BitMask::H1, b); b = BitBoard::oneSouth(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::H8; b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H7 == b); b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H6 == b); b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H5 == b); b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H4 == b); b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H3 == b); b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H2 == b); b = BitBoard::oneSouth(b);
+    CHECK(BitMask::H1 == b); b = BitBoard::oneSouth(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestOneNorth)
 {
-    bitmask b = (bitmask) BitMask::A1; b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A2, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A3, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A4, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A5, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A6, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A7, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(BitMask::A8, b); b = BitBoard::oneNorth(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::A1; b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A2 == b); b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A3 == b); b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A4 == b); b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A5 == b); b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A6 == b); b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A7 == b); b = BitBoard::oneNorth(b);
+    CHECK(BitMask::A8 == b); b = BitBoard::oneNorth(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestOneNorthEast)
 {
-    bitmask b = (bitmask) BitMask::A1; b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::B2, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::C3, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::D4, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::E5, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::F6, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::G7, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(BitMask::H8, b); b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::A1; b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::B2 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::C3 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::D4 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::E5 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::F6 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::G7 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(BitMask::H8 == b); b = BitBoard::oneNorthEast(b);
+    CHECK(0 == b);
 
-    b = (bitmask) BitMask::A8; b = BitBoard::oneNorthEast(b);
-    LONGS_EQUAL(0, b);
+    b =  BitMask::A8; b = BitBoard::oneNorthEast(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestOneSouthWest)
 {
-    bitmask b = (bitmask) BitMask::H8; b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::G7, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::F6, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::E5, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::D4, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::C3, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::B2, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(BitMask::A1, b); b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::H8; b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::G7 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::F6 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::E5 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::D4 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::C3 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::B2 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(BitMask::A1 == b); b = BitBoard::oneSouthWest(b);
+    CHECK(0 == b);
 
-    b = (bitmask) BitMask::H1; b = BitBoard::oneSouthWest(b);
-    LONGS_EQUAL(0, b);
+    b =  BitMask::H1; b = BitBoard::oneSouthWest(b);
+    CHECK(0 == b);
 }
 
 
 TEST(BitBoardTest, TestOneSouthEast)
 {
-    bitmask b = (bitmask) BitMask::A8; b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::B7, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::C6, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::D5, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::E4, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::F3, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::G2, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(BitMask::H1, b); b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::A8; b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::B7 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::C6 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::D5 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::E4 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::F3 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::G2 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(BitMask::H1 == b); b = BitBoard::oneSouthEast(b);
+    CHECK(0 == b);
 
-    b = (bitmask) BitMask::H8; b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(0, b);
+    b =  BitMask::H8; b = BitBoard::oneSouthEast(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestOneNorthWest)
 {
-    bitmask b = (bitmask) BitMask::H1; b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::G2, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::F3, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::E4, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::D5, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::C6, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::B7, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(BitMask::A8, b); b = BitBoard::oneNorthWest(b);
-    LONGS_EQUAL(0, b);
+    bitmask b =  BitMask::H1; b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::G2 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::F3 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::E4 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::D5 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::C6 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::B7 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(BitMask::A8 == b); b = BitBoard::oneNorthWest(b);
+    CHECK(0 == b);
 
-    b = (bitmask) BitMask::A1; b = BitBoard::oneSouthEast(b);
-    LONGS_EQUAL(0, b);
+    b =  BitMask::A1; b = BitBoard::oneSouthEast(b);
+    CHECK(0 == b);
 }
 
 TEST(BitBoardTest, TestRankFileIndex)
 {
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::A1), 0);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::B2), 1);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::C3), 2);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::D4), 3);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::E5), 4);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::F6), 5);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::G7), 6);
-    LONGS_EQUAL(BitBoard::rankIndex(BoardIndex::H8), 7);
+    CHECK(BitBoard::rankIndex(BoardIndex::A1) == 0);
+    CHECK(BitBoard::rankIndex(BoardIndex::B2) == 1);
+    CHECK(BitBoard::rankIndex(BoardIndex::C3) == 2);
+    CHECK(BitBoard::rankIndex(BoardIndex::D4) == 3);
+    CHECK(BitBoard::rankIndex(BoardIndex::E5) == 4);
+    CHECK(BitBoard::rankIndex(BoardIndex::F6) == 5);
+    CHECK(BitBoard::rankIndex(BoardIndex::G7) == 6);
+    CHECK(BitBoard::rankIndex(BoardIndex::H8) == 7);
 
 
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::A1), 0);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::B2), 1);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::C3), 2);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::D4), 3);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::E5), 4);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::F6), 5);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::G7), 6);
-    LONGS_EQUAL(BitBoard::fileIndex(BoardIndex::H8), 7);
+    CHECK(BitBoard::fileIndex(BoardIndex::A1) == 0);
+    CHECK(BitBoard::fileIndex(BoardIndex::B2) == 1);
+    CHECK(BitBoard::fileIndex(BoardIndex::C3) == 2);
+    CHECK(BitBoard::fileIndex(BoardIndex::D4) == 3);
+    CHECK(BitBoard::fileIndex(BoardIndex::E5) == 4);
+    CHECK(BitBoard::fileIndex(BoardIndex::F6) == 5);
+    CHECK(BitBoard::fileIndex(BoardIndex::G7) == 6);
+    CHECK(BitBoard::fileIndex(BoardIndex::H8) == 7);
 }
 
 TEST(BitBoardTest, TestSquareBitmask)
 {
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A1), BitMask::A1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A2), BitMask::A2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A3), BitMask::A3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A4), BitMask::A4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A5), BitMask::A5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A6), BitMask::A6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A7), BitMask::A7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::A8), BitMask::A8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A1) == BitMask::A1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A2) == BitMask::A2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A3) == BitMask::A3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A4) == BitMask::A4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A5) == BitMask::A5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A6) == BitMask::A6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A7) == BitMask::A7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::A8) == BitMask::A8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B1), BitMask::B1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B2), BitMask::B2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B3), BitMask::B3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B4), BitMask::B4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B5), BitMask::B5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B6), BitMask::B6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B7), BitMask::B7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::B8), BitMask::B8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B1) == BitMask::B1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B2) == BitMask::B2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B3) == BitMask::B3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B4) == BitMask::B4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B5) == BitMask::B5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B6) == BitMask::B6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B7) == BitMask::B7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::B8) == BitMask::B8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C1), BitMask::C1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C2), BitMask::C2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C3), BitMask::C3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C4), BitMask::C4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C5), BitMask::C5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C6), BitMask::C6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C7), BitMask::C7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::C8), BitMask::C8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C1) == BitMask::C1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C2) == BitMask::C2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C3) == BitMask::C3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C4) == BitMask::C4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C5) == BitMask::C5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C6) == BitMask::C6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C7) == BitMask::C7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::C8) == BitMask::C8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D1), BitMask::D1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D2), BitMask::D2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D3), BitMask::D3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D4), BitMask::D4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D5), BitMask::D5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D6), BitMask::D6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D7), BitMask::D7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::D8), BitMask::D8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D1) == BitMask::D1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D2) == BitMask::D2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D3) == BitMask::D3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D4) == BitMask::D4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D5) == BitMask::D5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D6) == BitMask::D6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D7) == BitMask::D7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::D8) == BitMask::D8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E1), BitMask::E1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E2), BitMask::E2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E3), BitMask::E3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E4), BitMask::E4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E5), BitMask::E5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E6), BitMask::E6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E7), BitMask::E7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::E8), BitMask::E8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E1) == BitMask::E1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E2) == BitMask::E2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E3) == BitMask::E3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E4) == BitMask::E4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E5) == BitMask::E5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E6) == BitMask::E6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E7) == BitMask::E7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::E8) == BitMask::E8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F1), BitMask::F1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F2), BitMask::F2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F3), BitMask::F3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F4), BitMask::F4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F5), BitMask::F5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F6), BitMask::F6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F7), BitMask::F7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::F8), BitMask::F8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F1) == BitMask::F1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F2) == BitMask::F2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F3) == BitMask::F3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F4) == BitMask::F4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F5) == BitMask::F5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F6) == BitMask::F6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F7) == BitMask::F7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::F8) == BitMask::F8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G1), BitMask::G1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G2), BitMask::G2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G3), BitMask::G3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G4), BitMask::G4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G5), BitMask::G5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G6), BitMask::G6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G7), BitMask::G7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::G8), BitMask::G8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G1) == BitMask::G1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G2) == BitMask::G2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G3) == BitMask::G3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G4) == BitMask::G4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G5) == BitMask::G5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G6) == BitMask::G6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G7) == BitMask::G7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::G8) == BitMask::G8);
 
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H1), BitMask::H1);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H2), BitMask::H2);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H3), BitMask::H3);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H4), BitMask::H4);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H5), BitMask::H5);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H6), BitMask::H6);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H7), BitMask::H7);
-    LONGS_EQUAL(BitBoard::squareBitmask(BoardIndex::H8), BitMask::H8);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H1) == BitMask::H1);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H2) == BitMask::H2);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H3) == BitMask::H3);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H4) == BitMask::H4);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H5) == BitMask::H5);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H6) == BitMask::H6);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H7) == BitMask::H7);
+    CHECK(BitBoard::squareBitmask(BoardIndex::H8) == BitMask::H8);
 }
 
 
 TEST(BitBoardTest, TestReverseRanks)
 {
-    bitmask b = (bitmask) BitMask::FRAME;
-    LONGS_EQUAL(b, BitBoard::reverseRanks(b));
+    bitmask b =  BitMask::FRAME;
+    CHECK(b == BitBoard::reverseRanks(b));
 
-    b = ~BitBoard::A1H8[7];
+    b = ~BitMask::A1H8[7];
 
     bitmask b2 = BitBoard::reverseRanks(b);
     CHECK(b != b2);
     b2 = BitBoard::reverseRanks(b2);
-    LONGS_EQUAL(b, b2);
+    CHECK(b == b2);
 }
 
 
 TEST(BitBoardTest, TestFlipDiagA8H1)
 {
-    bitmask diag1 = ~BitBoard::A1H8[7];
-    bitmask diag2 = ~BitBoard::A1H8[5];
+    bitmask diag1 = ~BitMask::A1H8[7];
+    bitmask diag2 = ~BitMask::A1H8[5];
 
     CHECK(BitBoard::flipDiagA1H8(diag1) == diag1);
     CHECK(BitBoard::flipDiagA1H8(diag2) != diag2);
     CHECK(BitBoard::flipDiagA1H8(BitBoard::flipDiagA1H8(diag2)) == diag2);
+
+
+    bitmask b1 = BitMask::A1 | BitMask::H1 | BitMask::H8;
+    bitmask b2 = BitMask::A1 | BitMask::A8 | BitMask::H8;
+
+    CHECK(b2 = BitBoard::flipDiagA1H8(b1));
 }
 
 
 TEST(BitBoardTest, TestMirrorHorizontal)
 {
-    bitmask diag1 = (bitmask) BitMask::FRAME;
-    bitmask diag2 = ~BitBoard::A1H8[7];
+    bitmask diag1 =  BitMask::FRAME;
+    bitmask diag2 = ~BitMask::A1H8[7];
 
     CHECK(BitBoard::mirrorHorizontal(diag1) == diag1);
     CHECK(BitBoard::mirrorHorizontal(diag2) != diag2);
     CHECK(BitBoard::mirrorHorizontal(BitBoard::mirrorHorizontal(diag2)) == diag2);
+
+
+    CHECK(BitMask::FILE[1] == BitBoard::mirrorHorizontal(BitMask::FILE[6]));
 }
 
 
@@ -312,109 +321,74 @@ TEST(BitBoardTest, TestRankArray)
 {
     bitmask board = 0;
     for(int i=0; i<8; i++) {
-        CHECK(board != (bitmask)BitMask::UNIVERSE);
-        board |= BitBoard::RANK[i];
+        CHECK(board != BitMask::UNIVERSE);
+        board |= BitMask::RANK[i];
     }
-    CHECK(board == (bitmask)BitMask::UNIVERSE);
+    CHECK(board == BitMask::UNIVERSE);
 }
 
 TEST(BitBoardTest, TestFileArray)
 {
     bitmask board = 0;
     for(int i=0; i<8; i++) {
-        CHECK(board != (bitmask)BitMask::UNIVERSE);
-        board |= BitBoard::FILE[i];
+        CHECK(board != BitMask::UNIVERSE);
+        board |= BitMask::FILE[i];
     }
-    CHECK(board == (bitmask)BitMask::UNIVERSE);
+    CHECK(board == BitMask::UNIVERSE);
 }
 
 TEST(BitBoardTest, TestA1H8Array)
 {
     bitmask board = 0;
     for(int i=0; i<15; i++) {
-        CHECK(board != (bitmask)BitMask::UNIVERSE);
-        board |= BitBoard::A1H8[i];
+        CHECK(board != BitMask::UNIVERSE);
+        board |= BitMask::A1H8[i];
     }
-    CHECK(board == (bitmask)BitMask::UNIVERSE);
+    CHECK(board == BitMask::UNIVERSE);
 }
 
 TEST(BitBoardTest, TestA8H1Array)
 {
     bitmask board = 0;
     for(int i=0; i<15; i++) {
-        CHECK(board != (bitmask)BitMask::UNIVERSE);
-        board |= BitBoard::A8H1[i];
+        CHECK(board != BitMask::UNIVERSE);
+        board |= BitMask::A8H1[i];
     }
-    CHECK(board == (bitmask)BitMask::UNIVERSE);
+    CHECK(board == BitMask::UNIVERSE);
 }
 
-//TEST(BitBoardTest, TestLeastSignificantBit)
-//{
-//    const int i = bitScan(BITMASK_H2);
-//    char notation[3];
-//
-//    fieldNotation(i, notation, sizeof(notation)/sizeof(char));
-//
-//    STRCMP_EQUAL("h2", notation);
-//}
+TEST(BitBoardTest, TestConstantArrayts)
+{
+    CHECK(BitMask::FILE_A == BitMask::FILE[0]);
+    CHECK(BitMask::FILE_H == BitMask::FILE[7]);
 
-//
-//TEST(BitBoardTest, TestBitCount)
-//{
-//    LONGS_EQUAL(28, popCount(BITMASK_FRAME));
-//    LONGS_EQUAL(64, popCount(BITMASK_UNIVERSE));
-//    LONGS_EQUAL(0, popCount(~BITMASK_UNIVERSE));
-//
-//    LONGS_EQUAL(BITMASK_FILE_A, BITMASK_FILE[0]);
-//    LONGS_EQUAL(BITMASK_FILE_H, BITMASK_FILE[7]);
-//
-//    LONGS_EQUAL(BITMASK_RANK_1, BITMASK_RANK[0]);
-//    LONGS_EQUAL(BITMASK_RANK_8, BITMASK_RANK[7]);
-//
-//    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_FILE[0] | BITMASK_FILE[1] | BITMASK_FILE[2] | BITMASK_FILE[3] | BITMASK_FILE[4] | BITMASK_FILE[5] | BITMASK_FILE[6] | BITMASK_FILE[7] );
-//    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_RANK[0] | BITMASK_RANK[1] | BITMASK_RANK[2] | BITMASK_RANK[3] | BITMASK_RANK[4] | BITMASK_RANK[5] | BITMASK_RANK[6] | BITMASK_RANK[7] );
-//
-//    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_A1H8[0] | BITMASK_A1H8[1] | BITMASK_A1H8[2] | BITMASK_A1H8[3] | BITMASK_A1H8[4] | BITMASK_A1H8[5] | BITMASK_A1H8[6] | BITMASK_A1H8[7] | BITMASK_A1H8[8] | BITMASK_A1H8[9] | BITMASK_A1H8[10] | BITMASK_A1H8[11] | BITMASK_A1H8[12] | BITMASK_A1H8[13] | BITMASK_A1H8[14]);
-//    LONGS_EQUAL(BITMASK_UNIVERSE, BITMASK_A8H1[0] | BITMASK_A8H1[1] | BITMASK_A8H1[2] | BITMASK_A8H1[3] | BITMASK_A8H1[4] | BITMASK_A8H1[5] | BITMASK_A8H1[6] | BITMASK_A8H1[7] | BITMASK_A8H1[8] | BITMASK_A8H1[9] | BITMASK_A8H1[10] | BITMASK_A8H1[11] | BITMASK_A8H1[12] | BITMASK_A8H1[13] | BITMASK_A8H1[14]);
-//
-//}
+    CHECK(BitMask::RANK_1 == BitMask::RANK[0]);
+    CHECK(BitMask::RANK_8 == BitMask::RANK[7]);
+}
 
-//
-//TEST(BitBoardTest, TestIndexes)
-//{
-//    for(int i=0; i<64; i++) {
-//        bitboard b = BITMASK_SQUARE(i);
-//
-//        LONGS_EQUAL((1ULL << i), b);
-//        LONGS_EQUAL(1, popCount(b));
-//    }
-//}
 
-//TEST(BitBoardTest, TestBasicOperations)
-//{
-//    LONGS_EQUAL(13, popCount(ONE_NORTH_EAST(BITMASK_FRAME)));
-//    LONGS_EQUAL(13, popCount(ONE_SOUTH_WEST(BITMASK_FRAME)));
-//
-//    bitboard b = flipDiagA1H8(BITMASK_A1 | BITMASK_H1 | BITMASK_H8);
-//    LONGS_EQUAL(BITMASK_A1 | BITMASK_A8 | BITMASK_H8, b);
-//    LONGS_EQUAL(BITMASK_FILE[1], mirrorHorizontal(BITMASK_FILE[6]));
-//
-//    LONGS_EQUAL(BITMASK_A8, ONE_NORTH(BITMASK_A7));
-//    LONGS_EQUAL(BITMASK_A7, ONE_SOUTH(BITMASK_A8));
-//    LONGS_EQUAL(BITMASK_B7, ONE_EAST(BITMASK_A7));
-//    LONGS_EQUAL(BITMASK_B7, ONE_WEST(BITMASK_C7));
-//
-//    LONGS_EQUAL(BITMASK_A3, ONE_NORTH_WEST(BITMASK_B2));
-//    LONGS_EQUAL(BITMASK_C3, ONE_NORTH_EAST(BITMASK_B2));
-//    LONGS_EQUAL(BITMASK_C1, ONE_SOUTH_EAST(BITMASK_B2));
-//    LONGS_EQUAL(BITMASK_A1, ONE_SOUTH_WEST(BITMASK_B2));
-//
-//    LONGS_EQUAL(0, ONE_NORTH(BITMASK_A8));
-//    LONGS_EQUAL(0, ONE_NORTH_WEST(BITMASK_A8));
-//    LONGS_EQUAL(0, ONE_WEST(BITMASK_A8));
-//
-//    LONGS_EQUAL(0, ONE_NORTH(BITMASK_H8));
-//    LONGS_EQUAL(0, ONE_NORTH_EAST(BITMASK_H8));
-//    LONGS_EQUAL(0, ONE_EAST(BITMASK_H8));
-//}
-//
+
+TEST(BitBoardTest, TestBitScan)
+{
+    int i = BitBoard::bitScan(BitMask::H2);
+    auto notation = BitBoard::fieldNotation(i);
+
+    CHECK("h2" == notation);
+
+    bitmask b =  BitMask::H1 |  BitMask::A1;
+
+    i = BitBoard::bitPop(b);
+    CHECK((int)BoardIndex::A1 == i);
+    CHECK( BitMask::H1 == b);
+}
+
+
+TEST(BitBoardTest, TestPopCount)
+{
+    CHECK(28 == BitBoard::popCount( BitMask::FRAME));
+    CHECK(64 == BitBoard::popCount( BitMask::UNIVERSE));
+    CHECK(0 == BitBoard::popCount(~ BitMask::UNIVERSE));
+
+    CHECK(13 == BitBoard::popCount(BitBoard::oneNorthEast(BitMask::FRAME)));
+    CHECK(13 == BitBoard::popCount(BitBoard::oneSouthEast(BitMask::FRAME)));
+}

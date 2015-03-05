@@ -58,7 +58,7 @@ std::vector<UCICommand> commands = {
 
 int main()
 {
-    println("Welcome to sachista-chess v. %s (%s) %s", IMPLEMENTATION_VERSION, IMPLEMENTATION_DATE, PLATFORM);
+    println("Welcome to sachista-chess v. %s (%s) %s", IMPLEMENTATION_VERSION, IMPLEMENTATION_DATE, ARCHITECTURE);
 
     initMovesGenerator();
 

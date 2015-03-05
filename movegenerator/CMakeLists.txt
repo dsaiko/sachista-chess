@@ -17,9 +17,12 @@ add_library (
     sachista-movegenerator
     version
     bitboard
+    chessboard
+    chessboard-fen
+    chessboard-string
+    rand64
+    zobrist
 #    utils
-#    version
-#    chessboard
 #    movegenerator
 #    movegenerator-bishop
 #    movegenerator-king
@@ -29,7 +32,6 @@ add_library (
 #    bitscan
 #    popcount
 #    makemove
-#    zobrist
 #    perft
 #    memfree
 )
