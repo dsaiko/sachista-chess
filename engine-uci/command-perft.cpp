@@ -16,15 +16,11 @@
 */
 
 #include <stdio.h>
-#include <string.h>
 #include <sys/time.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <unistd.h>
 
 #include "chessboard.h"
 #include "uci.h"
-#include "utils.h"
 #include "perft.h"
 
 void commandPerfT(std::vector<std::string> args) {

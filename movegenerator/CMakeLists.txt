@@ -15,21 +15,22 @@
 
 add_library (
     sachista-movegenerator
-    utils
     version
     bitboard
-    chessboard
-    movegenerator
-    movegenerator-bishop
-    movegenerator-king
-    movegenerator-pawn
-    movegenerator-rook
-    movegenerator-knight
-    bitscan
-    popcount
-    makemove
-    zobrist
-    perft
-    memfree
+#    utils
+#    version
+#    chessboard
+#    movegenerator
+#    movegenerator-bishop
+#    movegenerator-king
+#    movegenerator-pawn
+#    movegenerator-rook
+#    movegenerator-knight
+#    bitscan
+#    popcount
+#    makemove
+#    zobrist
+#    perft
+#    memfree
 )
 

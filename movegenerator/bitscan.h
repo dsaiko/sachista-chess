@@ -1,3 +1,4 @@
+#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -14,10 +15,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef SACHISTA_CHESS_BITSCAN_H
-#define SACHISTA_CHESS_BITSCAN_H
-
 
 #include <stdint.h>
 #include <string.h>
@@ -77,7 +74,3 @@ INLINE int bitPop(bitboard *b) {
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif //SACHISTA_CHESS_BITSCAN_H
-

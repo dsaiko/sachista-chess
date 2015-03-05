@@ -1,3 +1,4 @@
+#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -21,10 +22,7 @@
 #include <sys/time.h>
 #include "version.h"
 
-#ifndef SACHISTA_CHESS_UTILS_H
-#define SACHISTA_CHESS_UTILS_H
-
-#define INLINE  inline __attribute__((always_inline))
+#define INLINE  static inline __attribute__((always_inline))
 
 #define likely(x)       __builtin_expect((x),1)
 #define unlikely(x)     __builtin_expect((x),0)
@@ -113,6 +111,4 @@ size_t getMemorySize();
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

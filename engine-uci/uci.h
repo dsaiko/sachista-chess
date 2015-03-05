@@ -1,3 +1,4 @@
+#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -14,9 +15,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef SACHISTA_CHESS_UCI_H
-#define SACHISTA_CHESS_UCI_H
 
 #include <vector>
 #include <string>
@@ -52,7 +50,7 @@ void commandIsReady     (std::vector<std::string> args);
 void commandPerfT       (std::vector<std::string> args);
 void commandQuit        (std::vector<std::string> args);
 void commandHelp        (std::vector<std::string> args);
-void commandDebug        (std::vector<std::string> args);
+void commandDebug       (std::vector<std::string> args);
 
 /**
  * @brief readLine
@@ -66,5 +64,3 @@ std::string             readLine();
  * @return vector of string tokens
  */
 std::vector<std::string> split(const std::string &txt);
-
-#endif

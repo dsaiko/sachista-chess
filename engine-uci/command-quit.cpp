@@ -22,5 +22,5 @@
 extern std::atomic<int>  isAppRunning;
 
 void commandQuit(std::vector<std::string> args) {
-    isAppRunning = 0;
+    isAppRunning.store(0);
 }

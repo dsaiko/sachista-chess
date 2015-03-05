@@ -21,7 +21,6 @@
 #endif
 
 
-
 /**
  * Returns the size of physical memory (RAM) in bytes.
  */

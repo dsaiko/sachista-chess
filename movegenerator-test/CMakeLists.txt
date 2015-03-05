@@ -19,15 +19,15 @@ link_directories        (${SACHISTA_CHESS_SOURCE_DIR}/movegenerator)
 add_executable          (
     sachista-movegenerator-tests
     bitboard-test
-    chesspiece-test
-    chessboard-test
-    movesgenerator-test
-    movesgenerator-pawn-test
-    movesgenerator-knight-test
-    movesgenerator-king-test
-    movesgenerator-queen-test
-    movesgenerator-bishop-test
-    movesgenerator-rook-test
+   # chesspiece-test
+   # chessboard-test
+   # movesgenerator-test
+   # movesgenerator-pawn-test
+   # movesgenerator-knight-test
+   # movesgenerator-king-test
+   # movesgenerator-queen-test
+   # movesgenerator-bishop-test
+   # movesgenerator-rook-test
     main
 )
 

@@ -1,3 +1,4 @@
+#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -15,10 +16,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SACHISTA_CHESS_PERFT_H
-#define SACHISTA_CHESS_PERFT_H
-
-
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
@@ -26,5 +23,4 @@
 
 uint64_t    perft(const ChessBoard *board, const int depth);
 
-#endif
 

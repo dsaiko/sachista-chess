@@ -15,24 +15,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include <iostream>
-#include <stdio.h>
 #include <thread>
 #include <vector>
-#include <string>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-
-#include "utils.h"
-#include "chessboard.h"
-#include "uci.h"
 #include <atomic>
 
+#include "chessboard.h"
+#include "uci.h"
 
 std::mutex mutex_print;
-
 
 std::atomic<int>  isAppRunning(1);
 std::atomic<int>  isDebugMode(0);

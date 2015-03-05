@@ -1,3 +1,4 @@
+#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -14,9 +15,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef SACHISTA_CHESS_BOARD_H
-#define SACHISTA_CHESS_BOARD_H
 
 #include "bitboard.h"
 #include "version.h"
@@ -91,7 +89,7 @@ ChessBoard  boardFromFEN(const char *fen);
 
 
 void        initMovesGenerator();
-void        generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
+INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
 char *      move2str(const Move *m, char *buffer, const int bufferSize);
 void        makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
 
@@ -163,6 +161,3 @@ uint64_t zobristKey(const ChessBoard *board);
 #ifdef __cplusplus
 }
 #endif
-
-#endif //SACHISTA_CHESS_BOARD_H
-

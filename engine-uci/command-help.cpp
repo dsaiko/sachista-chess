@@ -18,7 +18,6 @@
 
 #include "uci.h"
 
-
 extern std::vector<UCICommand> commands;
 
 void commandHelp(std::vector<std::string> args) {

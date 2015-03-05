@@ -17,14 +17,10 @@
 
 
 #include <iostream>
-#include <stdio.h>
-#include <iostream>
-#include <string>
 #include <sstream>
 #include <iterator>
 #include <cstring>
 
-#include "utils.h"
 #include "chessboard.h"
 #include "uci.h"
 

@@ -1,3 +1,4 @@
+#pragma once
 /*
   sachista-chess copyright (C) 2014,2015 dusan.saiko@gmail.com
 
@@ -14,10 +15,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef SACHISTA_CHESS_MOVEGENERATOR_H
-#define SACHISTA_CHESS_MOVEGENERATOR_H
-
 #include "chessboard.h"
 
 #ifdef __cplusplus
@@ -25,7 +22,6 @@ extern "C"{
 #endif
 
 bitboard moveBitBoard0(bitboard b, const int up, const int right);
-
 
 int MOVE_RANK_SHIFT[64];
 bitboard MOVE_RANK_MASK[64];
@@ -67,12 +63,10 @@ void        generateMovesBishop     (const ChessBoard *board, Move **moves, cons
 void        generateMovesKnight     (const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo);
 
 
-INLINE void GENERATE_MOVE(Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
+void GENERATE_MOVE(Move **moves, Piece piece, Piece promotionPiece, int sourceIndex, int targetIndex, int isEnPassant) {
     *((*moves)++) = (Move){(piece), (promotionPiece), (sourceIndex), (targetIndex), (isEnPassant)};
 }
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif //SACHISTA_CHESS_MOVEGENERATOR_H

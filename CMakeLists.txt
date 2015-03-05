@@ -24,9 +24,9 @@ enable_language             (C)
 enable_language		        (CXX)
 
 add_subdirectory            (movegenerator)
-add_subdirectory	        (engine-uci)
-
 add_subdirectory            (movegenerator-test)
-add_subdirectory            (movegenerator-perft)
+
+#add_subdirectory	        (engine-uci)
+#add_subdirectory            (movegenerator-perft)
 
 

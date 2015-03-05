@@ -16,16 +16,14 @@
 */
 
 #include <CppUTest/CommandLineTestRunner.h>
-
-#include "stdio.h"
-#include "chessboard.h"
+#include "version.h"
 
 extern void testMoves(const int expectedCount, const char *boardString);
 extern void testMovesFromFen(const int expectedCount, const char *boardString);
 extern void testValidMoves(const int expectedCount, const char *boardString);
 
 
-int main(int ac, char** av) {
+int main(int argc, char** args) {
 
 #if defined(__i386__)
     char architecture[] = "x86";
@@ -35,13 +33,12 @@ int main(int ac, char** av) {
     char architecture[] = "UnknownArchitecture";
 #endif
 
-   printf("Welcome to %s sachista-chess %s (%s)!\n",
+   printf("Welcome to %s sachista-chess %s (%s) unit tests!\n",
           architecture,
           IMPLEMENTATION_VERSION,
           IMPLEMENTATION_DATE
    );
 
-   initMovesGenerator();
-
-   return CommandLineTestRunner::RunAllTests(ac, av);
+//   initMovesGenerator();
+   return CommandLineTestRunner::RunAllTests(argc, args);
 }

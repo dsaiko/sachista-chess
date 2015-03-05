@@ -16,17 +16,12 @@
 */
 
 #include <stdio.h>
-#include <string.h>
 #include <sys/time.h>
 #include <stdlib.h>
-#include <omp.h>
-#include <string.h>
 
 #include "chessboard.h"
-#include "utils.h"
-#include "zobrist.h"
 
-#define CACHESIZE     (16*1024*1024)
+const int CACHESIZE=16*1024*1024;
 
 typedef struct {
     uint64_t hashCode;
