@@ -59,15 +59,18 @@ public:
     //zobrist key is a hashcode of the beard (without halfMoveClock and fullMoveNumber info)
     uint64_t        zobristKey;
 
-    void        clear();
     bool operator==(const ChessBoard &other);
 
-    inline bitmask whitePieces() { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
-    inline bitmask blackPieces() { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
-    inline bitmask allPieces()   { return whitePieces() | blackPieces(); }
+    inline  bitmask         whitePieces() { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
+    inline  bitmask         blackPieces() { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
+    inline  bitmask         allPieces()   { return whitePieces() | blackPieces(); }
+    inline  void            removeCastling(Color color, Castling remove) { castling[color] = (Castling) (castling[color] & ~remove); }
 
 
-    std::string toString();
+            void            clearBoard();
+            std::string     toString();
+            void            setupString(const std::string &str);
+            void            setupFEN(const std::string &fen);
 private:
     static const Zobrist zobrist;
 };

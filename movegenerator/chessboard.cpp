@@ -38,19 +38,22 @@ bool ChessBoard::operator==(const ChessBoard &other)
     return this->zobristKey == other.zobristKey;
 }
 
+void ChessBoard::clearBoard() {
+    nextMove = White;
+    castling[White] = None;
+    castling[Black] = None;
+    halfMoveClock = 0;
+    fullMoveNumber = 1;
+    enPassantTargetIndex = 0;
+    zobristKey = 0;
+
+    std::fill( &pieces[0][0], &pieces[0][0] + sizeof(pieces) / sizeof(pieces[0][0]), 0 );
+}
 
 //ChessBoard boardFromFEN(const char *fen) {
-//    ChessBoard board = emptyBoard();
-//
-//    //rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-//    //8/1K6/1Q6/8/5r2/4rk2/8/8 w - -
 //
 //    int pos = 0;
 //    int len = strlen(fen);
-//
-//    //protection against large strings
-//    if(len > 128) return board;
-//
 //    while(pos < len) {
 //        const char c = fen[pos];
 //        if(c == ' ') break;
@@ -191,90 +194,6 @@ bool ChessBoard::operator==(const ChessBoard &other)
 //}
 //
 
-//
-//ChessBoard boardFromString(const char *buffer) {
-//    ChessBoard board = emptyBoard();
-//
-//    if(strlen(buffer) > BUFFERSIZE) return board;
-//
-//    char str[BUFFERSIZE] = {0};
-//    char fen[BUFFERSIZE] = {0};
-//
-//    const char header[] = "a b c d e f g h";
-//
-//    strcpy(str, buffer);
-//
-//    //replace header in str
-//    char *headerpos = 0;
-//    while((headerpos = strstr(str, header))) {
-//        int len = strlen(header);
-//        for (int i=0; i<len; i++)
-//                headerpos[i] = ' ';
-//
-//    }
-//
-//    //create FEN string from board pieces
-//    int len = strlen(str);
-//    for (int i = 0; i < len; i++) {
-//        char c = str[i];
-//        switch (c) {
-//            case 'k':
-//            case 'q':
-//            case 'r':
-//            case 'n':
-//            case 'b':
-//            case 'p':
-//            case 'K':
-//            case 'Q':
-//            case 'R':
-//            case 'N':
-//            case 'B':
-//            case 'P':
-//                appendChar(fen, BUFFERSIZE, c);
-//                break;
-//            case '-':
-//                appendChar(fen, BUFFERSIZE, '1');
-//                break;
-//        }
-//
-//    }
-//
-//    if(strlen(fen) < 64)
-//        appendChar(fen, BUFFERSIZE, '/');
-//
-//    appendString(fen, BUFFERSIZE, " w KQkq - 0 1");
-//
-//    board = boardFromFEN(fen);
-//
-//
-//    //tune castling availability according to board setup
-//    if ((board.pieces[WHITE][ROOK] & BITMASK_A1) == 0) {
-//        board.castling[WHITE] &= ~QUEEN_SIDE;
-//    }
-//    if ((board.pieces[WHITE][ROOK] & BITMASK_H1) == 0) {
-//        board.castling[WHITE] &= ~KING_SIDE;
-//    }
-//
-//    if ((board.pieces[BLACK][ROOK] & BITMASK_A8) == 0) {
-//        board.castling[BLACK] &= ~QUEEN_SIDE;
-//    }
-//    if ((board.pieces[BLACK][ROOK] & BITMASK_H8) == 0) {
-//        board.castling[BLACK] &= ~KING_SIDE;
-//    }
-//
-//
-//    //if king is misplaced, remove castling availability
-//    if ((board.pieces[WHITE][KING] & BITMASK_E1) == 0) {
-//        board.castling[WHITE] = 0;
-//    }
-//    if ((board.pieces[BLACK][KING] & BITMASK_E8) == 0) {
-//        board.castling[BLACK] = 0;
-//    }
-//
-//    board.zobristKey = zobristKey(&board);
-//    return board;
-//}
-//
 //char* board2fen(const ChessBoard *board, char *buffer, const int bufferSize) {
 //    //reinitialize buffer to empty string
 //    if(bufferSize < 1) return buffer;

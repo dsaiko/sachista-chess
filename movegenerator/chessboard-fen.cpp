@@ -15,3 +15,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <string>
+#include <regex>
+#include <iostream>
+
+#include "chessboard.h"
+
+void ChessBoard::setupFEN(const std::string &fen)
+{
+    if(fen.length() > 128) return;
+    //rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+    //8/1K6/1Q6/8/5r2/4rk2/8/8 w - -
+
+    clearBoard();
+
+}

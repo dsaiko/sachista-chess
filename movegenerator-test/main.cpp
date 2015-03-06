@@ -37,7 +37,21 @@ int main(int argc, char** args) {
     ;
 
     ChessBoard board;
-    std::cout << board.toString();
+    board.setupString(R"(
+    a b c d e f g h
+    8 - - - - - - - - 8
+    7 - - - Q - - - - 7
+    6 - - - k - - - - 6
+    5 - - - K - - - - 5
+    4 - - - q - - - - 4
+    3 - - - - - - - - 3
+    2 - - - - - - - - 2
+    1 - - - - - - - - 1
+    a b c d e f g h
+    )");
 
-   return CommandLineTestRunner::RunAllTests(argc, args);
+    std::cout << board.toString();
+//
+//    return CommandLineTestRunner::RunAllTests(argc, args);
+    return 0;
 }

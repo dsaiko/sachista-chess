@@ -15,6 +15,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <string>
+#include <regex>
+#include <iostream>
+
 #include "chessboard.h"
 
 std::string ChessBoard::toString() {
@@ -72,3 +76,53 @@ std::string ChessBoard::toString() {
     buffer += header;
     return buffer;
 }
+
+void ChessBoard::setupString(const std::string &str) {
+    //delete possible header/footer
+    static const std::regex reHeader("a b c d e f g h");
+    std::string buffer = std::regex_replace(str, reHeader, "", std::regex_constants::match_any);
+
+    //create fen
+    std::string fen;
+
+    //create FEN string from board pieces
+    for(char &c : buffer) {
+        switch (c) {
+            case 'k':
+            case 'q':
+            case 'r':
+            case 'n':
+            case 'b':
+            case 'p':
+            case 'K':
+            case 'Q':
+            case 'R':
+            case 'N':
+            case 'B':
+            case 'P':
+                fen += c;
+                break;
+            case '-':
+                fen += '1';
+                break;
+        }
+    }
+
+    if(fen.length() < 64) fen += '/';
+    fen += " w KQkq - 0 1";
+
+    setupFEN(fen);
+
+    //set castling
+    if ((pieces[White][Rook] & BitMask::A1) == 0) removeCastling(White, QueenSide);
+    if ((pieces[White][Rook] & BitMask::H1) == 0) removeCastling(White, KingSide);
+    if ((pieces[Black][Rook] & BitMask::A8) == 0) removeCastling(Black, QueenSide);
+    if ((pieces[Black][Rook] & BitMask::H8) == 0) removeCastling(Black, KingSide);
+
+    //if king is misplaced, remove castling availability
+    if ((pieces[White][King] & BitMask::E1) == 0) castling[White] = None;
+    if ((pieces[Black][King] & BitMask::E8) == 0) castling[Black] = None;
+
+    zobristKey = zobrist.getKey(*this);
+}
+
