@@ -20,9 +20,9 @@
 #define IMPLEMENTATION_DATE     __DATE__ " " __TIME__
 
 
-#if defined(__i386__)
+#if defined(__i386__) || defined (_M_IX86)
   #define ARCHITECTURE    "x86"
-#elif defined(__x86_64__)
+#elif defined(__x86_64__) || defined(_M_X64)
   #define ARCHITECTURE    "x64"
 #else
   #define ARCHITECTURE    "Unknown Architecture"

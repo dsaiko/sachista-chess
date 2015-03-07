@@ -20,9 +20,10 @@ add_executable          (
     sachista-movegenerator-tests
     bitboard-test
     random64-test
-    zobrist-test
     chessboard-test
+    utility-test
 
+   # zobrist-test
    # chesspiece-test
    # movesgenerator-test
    # movesgenerator-pawn-test

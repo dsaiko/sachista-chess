@@ -144,9 +144,6 @@ void ChessBoard::setupFEN(const std::string &fen_)
     updateZobrist();
 }
 
-
-
-
 std::string ChessBoard::toFEN()
 {
     const std::regex reHeader("a b c d e f g h|\\d| ");
