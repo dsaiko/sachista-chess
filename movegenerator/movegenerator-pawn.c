@@ -18,44 +18,6 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
-void initMovesGeneratorPawn() {
-    //for all fields
-    for (int i = 0; i < 64; i++) {
-     //put the piece on the board
-     bitboard piece = BITMASK_SQUARE(i);
-
-     //generate move
-     PAWN_MOVES[WHITE][i]         = moveBitBoard0(piece, 1, 0);
-
-     //generate move
-     PAWN_DOUBLE_MOVES[WHITE][i]  = moveBitBoard0(piece, 2, 0);
-
-     //generate attacks
-     PAWN_ATTACKS[WHITE][i]       = moveBitBoard0(piece, 1, 1) | moveBitBoard0(piece, 1, -1);
-
-     //generate move
-     PAWN_MOVES[BLACK][i]         = moveBitBoard0(piece, -1, 0);
-
-     //generate move
-     PAWN_DOUBLE_MOVES[BLACK][i]  = moveBitBoard0(piece, -2, 0);
-
-     //generate attacks
-     PAWN_ATTACKS[BLACK][i]       = moveBitBoard0(piece, -1, 1) | moveBitBoard0(piece, -1, -1);
-    }
-
-}
-
-
-INLINE bitboard generateAttacksPawn(const ChessBoard *board, const Color color)
-{
-    if(color == WHITE) {
-        return ONE_NORTH_EAST(board->pieces[color][PAWN]) | ONE_NORTH_WEST(board->pieces[color][PAWN]);
-    } else {
-        return ONE_SOUTH_EAST(board->pieces[color][PAWN]) | ONE_SOUTH_WEST(board->pieces[color][PAWN]);
-    }
-}
-
-
 void generateMovesPawn(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo)
 {
     const bitboard emptyBoard = ~boardInfo->allPieces;

@@ -19,8 +19,7 @@
 #include "movegenerator.h"
 
 
-int A1H8_INDEX[64];
-int A8H1_INDEX[64];
+
 
 
 

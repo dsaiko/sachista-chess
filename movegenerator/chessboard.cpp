@@ -60,33 +60,3 @@ void ChessBoard::clearBoard() {
     std::fill( &pieces[0][0], &pieces[0][0] + sizeof(pieces) / sizeof(pieces[0][0]), 0 );
 }
 
-//char *move2str(const Move *m, char *buffer, const int bufferSize) {
-//    //reinitialize buffer to empty string
-//    if(bufferSize < 1) return buffer;
-//    buffer[0] = 0;
-//
-//    char notation[3];
-//
-//    fieldNotation(m->sourceIndex, notation, sizeof(notation) / sizeof(char));
-//    appendString(buffer, bufferSize, notation);
-//
-//    fieldNotation(m->targetIndex, notation, sizeof(notation) / sizeof(char));
-//    appendString(buffer, bufferSize, notation);
-//
-//    if(m->promotionPiece) {
-//        switch(m->promotionPiece) {
-//        case QUEEN:     notation[0] = 'q'; break;
-//        case KING:      notation[0] = 'k'; break;
-//        case ROOK:      notation[0] = 'r'; break;
-//        case BISHOP:    notation[0] = 'b'; break;
-//        case KNIGHT:    notation[0] = 'n'; break;
-//        case PAWN:      notation[0] = 'p'; break;
-//        default:        ;
-//        }
-//
-//        notation[1] = '\0';
-//        appendString(buffer, bufferSize, notation);
-//    }
-//
-//    return buffer;
-//}

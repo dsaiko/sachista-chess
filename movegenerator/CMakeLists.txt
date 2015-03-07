@@ -20,6 +20,12 @@ add_library (
     chessboard
     chessboard-fen
     chessboard-string
+    chessboard-stats
+    move
+    move-pawn
+    move-knight
+    move-king
+    move-bishop
     rand64
     zobrist
     utility

@@ -44,6 +44,12 @@ enum Color {
     Black       = 1
 };
 
+enum Bool {
+    NotSure     = -1,
+    No          = 0,
+    Yes         = 1
+};
+
 class ChessBoard {
 
 public:
@@ -63,9 +69,9 @@ public:
     bool operator==(const ChessBoard &other);
     inline bool operator!=(const ChessBoard &other) {return !(*this==other); }
 
-    inline  bitmask         whitePieces() { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
-    inline  bitmask         blackPieces() { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
-    inline  bitmask         allPieces()   { return whitePieces() | blackPieces(); }
+    inline  bitmask         whitePieces() const { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
+    inline  bitmask         blackPieces() const { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
+    inline  bitmask         allPieces()   const { return whitePieces() | blackPieces(); }
     inline  void            removeCastling(Color color, Castling remove) { castling[color] = (Castling) (castling[color] & ~remove); }
 
 
@@ -82,56 +88,4 @@ private:
 };
 
 
-//
-//
-//typedef struct ChessBoardComputedInfo {
-//    bitboard        allPieces;
-//    bitboard        opponentPieces;
-//    bitboard        boardAvailable; //empty or opponent
-//} ChessBoardComputedInfo;
-//
-//typedef struct Move {
-//    Piece piece           ;
-//    Piece promotionPiece  ;
-//
-//    unsigned int    sourceIndex     ;
-//    unsigned int    targetIndex     ;
-//
-//    int             isEnPassant     ;
-//} Move;
-//
-//#define MAX_MOVES_ARR_SIZE    220
-//
-//char*       board2str(const ChessBoard *board, const int decorated, char *buffer, const int bufferSize);
-//ChessBoard  boardFromString(const char *buffer);
-//char*       board2fen(const ChessBoard *board, char *buffer, const int bufferSize);
-//ChessBoard  boardFromFEN(const char *fen);
-//
-//
-//void        initMovesGenerator();
-//INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
-//char *      move2str(const Move *m, char *buffer, const int bufferSize);
-//void        makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
-//
-//int         isNotUnderCheck(const ChessBoard *board, const Color nextMove);
-//
-
-//INLINE ChessBoardComputedInfo computeInfo(const ChessBoard *board) {
-//    ChessBoardComputedInfo info;
-//
-//    info.allPieces = ALL_PIECES(board);
-//
-//    if(board->nextMove == WHITE) {
-//        info.opponentPieces =  BLACK_PIECES(board) ;
-//        info.boardAvailable =  ~WHITE_PIECES(board);
-//    } else {
-//        info.opponentPieces = WHITE_PIECES(board);
-//        info.boardAvailable = ~BLACK_PIECES(board);
-//    }
-//
-//    return info;
-//}
-//
-
-//
 

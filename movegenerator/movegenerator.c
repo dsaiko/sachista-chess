@@ -19,18 +19,6 @@
 #include "movegenerator.h"
 #include "zobrist.h"
 
-extern void initZobrist();
-
-void initMovesGenerator() {
-    initZobrist();
-
-    initMovesGeneratorKnight();
-    initMovesGeneratorPawn();
-    initMovesGeneratorKing();
-    initMovesGeneratorBishop();
-    initMovesGeneratorRook();
-}
-
 INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves)
 {  
     generateMovesKnight (board, moves, boardInfo);
@@ -38,27 +26,6 @@ INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo 
     generateMovesKing   (board, moves, boardInfo);
     generateMovesRook   (board, moves, boardInfo);
     generateMovesBishop (board, moves, boardInfo);
-}
-
-bitboard moveBitBoard0(bitboard b, const int up, const int right) {
-    //move the piece up or down
-    if (up > 0) {
-        for(int i=0; i < up; i++)
-            b = ONE_NORTH(b);
-    } else if(up < 0) {
-        for(int i=0; i < -up; i++)
-            b = ONE_SOUTH(b);
-    }
-
-    //move the piece right or left
-    if (right > 0) {
-        for(int i=0; i < right; i++)
-            b = ONE_EAST(b);
-    } else if( right < 0){
-        for(int i=0; i < -right; i++)
-            b = ONE_WEST(b);
-    }
-    return b;
 }
 
 

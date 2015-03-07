@@ -18,46 +18,6 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
-const bitboard WHITE_CASTLE_OO_EMPTY = BITMASK_F1 | BITMASK_G1;
-const bitboard WHITE_CASTLE_OO_ATTACKS = BITMASK_E1 | BITMASK_F1 | BITMASK_G1;
-const bitboard WHITE_CASTLE_OOO_EMPTY = BITMASK_B1 | BITMASK_C1 | BITMASK_D1;
-const bitboard WHITE_CASTLE_OOO_ATTACKS = BITMASK_C1 | BITMASK_D1 | BITMASK_E1;
-
-const bitboard BLACK_CASTLE_OO_EMPTY = BITMASK_F8 | BITMASK_G8;
-const bitboard BLACK_CASTLE_OO_ATTACKS = BITMASK_E8 | BITMASK_F8 | BITMASK_G8;
-const bitboard BLACK_CASTLE_OOO_EMPTY = BITMASK_B8 | BITMASK_C8 | BITMASK_D8;
-const bitboard BLACK_CASTLE_OOO_ATTACKS = BITMASK_C8 | BITMASK_D8 | BITMASK_E8;
-
-
-void initMovesGeneratorKing() {
-   //for all fields
-   for (int i = 0; i < 64; i++) {
-       //put the piece on the board
-       bitboard piece = BITMASK_SQUARE(i);
-
-       //move all directions
-       KING_MOVES[i] =
-                       moveBitBoard0(piece,  1,  0) |
-                       moveBitBoard0(piece,  1,  1) |
-                       moveBitBoard0(piece,  0,  1) |
-                       moveBitBoard0(piece, -1,  1) |
-                       moveBitBoard0(piece, -1,  0) |
-                       moveBitBoard0(piece, -1, -1) |
-                       moveBitBoard0(piece,  0, -1) |
-                       moveBitBoard0(piece,  1, -1)
-       ;
-
-   }
-}
-
-INLINE bitboard generateAttacksKing(const ChessBoard *board, const Color color)
-{
-    const bitboard piece = board->pieces[color][KING];
-    if(piece == 0) return 0;
-    return KING_MOVES[bitScan(piece)];
-}
-
-
 INLINE int isUnderAttack(const ChessBoard *board, const char color, const bitboard allPieces, const bitboard bitmask) {
 
     bitboard attacks = generateAttacksRook(board, color, allPieces);

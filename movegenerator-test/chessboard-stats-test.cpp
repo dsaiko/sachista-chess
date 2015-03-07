@@ -15,19 +15,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <iostream>
+#include <CppUTest/CommandLineTestRunner.h>
+
 #include "chessboard.h"
-#include "movegenerator.h"
+#include "chessboard-stats.h"
 
-void generateMovesKnight(const ChessBoard *board, Move **moves, const ChessBoardComputedInfo *boardInfo)
+
+TEST_GROUP(ChessBoardStats)
 {
-    bitboard knight = board->pieces[board->nextMove][KNIGHT];
+};
 
-    // while there are knight pieces
-    while (knight) {
-         int sourceIndex = bitPop(&knight);
-         // get possible moves - moves minus my onw color
-         bitboard movesBoard = KNIGHT_MOVES[sourceIndex] & boardInfo->boardAvailable;
-         // for all moves
-         while (movesBoard) GENERATE_MOVE(moves, KNIGHT, NO_PIECE, sourceIndex, bitPop(&movesBoard), 0);
-    }
+TEST(ChessBoardStats, TestChessBoardStats)
+{
+    ChessBoard board;
+    board.setupStandardBoard();
+
+    ChessBoardStats stats(board);
+
+    CHECK(BitBoard::popCount(stats.allPieces) == 32);
+    CHECK(BitBoard::popCount(stats.opponentPieces) == 16);
+    CHECK(BitBoard::popCount(stats.boardAvaliable) == 64 - 16);
 }
+
