@@ -24,9 +24,9 @@
 
 enum Castling {
     None        = 0,
-    KingSide    = 0b01,
-    QueenSide   = 0b10,
-    BothSides   = 0b11
+    KingSide    = 1,
+    QueenSide   = 2,
+    BothSides   = 3
 };
 
 enum Piece {
@@ -48,6 +48,7 @@ class ChessBoard {
 
 public:
     ChessBoard();
+    ChessBoard(const std::string &fen);
 
     Color       nextMove;
     Castling    castling[2];
@@ -60,6 +61,7 @@ public:
     uint64_t        zobristKey;
 
     bool operator==(const ChessBoard &other);
+    inline bool operator!=(const ChessBoard &other) {return !(*this==other); }
 
     inline  bitmask         whitePieces() { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
     inline  bitmask         blackPieces() { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
@@ -70,7 +72,11 @@ public:
             void            clearBoard();
             std::string     toString();
             void            setupString(const std::string &str);
+            std::string     toFEN();
             void            setupFEN(const std::string &fen);
+
+    void                    setupStandardBoard();
+    inline  void            updateZobrist() { zobristKey = zobrist.getKey(*this); }
 private:
     static const Zobrist zobrist;
 };
@@ -128,6 +134,4 @@ private:
 //
 
 //
-//INLINE ChessBoard standardBoard() {
-//    return boardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-//}
+

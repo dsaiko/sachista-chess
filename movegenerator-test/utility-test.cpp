@@ -15,28 +15,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <CppUTest/CommandLineTestRunner.h>
 #include <iostream>
-#include "version.h"
+#include <CppUTest/CommandLineTestRunner.h>
 #include "chessboard.h"
+#include "zobrist.h"
 
-extern void testMoves(const int expectedCount, const char *boardString);
-extern void testMovesFromFen(const int expectedCount, const char *boardString);
-extern void testValidMoves(const int expectedCount, const char *boardString);
+TEST_GROUP(ZobristTest)
+{
+};
 
-int main(int argc, char** args) {
-
-    std::cout
-            << "Welcome to "
-            << ARCHITECTURE
-            << " sachista-chess "
-            << IMPLEMENTATION_VERSION
-            << " (" << IMPLEMENTATION_DATE << ") unit tests!\n"
-    ;
-
-    std::string a;
-    for(auto c:a) {
-
-    }
-   return CommandLineTestRunner::RunAllTests(argc, args);
+TEST(ZobristTest, TestZobrist)
+{
+    ChessBoard board;
 }
+

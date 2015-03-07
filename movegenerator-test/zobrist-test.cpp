@@ -17,15 +17,42 @@
 
 #include <iostream>
 #include <CppUTest/CommandLineTestRunner.h>
-#include "chessboard.h"
-#include "zobrist.h"
+#include "utility.h"
 
-TEST_GROUP(ZobristTest)
+TEST_GROUP(UtilityTest)
 {
 };
 
-TEST(ZobristTest, TestZobrist)
+TEST(UtilityTest, SimplifiedStringTest)
 {
-    ChessBoard board;
+    CHECK(Utility::simplified("") == "");
+    CHECK(Utility::simplified(" ") == "");
+    CHECK(Utility::simplified("\t") == "");
+    CHECK(Utility::simplified("\r") == "");
+
+    std::string str = R"(
+
+            )";
+    CHECK(Utility::simplified(str) == "");
+
+    str = R"(
+
+            test
+
+            )";
+    CHECK(Utility::simplified(str) == "test");
+
+    str = R"(
+
+            test    text
+
+            )";
+    CHECK(Utility::simplified(str) == "test text");
+
+    CHECK(Utility::simplified("test    text") == "test text");
+    CHECK(Utility::simplified("test text") == "test text");
+    CHECK(Utility::simplified("testtext") == "testtext");
+    CHECK(Utility::simplified("  test text") == "test text");
+    CHECK(Utility::simplified("test text  ") == "test text");
 }
 

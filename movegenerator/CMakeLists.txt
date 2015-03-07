@@ -22,7 +22,7 @@ add_library (
     chessboard-string
     rand64
     zobrist
-#    utils
+    utility
 #    movegenerator
 #    movegenerator-bishop
 #    movegenerator-king

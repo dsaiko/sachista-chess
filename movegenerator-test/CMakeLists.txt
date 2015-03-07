@@ -21,8 +21,9 @@ add_executable          (
     bitboard-test
     random64-test
     zobrist-test
+    chessboard-test
+
    # chesspiece-test
-   # chessboard-test
    # movesgenerator-test
    # movesgenerator-pawn-test
    # movesgenerator-knight-test
@@ -34,5 +35,8 @@ add_executable          (
 )
 
 target_link_libraries   (sachista-movegenerator-tests CppUTest CppUTestExt sachista-movegenerator)
+if (WIN32)
+    target_link_libraries(sachista-movegenerator-tests winmm.lib)
+endif (WIN32)
 
 

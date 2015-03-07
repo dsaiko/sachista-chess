@@ -112,17 +112,5 @@ void ChessBoard::setupString(const std::string &str) {
     fen += " w KQkq - 0 1";
 
     setupFEN(fen);
-
-    //set castling
-    if ((pieces[White][Rook] & BitMask::A1) == 0) removeCastling(White, QueenSide);
-    if ((pieces[White][Rook] & BitMask::H1) == 0) removeCastling(White, KingSide);
-    if ((pieces[Black][Rook] & BitMask::A8) == 0) removeCastling(Black, QueenSide);
-    if ((pieces[Black][Rook] & BitMask::H8) == 0) removeCastling(Black, KingSide);
-
-    //if king is misplaced, remove castling availability
-    if ((pieces[White][King] & BitMask::E1) == 0) castling[White] = None;
-    if ((pieces[Black][King] & BitMask::E8) == 0) castling[Black] = None;
-
-    zobristKey = zobrist.getKey(*this);
 }
 

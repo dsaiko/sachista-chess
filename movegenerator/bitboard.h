@@ -84,11 +84,15 @@ namespace BitBoard {
             std::string fieldNotation       (const int index);
             std::string toString            (const bitmask b);
 
-    inline  int         bitScan             (const bitmask b) {
+    inline  int         bitScan             (bitmask b) {
     #if defined(__x86_64__)
             bitmask r;
             __asm__("bsfq %1, %0" : "=r" (r) : "rm" (b));
             return (int) r;
+    #elif defined(_MSC_VER) && defined(_M_X64)
+            unsigned long idx;
+            _BitScanForward64(&idx, b);
+            return idx;
     #else
             /**
              * bitScanForward
@@ -123,13 +127,11 @@ namespace BitBoard {
     }
 
     inline  int         popCount            (bitmask b) {
-    #if defined(_MSC_VER) && defined(__INTEL_COMPILER)
-        return _mm_popcnt_u64(b);
-    #elif defined(_MSC_VER)
-        return __popcnt64(b);
-    #elif defined(__x86_64__)
+    #if defined(__x86_64__)
             __asm__("popcnt %1, %0" : "=r" (b) : "r" (b));
             return (int) b;
+    #elif defined(_MSC_VER) && defined(_M_X64)
+        return _mm_popcnt_u64(b);
     #else
         //source: http://chessprogramming.wikispaces.com/Population+Count
         static const uint64_t k1 = 0x5555555555555555ULL; /*  -1/3   */
