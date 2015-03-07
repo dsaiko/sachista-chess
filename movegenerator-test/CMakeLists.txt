@@ -22,11 +22,10 @@ add_executable          (
     random64-test
     chessboard-test
     utility-test
-
-   # zobrist-test
+    zobrist-test
    # chesspiece-test
    # movesgenerator-test
-   # movesgenerator-pawn-test
+   # movesgenerator-pawn-tests
    # movesgenerator-knight-test
    # movesgenerator-king-test
    # movesgenerator-queen-test

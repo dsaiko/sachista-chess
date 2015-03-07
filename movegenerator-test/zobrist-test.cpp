@@ -18,6 +18,8 @@
 #include <iostream>
 #include <CppUTest/CommandLineTestRunner.h>
 
+#include "chessboard.h"
+#include "zobrist.h"
 
 
 TEST_GROUP(ZobristTest)
@@ -26,5 +28,27 @@ TEST_GROUP(ZobristTest)
 
 TEST(ZobristTest, TestZobrist)
 {
+  ChessBoard board;
 
+  Zobrist zobrist;
+  CHECK(zobrist.getKey(board) == 0);
+
+  board.setupStandardBoard();
+  uint64_t keyStandard = zobrist.getKey(board);
+  CHECK(keyStandard != 0);
+  CHECK(keyStandard == board.zobristKey);
+
+  //no halfmove counters are relevant
+  board.halfMoveClock = 99;
+  board.fullMoveNumber = 99;
+  board.updateZobrist();
+  CHECK(keyStandard == board.zobristKey);
+
+  //next move color is relevant
+  board.nextMove = Color::Black;
+  board.updateZobrist();
+  CHECK(board.zobristKey != 0);
+  CHECK(board.zobristKey !=  keyStandard);
 }
+
+//TODO: test moves generation - zobrist uniquness

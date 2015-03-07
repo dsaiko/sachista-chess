@@ -15,9 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
 #include <CppUTest/CommandLineTestRunner.h>
-#include "chessboard.h"
 #include "utility.h"
 
 
@@ -59,3 +57,7 @@ TEST(UtilityTest, SimplifiedStringTest)
 }
 
 
+TEST(UtilityTest, MemSizeTest)
+{
+  CHECK(Utility::getMemorySize() > 256*1024*1024);
+}
