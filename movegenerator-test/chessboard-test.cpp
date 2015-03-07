@@ -112,25 +112,23 @@ TEST(ChessBoardTest, TestToString)
     ChessBoard board("8/1K6/1Q6/8/5r2/4rk2/8/8 w - a2");
     CHECK(board.enPassantTargetIndex == BoardIndex::A2);
 
-    std::cout << board.toFEN();
+    ChessBoard board2(board.toFEN());
+    CHECK(board == board2);
 
-//    ChessBoard board2(board.toFEN());
-//    CHECK(board == board2);
-//
-//    board2.setupString(board.toString());
-//    CHECK(board != board2);
-//
-//    board2.enPassantTargetIndex = BoardIndex::A2;
-//    board2.updateZobrist();
-//    CHECK(board == board2);
-//
-//    board.setupStandardBoard();
-//    board2.setupString(board.toString());
-//    board.setupString(board.toString());
-//
-//    CHECK(board == board2);
-//
-//    board2.clearBoard();
-//    board2.setupFEN(board.toFEN());
-//    board.setupFEN(board.toFEN());
+    board2.setupString(board.toString());
+    CHECK(board != board2);
+
+    board2.enPassantTargetIndex = BoardIndex::A2;
+    board2.updateZobrist();
+    CHECK(board == board2);
+
+    board.setupStandardBoard();
+    board2.setupString(board.toString());
+    board.setupString(board.toString());
+
+    CHECK(board == board2);
+
+    board2.clearBoard();
+    board2.setupFEN(board.toFEN());
+    board.setupFEN(board.toFEN());
 }

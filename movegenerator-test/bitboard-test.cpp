@@ -313,7 +313,7 @@ TEST(BitBoardTest, TestMirrorHorizontal)
 
 TEST(BitBoardTest, TestNotation)
 {
-    CHECK(BitBoard::fromNotation("h5") == BitBoard::squareBitmask(BoardIndex::H5));
+    CHECK(BitBoard::bitmaskFromNotation("h5") == BitBoard::squareBitmask(BoardIndex::H5));
     CHECK(BitBoard::fieldNotation(BoardIndex::H5) == "h5");
 }
 

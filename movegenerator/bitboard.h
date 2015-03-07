@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include <string>
 
-typedef unsigned __int64 bitmask;
+typedef uint64_t bitmask;
 
 namespace BitMask {
     const   bitmask    A1 = 1ULL;           const   bitmask    B1 = (1ULL << 1);    const   bitmask    C1 = (1ULL << 2);    const   bitmask    D1 = (1ULL << 3);    const   bitmask    E1 = (1ULL << 4);    const   bitmask    F1 = (1ULL << 5);    const   bitmask    G1 = (1ULL << 6);    const   bitmask    H1 = (1ULL << 7);
@@ -80,7 +80,8 @@ namespace BitBoard {
             bitmask     flipDiagA1H8        (const bitmask b);
             bitmask     mirrorHorizontal    (const bitmask b);
 
-            bitmask     fromNotation        (const std::string &notation);
+            bitmask     bitmaskFromNotation (const std::string &notation);
+            int         indexFromNotation   (const std::string &notation);
             std::string fieldNotation       (const int index);
             std::string toString            (const bitmask b);
 

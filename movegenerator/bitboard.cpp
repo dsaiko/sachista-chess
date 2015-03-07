@@ -58,11 +58,16 @@ bitmask BitBoard::mirrorHorizontal(const bitmask b) {
     return r;
 }
 
-bitmask BitBoard::fromNotation(const std::string &notation)
+bitmask BitBoard::bitmaskFromNotation(const std::string &notation)
+{
+    return squareBitmask(indexFromNotation(notation));
+}
+
+int BitBoard::indexFromNotation(const std::string &notation)
 {
     if(notation.length() != 2) return 0;
     int index = ((notation[0] - 'a') + ((notation[1] - '1') << 3));
-    return squareBitmask(index);
+    return index;
 }
 
 std::string BitBoard::fieldNotation(const int index) {

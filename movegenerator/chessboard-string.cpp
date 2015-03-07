@@ -22,7 +22,7 @@
 #include "chessboard.h"
 
 std::string ChessBoard::toString() {
-    static const std::string header = "  a b c d e f g h\n";
+    const std::string header = "  a b c d e f g h\n";
     std::string buffer;
 
     buffer += header;
@@ -79,7 +79,7 @@ std::string ChessBoard::toString() {
 
 void ChessBoard::setupString(const std::string &str) {
     //delete possible header/footer
-    static const std::regex reHeader("a b c d e f g h");
+    const std::regex reHeader("a b c d e f g h");
     std::string buffer = std::regex_replace(str, reHeader, "", std::regex_constants::match_any);
 
     //create fen

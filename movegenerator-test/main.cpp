@@ -30,6 +30,7 @@ int main(int argc, char** args) {
             << "Welcome to "
             << ARCHITECTURE
             << " sachista-chess "
+            << ARCHITECTURE << " "
             << IMPLEMENTATION_VERSION
             << " (" << IMPLEMENTATION_DATE << ") unit tests!\n"
     ;

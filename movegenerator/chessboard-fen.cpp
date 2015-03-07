@@ -93,17 +93,15 @@ void ChessBoard::setupFEN(const std::string &fen_)
     }
 
     pos++; //skip space
-    char enPassantNotation[3] = {0, 0, 0};
-    int  strPos = 0;
+    std::string enPassantNotation;
     while(pos < len) {
         char c = fen[pos];
         if(c == ' ') break;
 
-        if(c != '-' && strPos < 2)
-            enPassantNotation[strPos++] = c;
-
-        if(strPos == 2)
-            enPassantTargetIndex = (enPassantNotation[0] - 'a') + ((enPassantNotation[1] - '1') << 3);
+        if(c != '-' && enPassantNotation.length() < 2)
+            enPassantNotation += c;
+        if(enPassantNotation.length() == 2)
+            enPassantTargetIndex = (short) BitBoard::indexFromNotation(enPassantNotation);
         pos++;
     }
 
@@ -144,13 +142,14 @@ void ChessBoard::setupFEN(const std::string &fen_)
     if ((pieces[Black][King] & BitMask::E8) == 0) castling[Black] = None;
 
     updateZobrist();
-};
+}
+
 
 
 
 std::string ChessBoard::toFEN()
 {
-    static const std::regex reHeader("a b c d e f g h|\\d| ");
+    const std::regex reHeader("a b c d e f g h|\\d| ");
 
     std::stringstream fen;
     std::string data = std::regex_replace(toString(), reHeader, "", std::regex_constants::match_any);
