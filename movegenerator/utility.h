@@ -17,9 +17,23 @@
 */
 
 #include <string>
+#include <chrono>
 
 namespace Utility {
     //trims the string and replaces all multi spaces (including '\t', '\n', '\v', '\f', '\r', and ' ') by one space
     std::string simplified(const std::string &str);
     uint64_t getMemorySize();
 }
+
+class StopWatch {
+public:
+   StopWatch();
+
+   uint64_t elapsedTimeInMilliseconds();
+   uint64_t speedInSeconds(uint64_t count);
+
+   static void sleep(int milliseconds);
+
+private:
+    const std::chrono::steady_clock::time_point start;
+};

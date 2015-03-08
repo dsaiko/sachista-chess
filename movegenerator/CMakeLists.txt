@@ -27,19 +27,9 @@ add_library (
     move-king
     move-bishop
     move-rook
+    move-makemove
     rand64
     zobrist
     utility
-#    movegenerator
-#    movegenerator-bishop
-#    movegenerator-king
-#    movegenerator-pawn
-#    movegenerator-rook
-#    movegenerator-knight
-#    bitscan
-#    popcount
-#    makemove
-#    perft
-#    memfree
 )
 

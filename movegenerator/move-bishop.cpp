@@ -229,3 +229,35 @@ bitmask MoveGeneratorBishop::generateAttacks(const ChessBoard &board, const Colo
     while (pieces) attacks |= onePieceAttacks(BitBoard::bitPop(pieces), stats.allPieces);
     return attacks;
 }
+
+std::vector<Move> MoveGeneratorBishop::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+{
+    std::vector<Move> result;
+    
+    bitmask bishop = board.pieces[board.nextMove][Bishop];
+
+    Piece movingPiece = Bishop;
+
+    for(int i=0; i<2; i++) {
+        //for all bishops
+        while (bishop) {
+            int fromIndex = BitBoard::bitPop(bishop);
+
+            //get all moves using precomputed values
+            bitmask movesBoard = onePieceAttacks(fromIndex, stats.allPieces) & stats.boardAvaliable;
+
+            //for all moves
+            while (movesBoard) {
+                int toIndex = BitBoard::bitPop(movesBoard);
+                bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
+                result.push_back(Move(movingPiece, fromIndex, toIndex, isCapture));
+            }
+        }
+
+        //switch to queen
+        bishop = board.pieces[board.nextMove][Queen];
+        movingPiece = Queen;
+    }
+
+    return result;
+}

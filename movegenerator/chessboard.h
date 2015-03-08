@@ -44,12 +44,6 @@ enum Color {
     Black       = 1
 };
 
-enum Bool {
-    NotSure     = -1,
-    No          = 0,
-    Yes         = 1
-};
-
 class ChessBoard {
 
 public:
@@ -83,7 +77,7 @@ public:
 
     void                    setupStandardBoard();
     inline  void            updateZobrist() { zobristKey = zobrist.getKey(*this); }
-private:
+
     static const Zobrist zobrist;
 };
 

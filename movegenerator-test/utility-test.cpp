@@ -16,48 +16,58 @@
 */
 
 #include <CppUTest/CommandLineTestRunner.h>
+#include <iostream>
 #include "utility.h"
 
 
-TEST_GROUP(UtilityTest)
-{
+TEST_GROUP(UtilityTest) {
 };
 
-TEST(UtilityTest, SimplifiedStringTest)
-{
-  CHECK(Utility::simplified("") == "");
-  CHECK(Utility::simplified(" ") == "");
-  CHECK(Utility::simplified("\t") == "");
-  CHECK(Utility::simplified("\r") == "");
+TEST(UtilityTest, SimplifiedStringTest) {
+    CHECK(Utility::simplified("") == "");
+    CHECK(Utility::simplified(" ") == "");
+    CHECK(Utility::simplified("\t") == "");
+    CHECK(Utility::simplified("\r") == "");
 
-  std::string str = R"(
+    std::string str = R"(
 
             )";
-  CHECK(Utility::simplified(str) == "");
+    CHECK(Utility::simplified(str) == "");
 
-  str = R"(
+    str = R"(
 
             test
 
             )";
-  CHECK(Utility::simplified(str) == "test");
+    CHECK(Utility::simplified(str) == "test");
 
-  str = R"(
+    str = R"(
 
             test    text
 
             )";
-  CHECK(Utility::simplified(str) == "test text");
+    CHECK(Utility::simplified(str) == "test text");
 
-  CHECK(Utility::simplified("test    text") == "test text");
-  CHECK(Utility::simplified("test text") == "test text");
-  CHECK(Utility::simplified("testtext") == "testtext");
-  CHECK(Utility::simplified("  test text") == "test text");
-  CHECK(Utility::simplified("test text  ") == "test text");
+    CHECK(Utility::simplified("test    text") == "test text");
+    CHECK(Utility::simplified("test text") == "test text");
+    CHECK(Utility::simplified("testtext") == "testtext");
+    CHECK(Utility::simplified("  test text") == "test text");
+    CHECK(Utility::simplified("test text  ") == "test text");
 }
 
 
-TEST(UtilityTest, MemSizeTest)
-{
-  CHECK(Utility::getMemorySize() > 256*1024*1024);
+TEST(UtilityTest, MemSizeTest) {
+    CHECK(Utility::getMemorySize() > 256 * 1024 * 1024);
+}
+
+TEST(UtilityTest, StopWatch) {
+    StopWatch chrono;
+
+    StopWatch::sleep(900);
+
+    uint64_t speed = chrono.speedInSeconds(99999);
+    uint64_t now = chrono.elapsedTimeInMilliseconds();
+
+    CHECK (now > 800 && now < 1000);
+    CHECK (speed > 100000);
 }

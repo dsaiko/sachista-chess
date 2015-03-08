@@ -161,3 +161,32 @@ bitmask MoveGeneratorRook::generateAttacks(const ChessBoard &board, const Color 
     return attacks;
 }
 
+std::vector<Move> MoveGeneratorRook::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+{
+    std::vector<Move> result;
+
+    bitmask rook = board.pieces[board.nextMove][Rook];
+    Piece movingPiece = Rook;
+
+    for(int i=0; i<2; i++) {
+        //for all rooks
+        while (rook) {
+            //get next rook
+            int fromIndex = BitBoard::bitPop(rook);
+
+            bitmask movesBoard = onePieceAttacks(fromIndex, stats.allPieces) & stats.boardAvaliable;
+
+            //for all moves
+            while (movesBoard) {
+                int toIndex = BitBoard::bitPop(movesBoard);
+                bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
+                result.push_back(Move(movingPiece, fromIndex, toIndex, isCapture));
+            }
+        }
+        //switch to queen
+        rook = board.pieces[board.nextMove][Queen];
+        movingPiece = Queen;
+    }
+
+    return result;
+}

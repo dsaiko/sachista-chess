@@ -17,26 +17,36 @@
 */
 
 #include <string>
+#include <vector>
 #include "chessboard.h"
-
-class ChessBoardStats;
+#include "chessboard-stats.h"
 
 class Move {
 public:
 
     Move();
+    Move (const Move& other);
+    Move (Move&& other) noexcept;
+    Move(Piece piece, int fromIndex, int toIndex, bool isCapture);
+    Move(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnpassant, bool isShortCastling, bool isLongCastling, Piece promotionPiece);
+    ~Move() noexcept;
 
-    Piece   piece;
-    Piece   promotionPiece;
+    Move& operator= (const Move& other);
+    Move& operator= (Move&& other) noexcept;
 
-    int     sourceIndex;
-    int     targetIndex;
+    const Piece   piece;
+    const Piece   promotionPiece;
 
-    Bool    isEnPassant;
-    Bool    isLegal;
-    Bool    isCapture;
+    const int     sourceIndex;
+    const int     targetIndex;
 
-    std::string toString();
+    const bool    isCapture;
+    const bool    isEnPassant;
+    const bool    isShortCastling;
+    const bool    isLongCastling;
+
+    void          applyTo(ChessBoard &board) const;
+    std::string toString() const;
 };
 
 class MoveGeneratorPawn;
@@ -48,6 +58,7 @@ class MoveGeneratorBishop;
 class MoveGenerator {
 public:
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const = 0;
+    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const = 0;
 
 protected:
     static bitmask shiftBitMask(bitmask b, int up, int right);
@@ -60,6 +71,10 @@ protected:
 
 
     static bitmask attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    static std::vector<Move> moves(const ChessBoard &board, const ChessBoardStats &stats);
+
+    static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields);
+    static bool    isKingNotUnderCheck(const ChessBoard &board, const Color nextMove, const ChessBoardStats &stats);
 };
 
 class MoveGeneratorPawn: MoveGenerator {
@@ -67,8 +82,8 @@ public:
     MoveGeneratorPawn();
 
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
+    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
 
-private:
     bitmask PAWN_MOVES[2][64];
     bitmask PAWN_DOUBLE_MOVES[2][64];
     bitmask PAWN_ATTACKS[2][64];
@@ -80,8 +95,8 @@ public:
     MoveGeneratorKnight();
 
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
+    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
 
-private:
     bitmask KNIGHT_MOVES[64];
 };
 
@@ -91,8 +106,8 @@ public:
     MoveGeneratorKing();
 
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
+    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
 
-private:
     bitmask KING_MOVES[64];
 };
 
@@ -101,7 +116,9 @@ public:
     MoveGeneratorBishop();
 
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-private:
+    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
+
+
     int A1H8_INDEX[64];
     int A8H1_INDEX[64];
 
@@ -122,7 +139,7 @@ public:
     MoveGeneratorRook();
 
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-private:
+    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
 
     bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces) const;
 
@@ -133,11 +150,3 @@ private:
     bitmask MOVE_FILE_MAGIC[64];
     bitmask MOVE_FILE_ATTACKS[64][64];
 };
-
-
-
-
-//#define MAX_MOVES_ARR_SIZE    220
-//INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);
-//void        makeMove(ChessBoard *board0, const bitboard allPieces, const Move *m);
-//int         isNotUnderCheck(const ChessBoard *board, const Color nextMove);

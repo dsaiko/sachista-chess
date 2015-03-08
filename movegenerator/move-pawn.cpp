@@ -40,3 +40,82 @@ bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color 
         return BitBoard::oneSouthEast(board.pieces[color][Pawn]) | BitBoard::oneSouthWest(board.pieces[color][Pawn]);
     }
 }
+
+std::vector<Move> MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+{
+    std::vector<Move> result;
+
+    const bitmask emptyBoard = ~stats.allPieces;
+
+    int whiteBaseRank;
+    int blackBaseRank;
+
+    int whitePromotionRank;
+    int blackPromotionRank;
+
+    if(board.nextMove == White) {
+        whiteBaseRank = 16;
+        blackBaseRank = 999;
+
+        whitePromotionRank = 55;
+        blackPromotionRank = 0;
+    } else {
+        whiteBaseRank = 0;
+        blackBaseRank = 47;
+
+        whitePromotionRank = 999;
+        blackPromotionRank = 8;
+    }
+
+    bitmask pawns = board.pieces[board.nextMove][Pawn];
+
+    //while there are pieces
+    while (pawns) {
+        //get next piece
+        const int sourceIndex = BitBoard::bitPop(pawns);
+
+        //get possible moves - moves minus my onw color
+        //one step forward
+        bitmask movesBoard = PAWN_MOVES[board.nextMove][sourceIndex] & emptyBoard;
+
+        //if one step forward was successful and we are on base rank, try double move
+        if(sourceIndex < whiteBaseRank && movesBoard) {
+            movesBoard |=  BitBoard::oneNorth(movesBoard) & emptyBoard;
+        } else if(sourceIndex > blackBaseRank && movesBoard) {
+            movesBoard |=  BitBoard::oneSouth(movesBoard) & emptyBoard;
+        }
+
+        //get attacks, only against opponent pieces
+        const bitmask attacks = PAWN_ATTACKS[board.nextMove][sourceIndex];
+        movesBoard |=  attacks & stats.opponentPieces;
+
+        //for all moves
+        while (movesBoard) {
+            //get next move
+            const int targetIndex = BitBoard::bitPop(movesBoard);
+            bool isCapture = BitBoard::squareBitmask(targetIndex) & stats.opponentPieces;
+
+            //promotion?
+            if (targetIndex > whitePromotionRank || targetIndex < blackPromotionRank) {
+                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Bishop));
+                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Knight));
+                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Queen));
+                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Rook));
+            } else {
+                //normal move/capture
+                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture));
+            }
+        }
+
+        //check enpassant capture
+        if(board.enPassantTargetIndex) {
+            movesBoard = attacks & BitBoard::squareBitmask(board.enPassantTargetIndex);
+            if (movesBoard) {
+                result.push_back(Move(Pawn, sourceIndex, BitBoard::bitScan(movesBoard), true, true, false, false, NoPiece));
+            }
+        }
+
+    }
+
+    return result;
+}

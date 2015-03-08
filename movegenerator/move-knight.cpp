@@ -16,6 +16,7 @@
 */
 
 #include "move.h"
+#include "chessboard-stats.h"
 
 MoveGeneratorKnight::MoveGeneratorKnight() {
     //for all fields
@@ -46,4 +47,26 @@ bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Colo
     while (pieces) attacks |= KNIGHT_MOVES[BitBoard::bitPop(pieces)];
 
     return attacks;
+}
+
+std::vector<Move> MoveGeneratorKnight::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+{
+    std::vector<Move> result;
+
+    bitmask knight = board.pieces[board.nextMove][Knight];
+
+    // while there are knight pieces
+    while (knight) {
+        int fromIndex = BitBoard::bitPop(knight);
+
+        // get possible moves - moves minus my onw color
+        bitmask movesBoard = KNIGHT_MOVES[fromIndex] & stats.boardAvaliable;
+        // for all moves
+        while (movesBoard) {
+            int toIndex = BitBoard::bitPop(movesBoard);
+            bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
+            result.push_back(Move(Knight, fromIndex, toIndex, isCapture));
+        }
+    }
+    return result;
 }
