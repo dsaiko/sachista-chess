@@ -211,7 +211,7 @@ MoveGeneratorBishop::MoveGeneratorBishop() {
 }
 
 
-inline bitmask MoveGeneratorBishop::onePieceAttacks(const int sourceIndex, const bitmask allPieces) {
+inline bitmask MoveGeneratorBishop::onePieceAttacks(const int sourceIndex, const bitmask allPieces) const {
     const int stateIndexA8H1 = (int) (((allPieces & MOVE_A8H1_MASK[sourceIndex]) * MOVE_A8H1_MAGIC[sourceIndex]) >> 57);
     const int stateIndexA1H8 = (int) (((allPieces & MOVE_A1H8_MASK[sourceIndex]) * MOVE_A1H8_MAGIC[sourceIndex]) >> 57);
 
@@ -220,7 +220,8 @@ inline bitmask MoveGeneratorBishop::onePieceAttacks(const int sourceIndex, const
 }
 
 
-bitmask MoveGeneratorBishop::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) {
+bitmask MoveGeneratorBishop::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const
+{
     bitmask pieces = board.pieces[color][Bishop] | board.pieces[color][Queen];
     bitmask attacks = 0;
 

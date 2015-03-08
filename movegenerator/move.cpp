@@ -22,6 +22,13 @@
 #include "move.h"
 
 
+const MoveGeneratorPawn      MoveGenerator::generatorPawn;
+const MoveGeneratorKnight    MoveGenerator::generatorKnight;
+const MoveGeneratorKing      MoveGenerator::generatorKing;
+const MoveGeneratorRook      MoveGenerator::generatorRook;
+const MoveGeneratorBishop    MoveGenerator::generatorBishop;
+
+
 std::string Move::toString() {
     std::stringstream move;
 
@@ -62,4 +69,15 @@ bitmask MoveGenerator::shiftBitMask(bitmask b, int up, int right) {
             b = BitBoard::oneWest(b);
     }
     return b;
+}
+
+inline bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats)
+{
+    return
+            generatorPawn.generateAttacks(board, color, stats)      |
+            generatorKnight.generateAttacks(board, color, stats)    |
+            generatorKing.generateAttacks(board, color, stats)      |
+            generatorRook.generateAttacks(board, color, stats)      |
+            generatorBishop.generateAttacks(board, color, stats)
+    ;
 }

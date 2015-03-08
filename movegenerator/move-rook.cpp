@@ -138,7 +138,8 @@ MoveGeneratorRook::MoveGeneratorRook() {
 
 }
 
-inline bitmask MoveGeneratorRook::onePieceAttacks(const int sourceIndex, const bitmask allPieces) {
+inline bitmask MoveGeneratorRook::onePieceAttacks(const int sourceIndex, const bitmask allPieces) const
+{
     //use magic multipliers to get occupancy state index
     const int stateIndexRank = (int) ((allPieces & MOVE_RANK_MASK[sourceIndex]) >> MOVE_RANK_SHIFT[sourceIndex]);
     const int stateIndexFile = (int) (((allPieces & MOVE_FILE_MASK[sourceIndex]) * MOVE_FILE_MAGIC[sourceIndex]) >> 57);
@@ -149,7 +150,8 @@ inline bitmask MoveGeneratorRook::onePieceAttacks(const int sourceIndex, const b
 }
 
 
-bitmask MoveGeneratorRook::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) {
+bitmask MoveGeneratorRook::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const
+{
     bitmask pieces = board.pieces[color][Rook] | board.pieces[color][Queen];
     bitmask attacks = 0;
 

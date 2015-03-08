@@ -39,20 +39,34 @@ public:
     std::string toString();
 };
 
+class MoveGeneratorPawn;
+class MoveGeneratorKnight;
+class MoveGeneratorKing;
+class MoveGeneratorRook;
+class MoveGeneratorBishop;
 
 class MoveGenerator {
 public:
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) = 0;
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const = 0;
 
 protected:
     static bitmask shiftBitMask(bitmask b, int up, int right);
+
+    static const MoveGeneratorPawn      generatorPawn;
+    static const MoveGeneratorKnight    generatorKnight;
+    static const MoveGeneratorKing      generatorKing;
+    static const MoveGeneratorRook      generatorRook;
+    static const MoveGeneratorBishop    generatorBishop;
+
+
+    static bitmask attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
 };
 
 class MoveGeneratorPawn: MoveGenerator {
 public:
     MoveGeneratorPawn();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
 
 private:
     bitmask PAWN_MOVES[2][64];
@@ -65,7 +79,7 @@ class MoveGeneratorKnight: MoveGenerator {
 public:
     MoveGeneratorKnight();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
 
 private:
     bitmask KNIGHT_MOVES[64];
@@ -76,7 +90,7 @@ class MoveGeneratorKing: MoveGenerator {
 public:
     MoveGeneratorKing();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
 
 private:
     bitmask KING_MOVES[64];
@@ -86,7 +100,7 @@ class MoveGeneratorBishop: MoveGenerator {
 public:
     MoveGeneratorBishop();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
 private:
     int A1H8_INDEX[64];
     int A8H1_INDEX[64];
@@ -99,7 +113,7 @@ private:
     bitmask MOVE_A1H8_ATTACKS[64][64];
     bitmask MOVE_A8H1_ATTACKS[64][64];
 
-    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces);
+    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces)const ;
 
 };
 
@@ -107,10 +121,10 @@ class MoveGeneratorRook: MoveGenerator {
 public:
     MoveGeneratorRook();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
 private:
 
-    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces);
+    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces) const;
 
     int     MOVE_RANK_SHIFT[64];
     bitmask MOVE_RANK_MASK[64];
@@ -119,6 +133,9 @@ private:
     bitmask MOVE_FILE_MAGIC[64];
     bitmask MOVE_FILE_ATTACKS[64][64];
 };
+
+
+
 
 //#define MAX_MOVES_ARR_SIZE    220
 //INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);

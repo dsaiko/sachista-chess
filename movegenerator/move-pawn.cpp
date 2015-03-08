@@ -32,7 +32,8 @@ MoveGeneratorPawn::MoveGeneratorPawn() {
     }
 }
 
-bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) {
+bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const
+{
     if(color == White) {
         return BitBoard::oneNorthEast(board.pieces[color][Pawn]) | BitBoard::oneNorthWest(board.pieces[color][Pawn]);
     } else {
