@@ -26,6 +26,7 @@ add_library (
     move-knight
     move-king
     move-bishop
+    move-rook
     rand64
     zobrist
     utility

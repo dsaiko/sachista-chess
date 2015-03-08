@@ -18,12 +18,7 @@
 #include "chessboard.h"
 
 
-int MOVE_RANK_SHIFT[64];
-bitboard MOVE_RANK_MASK[64];
-bitboard MOVE_RANK_ATTACKS[64][64];
-bitboard MOVE_FILE_MASK[64];
-bitboard MOVE_FILE_MAGIC[64];
-bitboard MOVE_FILE_ATTACKS[64][64];
+
 
 
 

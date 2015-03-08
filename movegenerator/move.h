@@ -19,6 +19,8 @@
 #include <string>
 #include "chessboard.h"
 
+class ChessBoardStats;
+
 class Move {
 public:
 
@@ -40,7 +42,7 @@ public:
 
 class MoveGenerator {
 public:
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color) = 0;
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) = 0;
 
 protected:
     static bitmask shiftBitMask(bitmask b, int up, int right);
@@ -50,7 +52,7 @@ class MoveGeneratorPawn: MoveGenerator {
 public:
     MoveGeneratorPawn();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
 
 private:
     bitmask PAWN_MOVES[2][64];
@@ -63,7 +65,7 @@ class MoveGeneratorKnight: MoveGenerator {
 public:
     MoveGeneratorKnight();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
 
 private:
     bitmask KNIGHT_MOVES[64];
@@ -74,7 +76,7 @@ class MoveGeneratorKing: MoveGenerator {
 public:
     MoveGeneratorKing();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color);
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
 
 private:
     bitmask KING_MOVES[64];
@@ -84,8 +86,7 @@ class MoveGeneratorBishop: MoveGenerator {
 public:
     MoveGeneratorBishop();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color);
-
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
 private:
     int A1H8_INDEX[64];
     int A8H1_INDEX[64];
@@ -97,8 +98,27 @@ private:
 
     bitmask MOVE_A1H8_ATTACKS[64][64];
     bitmask MOVE_A8H1_ATTACKS[64][64];
+
+    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces);
+
 };
 
+class MoveGeneratorRook: MoveGenerator {
+public:
+    MoveGeneratorRook();
+
+    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+private:
+
+    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces);
+
+    int     MOVE_RANK_SHIFT[64];
+    bitmask MOVE_RANK_MASK[64];
+    bitmask MOVE_RANK_ATTACKS[64][64];
+    bitmask MOVE_FILE_MASK[64];
+    bitmask MOVE_FILE_MAGIC[64];
+    bitmask MOVE_FILE_ATTACKS[64][64];
+};
 
 //#define MAX_MOVES_ARR_SIZE    220
 //INLINE void generateMoves(const ChessBoard *board, const ChessBoardComputedInfo *boardInfo, Move **moves);

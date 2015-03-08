@@ -47,7 +47,7 @@ MoveGeneratorKing::MoveGeneratorKing() {
     }
 }
 
-bitmask MoveGeneratorKing::generateAttacks(const ChessBoard &board, const Color color) {
+bitmask MoveGeneratorKing::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) {
     const bitmask piece = board.pieces[color][King];
     if(piece == 0) return 0;
     return KING_MOVES[BitBoard::bitScan(piece)];

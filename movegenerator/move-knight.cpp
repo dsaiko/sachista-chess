@@ -37,7 +37,7 @@ MoveGeneratorKnight::MoveGeneratorKnight() {
     }
 }
 
-bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Color color) {
+bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) {
 
     bitmask pieces = board.pieces[color][Knight];
     bitmask attacks = 0;
