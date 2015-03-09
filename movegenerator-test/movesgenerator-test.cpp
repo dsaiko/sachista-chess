@@ -36,16 +36,28 @@ void testMovesFromString(const uint64_t expectedCount, std::string board)
     testMoves(expectedCount, b);
 }
 
-void testValidMoves(const uint64_t expectedCount, const ChessBoard &board)
+void testLegalMoves(const uint64_t expectedCount, const ChessBoard &board)
 {
-    LONGS_EQUAL(expectedCount, board.perft(1));
+    uint64_t count = board.perft(1);
+    if(count != expectedCount) {
+        std::vector<Move> moves = MoveGenerator::moves(board, ChessBoardStats(board));
+        for(Move m: moves) {
+            ChessBoard b = board;
+            m.applyTo(b);
+            if(MoveGenerator::isOpponentsKingNotUnderCheck(b, ChessBoardStats(b))) {
+                std::cout << "---------- VALID BOARD:" << std::endl << b.toString() << std::endl;
+            }
+        }
+
+        LONGS_EQUAL(expectedCount, count);
+    }
 }
 
-void testValidMovesFromString(const uint64_t expectedCount, std::string board)
+void testLegalMovesFromString(const uint64_t expectedCount, std::string board)
 {
     ChessBoard b;
     b.setupString(board);
-    testValidMoves(expectedCount, b);
+    testLegalMoves(expectedCount, b);
 }
 
 
@@ -59,7 +71,7 @@ TEST(MovesGenerator, BasicTest)
     b.setupStandardBoard();
 
     testMoves(20, b);
-    testValidMoves(20, b);
+    testLegalMoves(20, b);
 }
 
 TEST(MovesGenerator, PerfT)
@@ -67,13 +79,13 @@ TEST(MovesGenerator, PerfT)
     ChessBoard board;
     board.setupStandardBoard();
 
-//    CHECK(197281 == board.perft(4));
-//
-//    board = boardFromFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-//    LONGS_EQUAL(2039, perft(&board, 2));
-//    LONGS_EQUAL(97862, perft(&board, 3));
-//    LONGS_EQUAL(4085603, perft(&board, 4));
-//    LONGS_EQUAL(193690690, perft(&board, 5));
+    LONGS_EQUAL(197281, board.perft(4));
+
+    board.setupFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+    LONGS_EQUAL(2039,       board.perft(2));
+    LONGS_EQUAL(97862,      board.perft(3));
+//    LONGS_EQUAL(4085603,    board.perft(4));
+//    LONGS_EQUAL(193690690,  board.perft(5));
 //
 //    board = boardFromFEN("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1");
 //    LONGS_EQUAL(43238, perft(&board, 4));
@@ -93,51 +105,4 @@ TEST(MovesGenerator, PerfT)
 //    board = boardFromFEN("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
 //    LONGS_EQUAL(164075551, perft(&board, 5));
 }
-
-
-//TEST(MovesGenerator, HashCode)
-//{
-//    ChessBoard board = boardFromFEN("rnbqkb1r/pp1ppppp/7n/2p5/5P2/N1P5/PP1PP1PP/R1BQKBNR b KQkq - 0 3");
-//    ChessBoard board2 = boardFromFEN("rnbqkb1r/pp1ppppp/2p4n/8/5P2/N1P5/PP1PP1PP/R1BQKBNR b KQkq - 0 3");
-//
-//    uint64_t key1 = zobristKey(&board);
-//    uint64_t key2 = zobristKey(&board2);
-//    CHECK_FALSE(key1 == key2);
-//
-//    board = boardFromFEN("rnbqkbnr/p1ppppp1/1p5B/8/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 3");
-//    board2 = boardFromFEN("rnbqkbnr/p1ppBpp1/1p5p/8/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 3");
-//
-//    key1 = zobristKey(&board);
-//    key2 = zobristKey(&board2);
-//    CHECK_FALSE(key1 == key2);
-//
-//
-//    Move moves[MAX_MOVES_ARR_SIZE];
-//
-//    //do 15 legal moves on the board
-//    for(int n=0; n<15; n++) {
-//        Move *pointer = moves;
-//
-//        ChessBoardComputedInfo boardInfo = computeInfo(&board);
-//        generateMoves(&board, &boardInfo, &pointer);
-//
-//        Move *i = moves;
-//
-//        while(i < pointer) {
-//            ChessBoard boardBackup = board;
-//            makeMove(&board, boardInfo.allPieces, i ++);
-//            if(isNotUnderCheck(&board, board.nextMove)) {
-//                //find first legal move
-//                break;
-//            }
-//            board = boardBackup;
-//        }
-//    }
-//
-//    //check the keys are the same as computed
-//    key1 = zobristKey(&board);
-//    key2 = board.zobristKey;
-//    CHECK(key1 == key2);
-//}
-//
 

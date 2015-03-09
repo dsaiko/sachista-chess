@@ -79,7 +79,7 @@ public:
 
 
     static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields);
-    static bool    isKingNotUnderCheck(const ChessBoard &board, const Color nextMove, const ChessBoardStats &stats);
+    static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats);
 };
 
 class MoveGeneratorPawn: MoveGenerator {

@@ -212,19 +212,19 @@ bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color c
     return false;
 }
 
-bool MoveGenerator::isKingNotUnderCheck(const ChessBoard &board, const Color nextMove, const ChessBoardStats &stats)
+bool MoveGenerator::isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats)
 {
     //TODO: measure the isBitmaskUnderAttack algorithm
 
     //reverse check if KING piece is not attacked by any other
-    const Color opponentColor = nextMove == Black ? White : Black;
+    const Color opponentColor = board.nextMove == Black ? White : Black;
 
     //check if my king is not under check by opponent pieces
     const bitmask king = board.pieces[opponentColor][King];
     if(!king) return false;
     int kingIndex = BitBoard::bitScan(king);
 
-    const bitmask *pieces = board.pieces[nextMove];
+    const bitmask *pieces = board.pieces[board.nextMove];
 
     if (pieces[Pawn]   & generatorPawn.PAWN_ATTACKS[opponentColor][kingIndex]) return false;
     if (pieces[Knight] & generatorKnight.KNIGHT_MOVES[kingIndex])              return false;

@@ -20,7 +20,7 @@
 
 #include "chessboard.h"
 #include "zobrist.h"
-
+#include "move.h"
 
 TEST_GROUP(ZobristTest)
 {
@@ -51,4 +51,28 @@ TEST(ZobristTest, TestZobrist)
   CHECK(board.zobristKey !=  keyStandard);
 }
 
-//TODO: test moves generation - zobrist uniquness
+TEST(ZobristTest, HashCode)
+{
+    ChessBoard board("rnbqkb1r/pp1ppppp/7n/2p5/5P2/N1P5/PP1PP1PP/R1BQKBNR b KQkq - 0 3");
+    ChessBoard board2("rnbqkb1r/pp1ppppp/2p4n/8/5P2/N1P5/PP1PP1PP/R1BQKBNR b KQkq - 0 3");
+
+    CHECK(board.zobristKey != board2.zobristKey);
+
+    board.setupFEN("rnbqkbnr/p1ppppp1/1p5B/8/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 3");
+    board2.setupFEN("rnbqkbnr/p1ppBpp1/1p5p/8/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 3");
+    CHECK(board.zobristKey != board2.zobristKey);
+
+    //do 30 legal moves on the board
+    board.setupStandardBoard();
+    for(int n=0; n<100; n++) {
+        auto moves = MoveGenerator::moves(board, ChessBoardStats(board));
+        moves[0].applyTo(board);
+    }
+
+    //check the keys are the same as computed
+    CHECK(board.zobristKey == ChessBoard::zobrist.getKey(board));
+}
+
+
+
+//TODO: test moves generation - zobrist uniquness - perft to some level

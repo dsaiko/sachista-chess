@@ -42,21 +42,17 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
 
     std::vector<Move> moves = MoveGenerator::moves(board, stats);
 
-    ChessBoard nextBoard = board;
 
     for(Move move : moves) {
+        //TODO: try to move out of the loop
+        ChessBoard nextBoard = board;
         move.applyTo(nextBoard);
 
         ChessBoardStats nextStats(nextBoard);
 
-        if(MoveGenerator::isKingNotUnderCheck(nextBoard, nextBoard.nextMove, nextStats)) {
-            count += minimax(nextBoard, depth -1, nextStats);
-        } else {
-            count += 1;
+        if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
+            count += (depth == 1) ? 1 : minimax(nextBoard, depth -1, nextStats);
         }
-
-        //TODO: not for the last one
-        nextBoard = board;
     }
 
     return count;

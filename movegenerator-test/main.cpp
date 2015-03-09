@@ -19,6 +19,7 @@
 #include <iostream>
 #include "version.h"
 #include "chessboard.h"
+#include "movesgenerator-test.h"
 
 int main(int argc, char** args) {
 
