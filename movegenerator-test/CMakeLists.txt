@@ -24,6 +24,7 @@ add_executable          (
     utility-test
     zobrist-test
     chessboard-stats-test
+    movesgenerator-test
    # chesspiece-test
    # movesgenerator-test
    # movesgenerator-pawn-tests

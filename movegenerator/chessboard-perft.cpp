@@ -16,18 +16,13 @@
 */
 
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <thread>
-#include <string>
 #include <vector>
-#include <mutex>
-#include <atomic>
-
 
 #include "chessboard.h"
-#include "utils.h"
 #include "zobrist.h"
+#include "chessboard-stats.h"
+#include "utility.h"
+#include "move.h"
 
 struct CacheEntry {
     uint64_t              hash;
@@ -41,7 +36,6 @@ struct CacheEntry {
 struct Cache {
     const int                       cacheSize;
     CacheEntry                      *data;
-    std::mutex                      mutex;
 
     Cache(int size): cacheSize(size) {
         data = new CacheEntry[cacheSize];
@@ -53,9 +47,6 @@ struct Cache {
 
     uint64_t get(const uint64_t &hash, int depth) {
         CacheEntry *entry = (data + ((cacheSize - 1) & hash));
-
-       // std::lock_guard<std::mutex> lock(mutex);
-
         if(entry->hash == hash && entry->depth == depth) {
             return entry->count;
         }
@@ -66,7 +57,6 @@ struct Cache {
         CacheEntry *entry = (data + ((cacheSize - 1) & hash));
 
         if(entry->hash == 0) {
-            std::lock_guard<std::mutex> lock(mutex);
             entry->hash = hash;
             entry->depth = depth;
             entry->count = count;
@@ -81,91 +71,49 @@ struct Cache {
  * @param cache Shared cache, needs OMP synchronization
  * @return number of legal moves
  */
-uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth)
+uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const ChessBoardStats &stats)
 {
+    //TODO: multi thread
+    //TODO: cache
     //compute directly
     if(depth < 1) return 1;
 
     uint64_t count = cache.get(board.zobristKey, depth);
     if(count) return count;
 
-    Move moves[MAX_MOVES_ARR_SIZE];
-    Move *pointer = moves;
-
-    ChessBoardComputedInfo boardInfo = computeInfo(&board);
-    generateMoves(&board, &boardInfo, &pointer);
-
-    Move *i = moves;
+    std::vector<Move> moves = MoveGenerator::moves(board, stats);
 
     ChessBoard nextBoard = board;
 
-    while(i < pointer) {
-        //make move
-        makeMove(&nextBoard, boardInfo.allPieces, i ++);
+    for(Move move : moves) {
+        move.applyTo(nextBoard);
 
-        //is move legal?
-        if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-            if(depth > 1) {
-                count += minimax(cache, nextBoard, depth -1);
-            } else {
-                count += 1;
-            }
+        ChessBoardStats nextStats(nextBoard);
+
+        if(MoveGenerator::isKingNotUnderCheck(nextBoard, nextBoard.nextMove, nextStats)) {
+            count += minimax(cache, nextBoard, depth -1, nextStats);
+        } else {
+            count += 1;
         }
 
-        //undo move - reset the move back
-        if(i < pointer)
-            nextBoard = board;
+        //TODO: not for the last one
+        nextBoard = board;
     }
 
     cache.set(board.zobristKey, depth, count);
     return count;
 }
 
-/**
- * @brief Method divides first moves into parallel tasks
- * @param board
- * @param depth
- * @return legal move count
- */
-uint64_t perft(const ChessBoard *board, const int depth)
+uint64_t ChessBoard::perft(int depth)
 {
     if(depth < 1) return 1;
 
-
-    Move moves[MAX_MOVES_ARR_SIZE];
-    Move *pointer = moves;
-
-    ChessBoardComputedInfo boardInfo = computeInfo(board);
-    generateMoves(board, &boardInfo, &pointer);
-
-    const int nMoves = pointer - moves;
-
-    unsigned long memSize = getMemorySize();
+    unsigned long memSize = Utility::getMemorySize();
     unsigned long cacheSize = 128*1024*1024;
     //get maximum of total_memory / 4 cache size
     if(cacheSize * sizeof(CacheEntry) > (memSize / 4)) cacheSize = (memSize / 4) / sizeof(CacheEntry);
 
-    std::vector<std::thread> threads;
-    std::atomic<uint64_t> count(0);
     Cache cache(cacheSize);
-
-    //create thread for each position
-    for(int i=0; i < nMoves; i++)
-    {
-        threads.push_back(std::thread([board, &boardInfo, i, moves, depth, &count, &cache](){
-            ChessBoard nextBoard = *board;
-            makeMove(&nextBoard, boardInfo.allPieces, moves + i);
-            if(isNotUnderCheck(&nextBoard, nextBoard.nextMove)) {
-                count += minimax(cache, nextBoard, depth -1);
-            }
-        }));
-    }
-
-    //join threads
-    for(auto& thread : threads){
-           thread.join();
-    }
-
-    return count.load();
+    return minimax(cache, *this, depth, ChessBoardStats(*this));
 }
 

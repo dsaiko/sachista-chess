@@ -21,18 +21,24 @@
 #include "chessboard.h"
 #include "chessboard-stats.h"
 
+#if defined(_NOEXCEPT)
+    #define NOEXCEPT _NOEXCEPT
+#else
+    #define NOEXCEPT noexcept
+#endif
+
 class Move {
 public:
 
     Move();
     Move (const Move& other);
-    Move (Move&& other) noexcept;
+    Move (Move&& other) NOEXCEPT;
     Move(Piece piece, int fromIndex, int toIndex, bool isCapture);
     Move(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnpassant, bool isShortCastling, bool isLongCastling, Piece promotionPiece);
-    ~Move() noexcept;
+    ~Move() NOEXCEPT;
 
     Move& operator= (const Move& other);
-    Move& operator= (Move&& other) noexcept;
+    Move& operator= (Move&& other) NOEXCEPT;
 
     const Piece   piece;
     const Piece   promotionPiece;
@@ -60,7 +66,9 @@ public:
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const = 0;
     virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const = 0;
 
-protected:
+    static bitmask attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    static std::vector<Move> moves(const ChessBoard &board, const ChessBoardStats &stats);
+
     static bitmask shiftBitMask(bitmask b, int up, int right);
 
     static const MoveGeneratorPawn      generatorPawn;
@@ -69,9 +77,6 @@ protected:
     static const MoveGeneratorRook      generatorRook;
     static const MoveGeneratorBishop    generatorBishop;
 
-
-    static bitmask attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
-    static std::vector<Move> moves(const ChessBoard &board, const ChessBoardStats &stats);
 
     static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields);
     static bool    isKingNotUnderCheck(const ChessBoard &board, const Color nextMove, const ChessBoardStats &stats);

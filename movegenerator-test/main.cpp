@@ -20,10 +20,6 @@
 #include "version.h"
 #include "chessboard.h"
 
-extern void testMoves(const int expectedCount, const char *boardString);
-extern void testMovesFromFen(const int expectedCount, const char *boardString);
-extern void testValidMoves(const int expectedCount, const char *boardString);
-
 int main(int argc, char** args) {
 
     std::cout
@@ -35,9 +31,5 @@ int main(int argc, char** args) {
             << " (" << IMPLEMENTATION_DATE << ") unit tests!\n"
     ;
 
-    std::string a;
-    for(auto c:a) {
-
-    }
    return CommandLineTestRunner::RunAllTests(argc, args);
 }

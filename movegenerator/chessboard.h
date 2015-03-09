@@ -75,8 +75,9 @@ public:
             std::string     toFEN();
             void            setupFEN(const std::string &fen);
 
-    void                    setupStandardBoard();
+            void            setupStandardBoard();
     inline  void            updateZobrist() { zobristKey = zobrist.getKey(*this); }
+            uint64_t        perft(int depth);
 
     static const Zobrist zobrist;
 };

@@ -55,7 +55,7 @@ Move::Move (const Move& other)
 }
 
 
-Move::Move (Move&& other) noexcept
+Move::Move (Move&& other) NOEXCEPT
 :   piece(other.piece),
     promotionPiece(other.promotionPiece),
     sourceIndex(other.sourceIndex),
@@ -77,12 +77,12 @@ Move& Move::operator= (const Move& other)
     return *this;
 }
 
-Move& Move::operator= (Move&& other) noexcept
+Move& Move::operator= (Move&& other) NOEXCEPT
 {
     return *this;
 }
 
-Move::~Move() noexcept
+Move::~Move() NOEXCEPT
 {
 
 }
@@ -169,7 +169,7 @@ inline bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color
     ;
 }
 
-inline std::vector<Move> MoveGenerator::moves(const ChessBoard &board, const ChessBoardStats &stats)
+std::vector<Move> MoveGenerator::moves(const ChessBoard &board, const ChessBoardStats &stats)
 {
     //TODO: change std::vector to something better
     //TODO: first test vector, then vector + rule of 5, then list, array, no constants
@@ -195,7 +195,7 @@ inline std::vector<Move> MoveGenerator::moves(const ChessBoard &board, const Che
 
 
 
-inline bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields)
+bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields)
 {
     //TODO: measure the reverse check algorithm
     bitmask attacks = generatorRook.generateAttacks(board, color, stats);

@@ -21,6 +21,7 @@ add_library (
     chessboard-fen
     chessboard-string
     chessboard-stats
+    chessboard-perft
     move
     move-pawn
     move-knight

@@ -35,7 +35,7 @@ MoveGeneratorRook::MoveGeneratorRook() {
 
     for (int i = 0; i < 64; i++) {
         //get 6-bit mask for a rank
-        MOVE_RANK_MASK[i] = (0b01111110ULL) << (BitBoard::rankIndex(i) << 3);
+        MOVE_RANK_MASK[i] = (126ULL) << (BitBoard::rankIndex(i) << 3);
 
         //compute needed rank shift
         MOVE_RANK_SHIFT[i] = (BitBoard::rankIndex(i) << 3) + 1;
