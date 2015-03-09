@@ -26,7 +26,7 @@
 void testMoves(const uint64_t expectedCount,  const ChessBoard &board)
 {
     std::vector<Move> moves = MoveGenerator::moves(board, ChessBoardStats(board));
-    CHECK(expectedCount == moves.size());
+    LONGS_EQUAL(expectedCount, moves.size());
 }
 
 void testMovesFromString(const uint64_t expectedCount, std::string board)
@@ -38,22 +38,7 @@ void testMovesFromString(const uint64_t expectedCount, std::string board)
 
 void testValidMoves(const uint64_t expectedCount, const ChessBoard &board)
 {
-    std::vector<Move> moves = MoveGenerator::moves(board, ChessBoardStats(board));
-
-    uint64_t count = 0;
-
-    ChessBoard nextBoard = board;
-    for(Move move : moves) {
-        move.applyTo(nextBoard);
-
-        ChessBoardStats nextStats(nextBoard);
-
-        if(MoveGenerator::isKingNotUnderCheck(nextBoard, nextBoard.nextMove, nextStats)) {
-            count += 1;
-        }
-
-        nextBoard = board;
-    }
+    LONGS_EQUAL(expectedCount, board.perft(1));
 }
 
 void testValidMovesFromString(const uint64_t expectedCount, std::string board)

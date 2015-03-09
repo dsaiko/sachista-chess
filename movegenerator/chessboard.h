@@ -77,7 +77,7 @@ public:
 
             void            setupStandardBoard();
     inline  void            updateZobrist() { zobristKey = zobrist.getKey(*this); }
-            uint64_t        perft(int depth);
+            uint64_t        perft(int depth) const;
 
     static const Zobrist zobrist;
 };

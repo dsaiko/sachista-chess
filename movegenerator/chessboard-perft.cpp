@@ -24,46 +24,6 @@
 #include "utility.h"
 #include "move.h"
 
-struct CacheEntry {
-    uint64_t              hash;
-    uint64_t              count;
-    int                   depth;
-
-    CacheEntry(): hash(0), count(0), depth(0) {}
-};
-
-
-struct Cache {
-    const int                       cacheSize;
-    CacheEntry                      *data;
-
-    Cache(int size): cacheSize(size) {
-        data = new CacheEntry[cacheSize];
-    }
-
-    ~Cache() {
-        delete[] data;
-    }
-
-    uint64_t get(const uint64_t &hash, int depth) {
-        CacheEntry *entry = (data + ((cacheSize - 1) & hash));
-        if(entry->hash == hash && entry->depth == depth) {
-            return entry->count;
-        }
-        return 0;
-    }
-
-    void set(uint64_t hash, int depth, uint64_t count) {
-        CacheEntry *entry = (data + ((cacheSize - 1) & hash));
-
-        if(entry->hash == 0) {
-            entry->hash = hash;
-            entry->depth = depth;
-            entry->count = count;
-        }
-    }
-};
-
 /**
  * @brief This is a perft worker
  * @param board
@@ -71,15 +31,14 @@ struct Cache {
  * @param cache Shared cache, needs OMP synchronization
  * @return number of legal moves
  */
-uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const ChessBoardStats &stats)
+uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats &stats)
 {
     //TODO: multi thread
     //TODO: cache
     //compute directly
     if(depth < 1) return 1;
 
-    uint64_t count = cache.get(board.zobristKey, depth);
-    if(count) return count;
+    uint64_t count = 0;
 
     std::vector<Move> moves = MoveGenerator::moves(board, stats);
 
@@ -91,7 +50,7 @@ uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const C
         ChessBoardStats nextStats(nextBoard);
 
         if(MoveGenerator::isKingNotUnderCheck(nextBoard, nextBoard.nextMove, nextStats)) {
-            count += minimax(cache, nextBoard, depth -1, nextStats);
+            count += minimax(nextBoard, depth -1, nextStats);
         } else {
             count += 1;
         }
@@ -100,20 +59,12 @@ uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const C
         nextBoard = board;
     }
 
-    cache.set(board.zobristKey, depth, count);
     return count;
 }
 
-uint64_t ChessBoard::perft(int depth)
+uint64_t ChessBoard::perft(int depth) const
 {
     if(depth < 1) return 1;
-
-    unsigned long memSize = Utility::getMemorySize();
-    unsigned long cacheSize = 128*1024*1024;
-    //get maximum of total_memory / 4 cache size
-    if(cacheSize * sizeof(CacheEntry) > (memSize / 4)) cacheSize = (memSize / 4) / sizeof(CacheEntry);
-
-    Cache cache(cacheSize);
-    return minimax(cache, *this, depth, ChessBoardStats(*this));
+    return minimax(*this, depth, ChessBoardStats(*this));
 }
 
