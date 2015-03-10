@@ -20,6 +20,7 @@
 #include "chessboard.h"
 
 const Zobrist ChessBoard::zobrist;
+const std::string ChessBoard::STANDARD_BOARD_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 ChessBoard::ChessBoard():
     nextMove(White),
@@ -40,7 +41,7 @@ ChessBoard::ChessBoard(const std::string &fen)
 }
 
 void ChessBoard::setupStandardBoard() {
-    setupFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    setupFEN(STANDARD_BOARD_FEN);
 }
 
 bool ChessBoard::operator==(const ChessBoard &other)

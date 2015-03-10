@@ -17,6 +17,7 @@
 */
 
 #include <string>
+#include "chessboard.h"
 
 void testMovesFromString(const uint64_t expectedCount, std::string board);
 void testLegalMovesFromString(const uint64_t expectedCount, std::string board);

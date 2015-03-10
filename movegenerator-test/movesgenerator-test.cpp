@@ -74,6 +74,12 @@ TEST(MovesGenerator, BasicTest)
     testLegalMoves(20, b);
 }
 
+TEST(MovesGenerator, TestPiecePromotion) {
+    Move m(Pawn, BoardIndex::A1, BoardIndex::H8, false, false, false, false, King);
+
+    CHECK("a1h8k" == m.toString());
+}
+
 TEST(MovesGenerator, PerfT)
 {
     ChessBoard board;

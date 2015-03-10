@@ -80,6 +80,7 @@ public:
             uint64_t        perft(int depth) const;
 
     static const Zobrist zobrist;
+    static const std::string STANDARD_BOARD_FEN;
 };
 
 

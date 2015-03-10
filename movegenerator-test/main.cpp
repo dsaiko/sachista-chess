@@ -18,8 +18,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include <iostream>
 #include "version.h"
-#include "chessboard.h"
-#include "movesgenerator-test.h"
+
 
 int main(int argc, char** args) {
 
@@ -29,7 +28,8 @@ int main(int argc, char** args) {
             << " sachista-chess "
             << ARCHITECTURE << " "
             << IMPLEMENTATION_VERSION
-            << " (" << IMPLEMENTATION_DATE << ") unit tests!\n"
+            << " (" << IMPLEMENTATION_DATE << ") unit tests!"
+            << std::endl
     ;
 
    return CommandLineTestRunner::RunAllTests(argc, args);

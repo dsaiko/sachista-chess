@@ -28,14 +28,9 @@ add_executable          (
     movesgenerator-knight-test
     movesgenerator-king-test
     movesgenerator-bishop-test
-   # chesspiece-test
-   # movesgenerator-test
-   # movesgenerator-pawn-tests
-   # movesgenerator-knight-test
-   # movesgenerator-king-test
-   # movesgenerator-queen-test
-   # movesgenerator-bishop-test
-   # movesgenerator-rook-test
+    movesgenerator-pawn-test
+    movesgenerator-queen-test
+    movesgenerator-rook-test
     main
 )
 

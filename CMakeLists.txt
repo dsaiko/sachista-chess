@@ -40,6 +40,3 @@ add_subdirectory            (movegenerator)
 add_subdirectory            (movegenerator-test)
 
 #add_subdirectory           (engine-uci)
-#add_subdirectory           (movegenerator-perft)
-
-

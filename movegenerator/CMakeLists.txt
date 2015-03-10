@@ -34,3 +34,25 @@ add_library (
     utility
 )
 
+add_executable (
+    sachista-movegenerator-perft
+    main-perft
+    version
+    bitboard
+    chessboard
+    chessboard-fen
+    chessboard-string
+    chessboard-stats
+    chessboard-perft
+    move
+    move-pawn
+    move-knight
+    move-king
+    move-bishop
+    move-rook
+    move-makemove
+    rand64
+    zobrist
+    utility
+)
+
