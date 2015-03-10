@@ -54,39 +54,6 @@ Move::Move (const Move& other)
 
 }
 
-
-Move::Move (Move&& other) NOEXCEPT
-:   piece(other.piece),
-    promotionPiece(other.promotionPiece),
-    sourceIndex(other.sourceIndex),
-    targetIndex(other.targetIndex),
-    isCapture(other.isCapture),
-    isEnPassant(other.isEnPassant),
-    isShortCastling(other.isShortCastling),
-    isLongCastling(other.isLongCastling)
-{
-
-}
-
-
-Move& Move::operator= (const Move& other)
-{
-    //TODO: try *this = other only
-    Move tmp(other);
-    *this = std::move(tmp);
-    return *this;
-}
-
-Move& Move::operator= (Move&& other) NOEXCEPT
-{
-    return *this;
-}
-
-Move::~Move() NOEXCEPT
-{
-
-}
-
 Move::Move(Piece piece, int fromIndex, int toIndex, bool isCapture)
 :   piece(piece),
     promotionPiece(Piece::NoPiece),

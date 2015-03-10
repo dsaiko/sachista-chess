@@ -21,38 +21,27 @@
 #include "chessboard.h"
 #include "chessboard-stats.h"
 
-#if defined(_NOEXCEPT)
-    #define NOEXCEPT _NOEXCEPT
-#else
-    #define NOEXCEPT noexcept
-#endif
-
 class Move {
 public:
 
     Move();
-    Move (const Move& other);
-    Move (Move&& other) NOEXCEPT;
+    Move(const Move& other);
     Move(Piece piece, int fromIndex, int toIndex, bool isCapture);
     Move(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnpassant, bool isShortCastling, bool isLongCastling, Piece promotionPiece);
-    ~Move() NOEXCEPT;
 
-    Move& operator= (const Move& other);
-    Move& operator= (Move&& other) NOEXCEPT;
+    Piece   piece;
+    Piece   promotionPiece;
 
-    const Piece   piece;
-    const Piece   promotionPiece;
+    int     sourceIndex;
+    int     targetIndex;
 
-    const int     sourceIndex;
-    const int     targetIndex;
+    bool    isCapture;
+    bool    isEnPassant;
+    bool    isShortCastling;
+    bool    isLongCastling;
 
-    const bool    isCapture;
-    const bool    isEnPassant;
-    const bool    isShortCastling;
-    const bool    isLongCastling;
-
-    void          applyTo(ChessBoard &board) const;
-    std::string toString() const;
+    void            applyTo(ChessBoard &board) const;
+    std::string     toString() const;
 };
 
 class MoveGeneratorPawn;
