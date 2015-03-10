@@ -3,3 +3,4 @@ BUILD-RELEASE
 BUILD-DEBUG
 .idea
 bin
+*.pro.user

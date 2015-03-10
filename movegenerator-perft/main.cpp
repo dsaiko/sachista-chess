@@ -39,13 +39,13 @@ int main(int argc, char** args) {
             << " sachista-chess "
             << ARCHITECTURE << " "
             << IMPLEMENTATION_VERSION
-            << " (" << IMPLEMENTATION_DATE << ") perf tests!"
+            << " (" << IMPLEMENTATION_DATE << ") PERF TEST!"
             << std::endl
     ;
 
     std::cout << "See: http://chessprogramming.wikispaces.com/Perft" << std::endl << std::endl;
 
-    int depth = 5;
+    int depth = 6;
     std::string fen = ChessBoard::STANDARD_BOARD_FEN;
     bool standardBoard = true;
 
@@ -66,9 +66,9 @@ int main(int argc, char** args) {
     }
 
     if(standardBoard) {
-        std::cout << "Running PERFT for standard board for the depth " << depth << std::endl;
+        std::cout << "Running PERFT for standard board for the depth " << depth << "..." << std::endl;
     } else {
-        std::cout << "Running PERFT for custom board for the depth " << depth << ": " << fen << std::endl;
+        std::cout << "Running PERFT for custom board for the depth " << depth << ": " << fen << "..." << std::endl;
     }
 
     ChessBoard board(fen);
