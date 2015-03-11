@@ -24,7 +24,7 @@ const std::string ChessBoard::STANDARD_BOARD_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PP
 
 ChessBoard::ChessBoard()
 {
-    //TODO: Do we need reseting the object in constructor?
+    clearBoard();
 }
 
 ChessBoard::ChessBoard(const std::string &fen)

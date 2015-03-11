@@ -53,7 +53,6 @@ public:
         m.isEnPassant = isEnPassant;
     }
 
-    //TODO: check numeric types, make int as much as possible
     inline void         clear()     { _size=0; }
     inline int          size()      { return _size; }
 

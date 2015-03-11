@@ -30,7 +30,6 @@ TEST_GROUP(ZobristTest)
 TEST(ZobristTest, TestZobrist)
 {
   ChessBoard board;
-  board.clearBoard();
 
   Zobrist zobrist;
   CHECK(zobrist.getKey(board) == 0);
@@ -75,7 +74,3 @@ TEST(ZobristTest, HashCode)
     //check the keys are the same as computed
     CHECK(board.zobristKey == ChessBoard::zobrist.getKey(board));
 }
-
-
-
-//TODO: test moves generation - zobrist uniquness - perft to some level
