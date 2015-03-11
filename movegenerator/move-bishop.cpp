@@ -16,6 +16,7 @@
 */
 
 #include "move.h"
+#include "movearray.h"
 #include "chessboard-stats.h"
 
 
@@ -230,10 +231,8 @@ bitmask MoveGeneratorBishop::generateAttacks(const ChessBoard &board, const Colo
     return attacks;
 }
 
-std::vector<Move> MoveGeneratorBishop::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+void MoveGeneratorBishop::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
 {
-    std::vector<Move> result;
-    
     bitmask bishop = board.pieces[board.nextMove][Bishop];
 
     Piece movingPiece = Bishop;
@@ -250,7 +249,8 @@ std::vector<Move> MoveGeneratorBishop::generateMoves(const ChessBoard &board, co
             while (movesBoard) {
                 int toIndex = BitBoard::bitPop(movesBoard);
                 bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
-                result.push_back(Move(movingPiece, fromIndex, toIndex, isCapture));
+
+                moves.setNext(movingPiece, fromIndex, toIndex, isCapture);
             }
         }
 
@@ -258,6 +258,4 @@ std::vector<Move> MoveGeneratorBishop::generateMoves(const ChessBoard &board, co
         bishop = board.pieces[board.nextMove][Queen];
         movingPiece = Queen;
     }
-
-    return result;
 }

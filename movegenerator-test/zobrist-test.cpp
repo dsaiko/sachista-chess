@@ -21,6 +21,7 @@
 #include "chessboard.h"
 #include "zobrist.h"
 #include "move.h"
+#include "movearray.h"
 
 TEST_GROUP(ZobristTest)
 {
@@ -65,8 +66,9 @@ TEST(ZobristTest, HashCode)
     //do 30 legal moves on the board
     board.setupStandardBoard();
     for(int n=0; n<100; n++) {
-        auto moves = MoveGenerator::moves(board, ChessBoardStats(board));
-        moves[0].applyTo(board);
+        MoveArray moves;
+        MoveGenerator::moves(board, ChessBoardStats(board), moves);
+        moves.first().applyTo(board);
     }
 
     //check the keys are the same as computed

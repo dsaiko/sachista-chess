@@ -17,6 +17,7 @@
 
 #include "move.h"
 #include "chessboard-stats.h"
+#include "movearray.h"
 
 const bitmask MAGIC_FILE[] = {
         0x8040201008040200ULL,
@@ -53,7 +54,7 @@ MoveGeneratorRook::MoveGeneratorRook() {
         //for all occupancy states
         for (int n = 0; n < 64; n++) {
             //reconstruct occupancy state
-            const bitmask board = shiftBitMask((bitmask) n, BitBoard::rankIndex(i), 1);
+            const bitmask board = MoveGenerator::shiftBitMask((bitmask) n, BitBoard::rankIndex(i), 1);
 
             //generate available moves
             bitmask moves = 0;
@@ -97,8 +98,8 @@ MoveGeneratorRook::MoveGeneratorRook() {
         //for all occupancy state indexes
         for (int n = 0; n < 64; n++) {
             //reconstuct the occupancy into file
-            const bitmask board = shiftBitMask(
-                    BitBoard::flipDiagA1H8(BitBoard::mirrorHorizontal(shiftBitMask((bitmask) n, 0, 1))),
+            const bitmask board = MoveGenerator::shiftBitMask(
+                    BitBoard::flipDiagA1H8(BitBoard::mirrorHorizontal(MoveGenerator::shiftBitMask((bitmask) n, 0, 1))),
                     0,
                     BitBoard::fileIndex(i));
 
@@ -161,10 +162,8 @@ bitmask MoveGeneratorRook::generateAttacks(const ChessBoard &board, const Color 
     return attacks;
 }
 
-std::vector<Move> MoveGeneratorRook::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+void MoveGeneratorRook::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
 {
-    std::vector<Move> result;
-
     bitmask rook = board.pieces[board.nextMove][Rook];
     Piece movingPiece = Rook;
 
@@ -180,13 +179,11 @@ std::vector<Move> MoveGeneratorRook::generateMoves(const ChessBoard &board, cons
             while (movesBoard) {
                 int toIndex = BitBoard::bitPop(movesBoard);
                 bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
-                result.push_back(Move(movingPiece, fromIndex, toIndex, isCapture));
+                moves.setNext(movingPiece, fromIndex, toIndex, isCapture);
             }
         }
         //switch to queen
         rook = board.pieces[board.nextMove][Queen];
         movingPiece = Queen;
     }
-
-    return result;
 }

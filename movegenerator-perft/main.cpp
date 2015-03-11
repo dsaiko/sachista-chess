@@ -17,9 +17,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <array>
 
 #include "chessboard.h"
 #include "utility.h"
+#include "move.h"
 
 
 struct DecimalSeparators : std::numpunct<char> {

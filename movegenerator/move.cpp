@@ -128,36 +128,21 @@ bitmask MoveGenerator::shiftBitMask(bitmask b, int up, int right) {
 inline bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats)
 {
     return
-            generatorPawn.generateAttacks(board, color, stats)      |
-            generatorKnight.generateAttacks(board, color, stats)    |
-            generatorKing.generateAttacks(board, color, stats)      |
+            generatorPawn.generateAttacks(board, color)             |
+            generatorKnight.generateAttacks(board, color)           |
+            generatorKing.generateAttacks(board, color)             |
             generatorRook.generateAttacks(board, color, stats)      |
             generatorBishop.generateAttacks(board, color, stats)
     ;
 }
 
-std::vector<Move> MoveGenerator::moves(const ChessBoard &board, const ChessBoardStats &stats)
+void MoveGenerator::moves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves)
 {
-    //TODO: change std::vector to something better
-    //TODO: first test vector, then vector + rule of 5, then list, array, no constants
-    std::vector<Move> result;
-
-    std::vector<Move> moves = generatorPawn.generateMoves(board, stats);
-    result.insert(result.end(), moves.begin(), moves.end());
-
-    moves = generatorKnight.generateMoves(board, stats);
-    result.insert(result.end(), moves.begin(), moves.end());
-
-    moves = generatorKing.generateMoves(board, stats);
-    result.insert(result.end(), moves.begin(), moves.end());
-
-    moves = generatorRook.generateMoves(board, stats);
-    result.insert(result.end(), moves.begin(), moves.end());
-
-    moves = generatorBishop.generateMoves(board, stats);
-    result.insert(result.end(), moves.begin(), moves.end());
-
-    return result;
+    generatorPawn.generateMoves(board, stats, moves);
+    generatorKnight.generateMoves(board, stats, moves);
+    generatorKing.generateMoves(board, stats, moves);
+    generatorRook.generateMoves(board, stats, moves);
+    generatorBishop.generateMoves(board, stats, moves);
 }
 
 
@@ -169,11 +154,11 @@ bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color c
     if(attacks & fields) return true;
     attacks  =  generatorBishop.generateAttacks(board, color, stats);
     if(attacks & fields) return true;
-    attacks  =  generatorKnight.generateAttacks(board, color, stats);
+    attacks  =  generatorKnight.generateAttacks(board, color);
     if(attacks & fields) return true;
-    attacks  =  generatorPawn.generateAttacks(board, color, stats);
+    attacks  =  generatorPawn.generateAttacks(board, color);
     if(attacks & fields) return true;
-    attacks  =  generatorKing.generateAttacks(board, color, stats);
+    attacks  =  generatorKing.generateAttacks(board, color);
     if(attacks & fields) return true;
 
     return false;

@@ -16,6 +16,7 @@
 */
 
 #include "move.h"
+#include "movearray.h"
 
 MoveGeneratorPawn::MoveGeneratorPawn() {
     //for all fields
@@ -23,16 +24,16 @@ MoveGeneratorPawn::MoveGeneratorPawn() {
         //put the piece on the board
         bitmask piece = BitBoard::squareBitmask(i);
 
-        PAWN_MOVES[White][i]         = shiftBitMask(piece, 1, 0);
-        PAWN_DOUBLE_MOVES[White][i]  = shiftBitMask(piece, 2, 0);
-        PAWN_ATTACKS[White][i]       = shiftBitMask(piece, 1, 1) | shiftBitMask(piece, 1, -1);
-        PAWN_MOVES[Black][i]         = shiftBitMask(piece, -1, 0);
-        PAWN_DOUBLE_MOVES[Black][i]  = shiftBitMask(piece, -2, 0);
-        PAWN_ATTACKS[Black][i]       = shiftBitMask(piece, -1, 1) | shiftBitMask(piece, -1, -1);
+        PAWN_MOVES[White][i]         = MoveGenerator::shiftBitMask(piece, 1, 0);
+        PAWN_DOUBLE_MOVES[White][i]  = MoveGenerator::shiftBitMask(piece, 2, 0);
+        PAWN_ATTACKS[White][i]       = MoveGenerator::shiftBitMask(piece, 1, 1) | MoveGenerator::shiftBitMask(piece, 1, -1);
+        PAWN_MOVES[Black][i]         = MoveGenerator::shiftBitMask(piece, -1, 0);
+        PAWN_DOUBLE_MOVES[Black][i]  = MoveGenerator::shiftBitMask(piece, -2, 0);
+        PAWN_ATTACKS[Black][i]       = MoveGenerator::shiftBitMask(piece, -1, 1) | MoveGenerator::shiftBitMask(piece, -1, -1);
     }
 }
 
-bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const
+bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color color) const
 {
     if(color == White) {
         return BitBoard::oneNorthEast(board.pieces[color][Pawn]) | BitBoard::oneNorthWest(board.pieces[color][Pawn]);
@@ -41,10 +42,8 @@ bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color 
     }
 }
 
-std::vector<Move> MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+void MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
 {
-    std::vector<Move> result;
-
     const bitmask emptyBoard = ~stats.allPieces;
 
     int whiteBaseRank;
@@ -93,17 +92,17 @@ std::vector<Move> MoveGeneratorPawn::generateMoves(const ChessBoard &board, cons
         while (movesBoard) {
             //get next move
             const int targetIndex = BitBoard::bitPop(movesBoard);
-            bool isCapture = BitBoard::squareBitmask(targetIndex) & stats.opponentPieces;
+            bool isCapture = (BitBoard::squareBitmask(targetIndex) & stats.opponentPieces) != 0;
 
             //promotion?
             if (targetIndex > whitePromotionRank || targetIndex < blackPromotionRank) {
-                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Bishop));
-                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Knight));
-                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Queen));
-                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Rook));
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Bishop);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Knight);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Queen);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Rook);
             } else {
                 //normal move/capture
-                result.push_back(Move(Pawn, sourceIndex, targetIndex, isCapture));
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture);
             }
         }
 
@@ -111,11 +110,9 @@ std::vector<Move> MoveGeneratorPawn::generateMoves(const ChessBoard &board, cons
         if(board.enPassantTargetIndex) {
             movesBoard = attacks & BitBoard::squareBitmask(board.enPassantTargetIndex);
             if (movesBoard) {
-                result.push_back(Move(Pawn, sourceIndex, BitBoard::bitScan(movesBoard), true, true, false, false, NoPiece));
+                moves.setNext(Pawn, sourceIndex, BitBoard::bitScan(movesBoard), true, true, false, false, NoPiece);
             }
         }
 
     }
-
-    return result;
 }

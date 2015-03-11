@@ -21,11 +21,13 @@
 #include "chessboard.h"
 #include "move.h"
 #include "movesgenerator-test.h"
+#include "movearray.h"
 
 
-void testMoves(const uint64_t expectedCount,  const ChessBoard &board)
+void testMoves(const int expectedCount,  const ChessBoard &board)
 {
-    std::vector<Move> moves = MoveGenerator::moves(board, ChessBoardStats(board));
+    MoveArray moves;
+    MoveGenerator::moves(board, ChessBoardStats(board), moves);
     LONGS_EQUAL(expectedCount, moves.size());
 }
 
@@ -36,12 +38,15 @@ void testMovesFromString(const uint64_t expectedCount, std::string board)
     testMoves(expectedCount, b);
 }
 
-void testLegalMoves(const uint64_t expectedCount, const ChessBoard &board)
+void testLegalMoves(const int expectedCount, const ChessBoard &board)
 {
     uint64_t count = board.perft(1);
-    if(count != expectedCount) {
-        std::vector<Move> moves = MoveGenerator::moves(board, ChessBoardStats(board));
-        for(Move m: moves) {
+    if((int)count != expectedCount) {
+        MoveArray moves;
+        MoveGenerator::moves(board, ChessBoardStats(board), moves);
+        for(int i=0; i<moves.size(); i++) {
+            Move &m = moves.data[i];
+
             ChessBoard b = board;
             m.applyTo(b);
             if(MoveGenerator::isOpponentsKingNotUnderCheck(b, ChessBoardStats(b))) {

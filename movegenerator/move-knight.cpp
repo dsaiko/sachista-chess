@@ -17,6 +17,7 @@
 
 #include "move.h"
 #include "chessboard-stats.h"
+#include "movearray.h"
 
 MoveGeneratorKnight::MoveGeneratorKnight() {
     //for all fields
@@ -26,19 +27,19 @@ MoveGeneratorKnight::MoveGeneratorKnight() {
 
         //get moves
         KNIGHT_MOVES[i] =
-                shiftBitMask(piece,  2,  1)       |
-                shiftBitMask(piece,  2, -1)       |
-                shiftBitMask(piece,  1,  2)       |
-                shiftBitMask(piece, -1,  2)       |
-                shiftBitMask(piece, -2,  1)       |
-                shiftBitMask(piece, -2, -1)       |
-                shiftBitMask(piece, -1, -2)       |
-                shiftBitMask(piece,  1, -2)
+                MoveGenerator::shiftBitMask(piece,  2,  1)       |
+                MoveGenerator::shiftBitMask(piece,  2, -1)       |
+                MoveGenerator::shiftBitMask(piece,  1,  2)       |
+                MoveGenerator::shiftBitMask(piece, -1,  2)       |
+                MoveGenerator::shiftBitMask(piece, -2,  1)       |
+                MoveGenerator::shiftBitMask(piece, -2, -1)       |
+                MoveGenerator::shiftBitMask(piece, -1, -2)       |
+                MoveGenerator::shiftBitMask(piece,  1, -2)
         ;
     }
 }
 
-bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const
+bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Color color) const
 {
     bitmask pieces = board.pieces[color][Knight];
     bitmask attacks = 0;
@@ -49,10 +50,8 @@ bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Colo
     return attacks;
 }
 
-std::vector<Move> MoveGeneratorKnight::generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const
+void MoveGeneratorKnight::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
 {
-    std::vector<Move> result;
-
     bitmask knight = board.pieces[board.nextMove][Knight];
 
     // while there are knight pieces
@@ -64,9 +63,8 @@ std::vector<Move> MoveGeneratorKnight::generateMoves(const ChessBoard &board, co
         // for all moves
         while (movesBoard) {
             int toIndex = BitBoard::bitPop(movesBoard);
-            bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
-            result.push_back(Move(Knight, fromIndex, toIndex, isCapture));
+            bool isCapture = (BitBoard::squareBitmask(toIndex) & stats.opponentPieces) != 0;
+            moves.setNext(Knight, fromIndex, toIndex, isCapture);
         }
     }
-    return result;
 }

@@ -35,4 +35,5 @@ zobrist.h \
 utility.h \
 bitboard.h \
 rand64.h \
-version.h
+version.h \
+    movearray.h

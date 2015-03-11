@@ -23,6 +23,8 @@
 #include "chessboard-stats.h"
 #include "utility.h"
 #include "move.h"
+#include "movearray.h"
+
 
 /**
  * @brief This is a perft worker
@@ -35,15 +37,19 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
 {
     //TODO: multi thread
     //TODO: cache
+
     //compute directly
     if(depth < 1) return 1;
 
     uint64_t count = 0;
 
-    std::vector<Move> moves = MoveGenerator::moves(board, stats);
+    MoveArray moves;
+    MoveGenerator::moves(board, stats, moves);
 
 
-    for(Move move : moves) {
+    for(int i=0; i < moves.size(); i++) {
+        Move &move = moves.data[i];
+
         //TODO: try to move out of the loop
         ChessBoard nextBoard = board;
         move.applyTo(nextBoard);

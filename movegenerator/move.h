@@ -17,9 +17,10 @@
 */
 
 #include <string>
-#include <vector>
 #include "chessboard.h"
 #include "chessboard-stats.h"
+
+
 
 class Move {
 public:
@@ -44,39 +45,15 @@ public:
     std::string     toString() const;
 };
 
-class MoveGeneratorPawn;
-class MoveGeneratorKnight;
-class MoveGeneratorKing;
-class MoveGeneratorRook;
-class MoveGeneratorBishop;
 
-class MoveGenerator {
-public:
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const = 0;
-    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const = 0;
+class MoveArray;
 
-    static bitmask attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
-    static std::vector<Move> moves(const ChessBoard &board, const ChessBoardStats &stats);
-
-    static bitmask shiftBitMask(bitmask b, int up, int right);
-
-    static const MoveGeneratorPawn      generatorPawn;
-    static const MoveGeneratorKnight    generatorKnight;
-    static const MoveGeneratorKing      generatorKing;
-    static const MoveGeneratorRook      generatorRook;
-    static const MoveGeneratorBishop    generatorBishop;
-
-
-    static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields);
-    static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats);
-};
-
-class MoveGeneratorPawn: MoveGenerator {
+class MoveGeneratorPawn {
 public:
     MoveGeneratorPawn();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
+    bitmask  generateAttacks(const ChessBoard &board, const Color color) const;
+    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
 
     bitmask PAWN_MOVES[2][64];
     bitmask PAWN_DOUBLE_MOVES[2][64];
@@ -84,33 +61,33 @@ public:
 };
 
 
-class MoveGeneratorKnight: MoveGenerator {
+class MoveGeneratorKnight {
 public:
     MoveGeneratorKnight();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
+    bitmask  generateAttacks(const ChessBoard &board, const Color color) const;
+    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
 
     bitmask KNIGHT_MOVES[64];
 };
 
 
-class MoveGeneratorKing: MoveGenerator {
+class MoveGeneratorKing {
 public:
     MoveGeneratorKing();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
+    bitmask  generateAttacks(const ChessBoard &board, const Color color) const;
+    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
 
     bitmask KING_MOVES[64];
 };
 
-class MoveGeneratorBishop: MoveGenerator {
+class MoveGeneratorBishop {
 public:
     MoveGeneratorBishop();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
+    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
+    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
 
 
     int A1H8_INDEX[64];
@@ -128,12 +105,12 @@ public:
 
 };
 
-class MoveGeneratorRook: MoveGenerator {
+class MoveGeneratorRook {
 public:
     MoveGeneratorRook();
 
     virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    virtual    std::vector<Move> generateMoves(const ChessBoard &board, const ChessBoardStats &stats) const;
+    virtual    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
 
     bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces) const;
 
@@ -143,4 +120,22 @@ public:
     bitmask MOVE_FILE_MASK[64];
     bitmask MOVE_FILE_MAGIC[64];
     bitmask MOVE_FILE_ATTACKS[64][64];
+};
+
+class MoveGenerator {
+public:
+    static bitmask  attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
+    static void     moves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves);
+
+    static bitmask shiftBitMask(bitmask b, int up, int right);
+
+    static const MoveGeneratorPawn      generatorPawn;
+    static const MoveGeneratorKnight    generatorKnight;
+    static const MoveGeneratorKing      generatorKing;
+    static const MoveGeneratorRook      generatorRook;
+    static const MoveGeneratorBishop    generatorBishop;
+
+
+    static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields);
+    static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats);
 };

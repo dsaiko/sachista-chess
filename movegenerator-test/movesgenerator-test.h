@@ -21,5 +21,5 @@
 
 void testMovesFromString(const uint64_t expectedCount, std::string board);
 void testLegalMovesFromString(const uint64_t expectedCount, std::string board);
-void testMoves(const uint64_t expectedCount, const ChessBoard &board);
-void testLegalMoves(const uint64_t expectedCount, const ChessBoard &board);
+void testMoves(const int expectedCount, const ChessBoard &board);
+void testLegalMoves(const int expectedCount, const ChessBoard &board);
