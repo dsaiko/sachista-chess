@@ -42,15 +42,14 @@ void Move::applyTo(ChessBoard &board) const
     if(board.castling[Black])
         board.zobristKey ^= ChessBoard::zobrist.Z_CASTLING[Black][board.castling[Black]];
 
-    if(piece ==  Knight) {
-        pieces[Knight] ^= source | target;
-        board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
-    } else if(piece ==  Bishop) {
-        pieces[ Bishop] ^= source | target;
-        board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
-    } else if(piece ==  Rook) {
-        pieces[Rook] ^= source | target;
-        board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
+    pieces[piece] ^= source | target;
+    board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
+
+    //if(piece ==  Knight)  nothing else to do
+    //if(piece ==  Bishop) nothing else to do
+    //if(piece == Queen) nothing else to do
+
+    if(piece ==  Rook) {
         if(board.castling[board.nextMove]) {
             if(sourceIndex == BoardIndex::A1 && board.nextMove == White)
                 board.removeCastling(board.nextMove, QueenSide);
@@ -61,13 +60,7 @@ void Move::applyTo(ChessBoard &board) const
             if(sourceIndex == BoardIndex::H8 && board.nextMove == Black)
                 board.removeCastling(board.nextMove, KingSide);
         }
-    } else if(piece == Queen) {
-        pieces[Queen] ^= source | target;
-        board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
     } else if(piece == King) {
-        pieces[King] ^= source | target;
-        board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
-
         board.castling[board.nextMove] = None;
         if (sourceIndex == BoardIndex::E1 && board.nextMove == White) {
             //castling
@@ -89,31 +82,27 @@ void Move::applyTo(ChessBoard &board) const
                 board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][ Rook][BoardIndex::H8] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][ Rook][BoardIndex::F8];
             }
         }
-
     } else if(piece ==  Pawn) {
         board.halfMoveClock = 0;
-        pieces[ Pawn] ^= source | target;
-        board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
 
         int step = targetIndex - sourceIndex;
         if (abs(step) > 10) {
             board.enPassantTargetIndex = sourceIndex + (board.nextMove == White ? 8 : -8);
-        } else
-        if (promotionPiece) {
-            pieces[ Pawn] ^= target;
-            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][ Pawn][targetIndex];
+        } else if (promotionPiece) {
+            pieces[Pawn] ^= target;
+            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][Pawn][targetIndex];
             if (promotionPiece == Queen) {
                 pieces[Queen] |= target;
                 board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][Queen][targetIndex];
             } else if (promotionPiece ==  Rook) {
-                pieces[ Rook] |= target;
-                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][ Rook][targetIndex];
+                pieces[Rook] |= target;
+                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][Rook][targetIndex];
             } else if (promotionPiece ==  Bishop) {
-                pieces[ Bishop] |= target;
-                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][ Bishop][targetIndex];
+                pieces[Bishop] |= target;
+                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][Bishop][targetIndex];
             } else if (promotionPiece ==  Knight) {
-                pieces[ Knight] |= target;
-                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][ Knight][targetIndex];
+                pieces[Knight] |= target;
+                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][Knight][targetIndex];
             }
         }
     }
@@ -125,27 +114,27 @@ void Move::applyTo(ChessBoard &board) const
         //check capture
         if (isEnPassant) {
             if(board.nextMove == White) {
-                board.pieces[opponentColor][ Pawn] ^= BitBoard::oneSouth(target);
-                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][ Pawn][targetIndex - 8];
+                board.pieces[opponentColor][Pawn] ^= BitBoard::oneSouth(target);
+                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Pawn][targetIndex - 8];
             } else {
-                board.pieces[opponentColor][ Pawn] ^= BitBoard::oneNorth(target);
-                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][ Pawn][targetIndex + 8];
+                board.pieces[opponentColor][Pawn] ^= BitBoard::oneNorth(target);
+                board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Pawn][targetIndex + 8];
             }
-        } else if (board.pieces[opponentColor][ Bishop] & target) {
-            board.pieces[opponentColor][ Bishop] ^= target;
-            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][ Bishop][targetIndex];
-        } else if (board.pieces[opponentColor][ Knight] & target) {
-            board.pieces[opponentColor][ Knight] ^= target;
-            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][ Knight][targetIndex];
-        } else if (board.pieces[opponentColor][ Pawn] & target) {
-            board.pieces[opponentColor][ Pawn] ^= target;
-            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][ Pawn][targetIndex];
+        } else if (board.pieces[opponentColor][Bishop] & target) {
+            board.pieces[opponentColor][Bishop] ^= target;
+            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Bishop][targetIndex];
+        } else if (board.pieces[opponentColor][Knight] & target) {
+            board.pieces[opponentColor][Knight] ^= target;
+            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Knight][targetIndex];
+        } else if (board.pieces[opponentColor][Pawn] & target) {
+            board.pieces[opponentColor][Pawn] ^= target;
+            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Pawn][targetIndex];
         } else if (board.pieces[opponentColor][Queen] & target) {
             board.pieces[opponentColor][Queen] ^= target;
             board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Queen][targetIndex];
         } else if (board.pieces[opponentColor][ Rook] & target) {
-            board.pieces[opponentColor][ Rook] ^= target;
-            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][ Rook][targetIndex];
+            board.pieces[opponentColor][Rook] ^= target;
+            board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[opponentColor][Rook][targetIndex];
 
             if(board.nextMove == White) {
                 if (targetIndex == BoardIndex::A8) {
