@@ -129,6 +129,6 @@ public:
     static const MoveGeneratorBishop    generatorBishop;
 
 
-    static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields);
+    static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, bitmask fields);
     static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats);
 };

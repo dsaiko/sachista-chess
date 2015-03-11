@@ -82,7 +82,7 @@ void MoveGenerator::moves(const ChessBoard &board, const ChessBoardStats &stats,
 
 
 
-bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, const bitmask fields)
+bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, bitmask fields)
 {
     //TODO: measure the reverse check algorithm
     bitmask attacks = generatorRook.generateAttacks(board, color, stats);

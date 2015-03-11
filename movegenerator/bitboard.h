@@ -87,9 +87,8 @@ namespace BitBoard {
 
     inline  int         bitScan             (bitmask b) {
     #if defined(__x86_64__)
-            bitmask r;
-            __asm__("bsfq %1, %0" : "=r" (r) : "rm" (b));
-            return (int) r;
+            __asm__("bsfq %1, %0" : "=r" (b) : "rm" (b));
+            return (int) b;
     #elif defined(_MSC_VER) && defined(_M_X64)
             unsigned long idx;
             _BitScanForward64(&idx, b);
