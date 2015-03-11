@@ -33,7 +33,7 @@ void trim(char * s) {
 
     char * p = s;
     int l = strlen(p);
-    if(l == 0) return;
+    if(!l) return;
 
     while(l > 0 && isspace(p[l - 1])) p[--l] = 0;
     while(* p && isspace(* p)) ++p, --l;

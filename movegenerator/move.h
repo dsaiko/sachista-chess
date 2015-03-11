@@ -33,8 +33,6 @@ public:
 
     bool    isCapture;
     bool    isEnPassant;
-    bool    isShortCastling;
-    bool    isLongCastling;
 
     void            applyTo(ChessBoard &board) const;
     std::string     toString() const;

@@ -38,12 +38,9 @@ public:
         m.isCapture = isCapture;
         m.promotionPiece = Piece::NoPiece;
         m.isEnPassant = false;
-        //TODO: remove castlings from Move - if that makes any performance difference
-        m.isShortCastling = false;
-        m.isLongCastling = false;
     }
 
-    inline void setNext(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnPassant, bool isShortCastling, bool isLongCastling, Piece promotionPiece)
+    inline void setNext(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnPassant, Piece promotionPiece)
     {
         if(_size >= MAX_MOVES) return;
 
@@ -54,17 +51,14 @@ public:
         m.isCapture = isCapture;
         m.promotionPiece = promotionPiece;
         m.isEnPassant = isEnPassant;
-        //TODO: remove castlings from Move - if that makes any performance difference
-        m.isShortCastling = isShortCastling;
-        m.isLongCastling = isLongCastling;
     }
 
     //TODO: check numeric types, make int as much as possible
-    inline void clear() { _size=0; }
-    inline int size()   { return _size; }
+    inline void         clear()     { _size=0; }
+    inline int          size()      { return _size; }
 
-    inline Move &first() { return data[0]; }
+    inline Move         &first()    { return data[0]; }
 
-    int _size;
-    Move    data[MAX_MOVES];
+            int         _size;
+            Move        data[MAX_MOVES];
 };

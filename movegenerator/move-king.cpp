@@ -66,7 +66,7 @@ void MoveGeneratorKing::generateMoves(const ChessBoard &board, const ChessBoardS
     //for all moves
     while (movesBoard) {
         int toIndex = BitBoard::bitPop(movesBoard);
-        bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
+        bool isCapture = (BitBoard::squareBitmask(toIndex) & stats.opponentPieces) != 0;
         moves.setNext(King, sourceIndex, toIndex, isCapture);
     }
 
@@ -76,13 +76,13 @@ void MoveGeneratorKing::generateMoves(const ChessBoard &board, const ChessBoardS
             //generate oponent attacks for castling on demand only
             if(MoveGenerator::isBitMaskUnderAttack(board, Black, stats, WHITE_CASTLE_OO_ATTACKS) == 0) {
                 //add short castling move
-                moves.setNext(King, sourceIndex, BoardIndex::G1, false, false, true, false, NoPiece);
+                moves.setNext(King, sourceIndex, BoardIndex::G1, false, false, NoPiece);
             }
         }
         if ((board.castling[White] & QueenSide) && ((stats.allPieces & WHITE_CASTLE_OOO_EMPTY) == 0)) {
             if(MoveGenerator::isBitMaskUnderAttack(board, Black, stats, WHITE_CASTLE_OOO_ATTACKS) == 0) {
                 //add long castling move
-                moves.setNext(King, sourceIndex, BoardIndex::C1, false, false, false, true, NoPiece);
+                moves.setNext(King, sourceIndex, BoardIndex::C1, false, false, NoPiece);
             }
         }
 
@@ -92,13 +92,13 @@ void MoveGeneratorKing::generateMoves(const ChessBoard &board, const ChessBoardS
             //generate oponent attacks for castling on demand only
             if(MoveGenerator::isBitMaskUnderAttack(board, White, stats, BLACK_CASTLE_OO_ATTACKS) == 0) {
                 //add short castling move
-                moves.setNext(King, sourceIndex, BoardIndex::G8, false, false, true, false, NoPiece);
+                moves.setNext(King, sourceIndex, BoardIndex::G8, false, false, NoPiece);
             }
         }
         if ((board.castling[Black] & QueenSide) && ((stats.allPieces & BLACK_CASTLE_OOO_EMPTY) == 0)) {
             if(MoveGenerator::isBitMaskUnderAttack(board, White, stats, BLACK_CASTLE_OOO_ATTACKS) == 0) {
                 //add long castling move
-               moves.setNext(King, sourceIndex, BoardIndex::C8, false, false, false, true, NoPiece);
+               moves.setNext(King, sourceIndex, BoardIndex::C8, false, false, NoPiece);
             }
         }
     }

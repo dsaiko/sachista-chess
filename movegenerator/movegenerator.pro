@@ -36,4 +36,4 @@ utility.h \
 bitboard.h \
 rand64.h \
 version.h \
-    movearray.h
+movearray.h

@@ -96,10 +96,10 @@ void MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardS
 
             //promotion?
             if (targetIndex > whitePromotionRank || targetIndex < blackPromotionRank) {
-                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Bishop);
-                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Knight);
-                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Queen);
-                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, false, false, Rook);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, Bishop);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, Knight);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, Queen);
+                moves.setNext(Pawn, sourceIndex, targetIndex, isCapture, false, Rook);
             } else {
                 //normal move/capture
                 moves.setNext(Pawn, sourceIndex, targetIndex, isCapture);
@@ -110,7 +110,7 @@ void MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardS
         if(board.enPassantTargetIndex) {
             movesBoard = attacks & BitBoard::squareBitmask(board.enPassantTargetIndex);
             if (movesBoard) {
-                moves.setNext(Pawn, sourceIndex, BitBoard::bitScan(movesBoard), true, true, false, false, NoPiece);
+                moves.setNext(Pawn, sourceIndex, BitBoard::bitScan(movesBoard), true, true, NoPiece);
             }
         }
 

@@ -53,22 +53,10 @@ std::string Move::toString() const {
 
 bitmask MoveGenerator::shiftBitMask(bitmask b, int up, int right) {
     //move the piece up or down
-    if (up > 0) {
-        for(int i=0; i < up; i++)
-            b = BitBoard::oneNorth(b);
-    } else if(up < 0) {
-        for(int i=0; i < -up; i++)
-            b = BitBoard::oneSouth(b);
-    }
-
-    //move the piece right or left
-    if (right > 0) {
-        for(int i=0; i < right; i++)
-            b = BitBoard::oneEast(b);
-    } else if( right < 0){
-        for(int i=0; i < -right; i++)
-            b = BitBoard::oneWest(b);
-    }
+    if(up > 0)  b <<= up * 8;
+    if(up < 0)  b >>= (-up) * 8;
+    for(int i=0; i < right; i++) b = BitBoard::oneEast(b);
+    for(int i=0; i < -right; i++) b = BitBoard::oneWest(b);
     return b;
 }
 
@@ -113,13 +101,12 @@ bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color c
 
 bool MoveGenerator::isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats)
 {
-    //TODO: measure the isBitmaskUnderAttack algorithm
-
     //reverse check if KING piece is not attacked by any other
     const Color opponentColor = board.nextMove == Black ? White : Black;
 
     //check if my king is not under check by opponent pieces
     const bitmask king = board.pieces[opponentColor][King];
+
     if(!king) return false;
     int kingIndex = BitBoard::bitScan(king);
 
@@ -129,23 +116,17 @@ bool MoveGenerator::isOpponentsKingNotUnderCheck(const ChessBoard &board, const 
     if (pieces[Knight] & generatorKnight.KNIGHT_MOVES[kingIndex])              return false;
     if (pieces[King]   & generatorKing.KING_MOVES[kingIndex])                  return false;
 
-    const bitmask rooks   = pieces[Queen] | pieces[Rook];
-    if(rooks) {
-
-        if (generatorRook.MOVE_RANK_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorRook.MOVE_RANK_MASK[kingIndex]) >> generatorRook.MOVE_RANK_SHIFT[kingIndex]))] & rooks)
-            return false;
-        if (generatorRook.MOVE_FILE_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorRook.MOVE_FILE_MASK[kingIndex]) * generatorRook.MOVE_FILE_MAGIC[kingIndex]) >> 57)] & rooks)
-            return false;
-    }
+    const bitmask rooks = pieces[Queen] | pieces[Rook];
+    if (generatorRook.MOVE_RANK_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorRook.MOVE_RANK_MASK[kingIndex]) >> generatorRook.MOVE_RANK_SHIFT[kingIndex]))] & rooks)
+        return false;
+    if (generatorRook.MOVE_FILE_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorRook.MOVE_FILE_MASK[kingIndex]) * generatorRook.MOVE_FILE_MAGIC[kingIndex]) >> 57)] & rooks)
+        return false;
 
     const bitmask bishops = pieces[Queen] | pieces[Bishop];
-    if(bishops) {
-
-        if (generatorBishop.MOVE_A8H1_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorBishop.MOVE_A8H1_MASK[kingIndex]) * generatorBishop.MOVE_A8H1_MAGIC[kingIndex]) >> 57)] & bishops)
-            return false;
-        if (generatorBishop.MOVE_A1H8_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorBishop.MOVE_A1H8_MASK[kingIndex]) * generatorBishop.MOVE_A1H8_MAGIC[kingIndex]) >> 57)] & bishops)
-            return false;
-    }
+    if (generatorBishop.MOVE_A8H1_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorBishop.MOVE_A8H1_MASK[kingIndex]) * generatorBishop.MOVE_A8H1_MAGIC[kingIndex]) >> 57)] & bishops)
+        return false;
+    if (generatorBishop.MOVE_A1H8_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorBishop.MOVE_A1H8_MASK[kingIndex]) * generatorBishop.MOVE_A1H8_MAGIC[kingIndex]) >> 57)] & bishops)
+        return false;
 
     return true;
 }

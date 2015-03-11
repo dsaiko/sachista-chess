@@ -380,6 +380,8 @@ TEST(BitBoardTest, TestBitScan)
     i = BitBoard::bitPop(b);
     CHECK((int)BoardIndex::A1 == i);
     CHECK( BitMask::H1 == b);
+
+    CHECK(BitBoard::popCount(0) == 0)
 }
 
 

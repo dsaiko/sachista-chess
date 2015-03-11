@@ -47,7 +47,7 @@ namespace BitMask {
     const   bitmask     FILE[8]   = {72340172838076673ULL, 144680345676153346ULL, 289360691352306692ULL, 578721382704613384ULL, 1157442765409226768ULL, 2314885530818453536ULL, 4629771061636907072ULL, 9259542123273814144ULL};
     const   bitmask     A1H8[15]  = {72057594037927936ULL, 144396663052566528ULL, 288794425616760832ULL, 577588855528488960ULL, 1155177711073755136ULL, 2310355422147575808ULL, 4620710844295151872ULL, 9241421688590303745ULL, 36099303471055874ULL, 141012904183812ULL, 550831656968ULL, 2151686160ULL, 8405024ULL, 32832ULL, 128ULL};
     const   bitmask     A8H1[15]  = {1ULL, 258ULL, 66052ULL, 16909320ULL, 4328785936ULL, 1108169199648ULL, 283691315109952ULL, 72624976668147840ULL, 145249953336295424ULL, 290499906672525312ULL, 580999813328273408ULL, 1161999622361579520ULL, 2323998145211531264ULL, 4647714815446351872ULL, 9223372036854775808ULL};
-};
+}
 
 namespace BoardIndex {
     const int A1 = 0;    const int B1 = 1;    const int C1 = 2;    const int D1 = 3;    const int E1 = 4;    const int F1 = 5;    const int G1 = 6;    const int H1 = 7;
@@ -58,16 +58,16 @@ namespace BoardIndex {
     const int A6 = 40;   const int B6 = 41;   const int C6 = 42;   const int D6 = 43;   const int E6 = 44;   const int F6 = 45;   const int G6 = 46;   const int H6 = 47;
     const int A7 = 48;   const int B7 = 49;   const int C7 = 50;   const int D7 = 51;   const int E7 = 52;   const int F7 = 53;   const int G7 = 54;   const int H7 = 55;
     const int A8 = 56;   const int B8 = 57;   const int C8 = 58;   const int D8 = 59;   const int E8 = 60;   const int F8 = 61;   const int G8 = 62;   const int H8 = 63;
-};
+}
 
 namespace BitBoard {
-    inline  bitmask     oneEast             (const bitmask b)                   { return ((b << 1) & (bitmask) BitMask::NOT_FILE_A); }
-    inline  bitmask     oneNorthEast        (const bitmask b)                   { return ((b << 9) & (bitmask) BitMask::NOT_FILE_A); }
-    inline  bitmask     oneSouthEast        (const bitmask b)                   { return ((b >> 7) & (bitmask) BitMask::NOT_FILE_A); }
+    inline  bitmask     oneEast             (const bitmask b)                   { return ((b << 1) & BitMask::NOT_FILE_A); }
+    inline  bitmask     oneNorthEast        (const bitmask b)                   { return ((b << 9) & BitMask::NOT_FILE_A); }
+    inline  bitmask     oneSouthEast        (const bitmask b)                   { return ((b >> 7) & BitMask::NOT_FILE_A); }
 
-    inline  bitmask     oneWest             (const bitmask b)                   { return ((b >> 1) & (bitmask) BitMask::NOT_FILE_H); }
-    inline  bitmask     oneSouthWest        (const bitmask b)                   { return ((b >> 9) & (bitmask) BitMask::NOT_FILE_H); }
-    inline  bitmask     oneNorthWest        (const bitmask b)                   { return ((b << 7) & (bitmask) BitMask::NOT_FILE_H); }
+    inline  bitmask     oneWest             (const bitmask b)                   { return ((b >> 1) & BitMask::NOT_FILE_H); }
+    inline  bitmask     oneSouthWest        (const bitmask b)                   { return ((b >> 9) & BitMask::NOT_FILE_H); }
+    inline  bitmask     oneNorthWest        (const bitmask b)                   { return ((b << 7) & BitMask::NOT_FILE_H); }
 
     inline  bitmask     oneNorth            (const bitmask b)                   { return (b << 8); }
     inline  bitmask     oneSouth            (const bitmask b)                   { return (b >> 8); }
@@ -148,4 +148,4 @@ namespace BitBoard {
         return (int) b & 255;
     #endif
     }
-};
+}

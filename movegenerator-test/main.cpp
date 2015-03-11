@@ -18,7 +18,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include <iostream>
 #include "version.h"
-
+#include "bitboard.h"
 
 int main(int argc, char** args) {
 
