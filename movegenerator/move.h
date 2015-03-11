@@ -25,11 +25,6 @@
 class Move {
 public:
 
-    Move();
-    Move(const Move& other);
-    Move(Piece piece, int fromIndex, int toIndex, bool isCapture);
-    Move(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnpassant, bool isShortCastling, bool isLongCastling, Piece promotionPiece);
-
     Piece   piece;
     Piece   promotionPiece;
 

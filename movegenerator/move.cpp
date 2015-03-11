@@ -28,59 +28,6 @@ const MoveGeneratorKing      MoveGenerator::generatorKing;
 const MoveGeneratorRook      MoveGenerator::generatorRook;
 const MoveGeneratorBishop    MoveGenerator::generatorBishop;
 
-
-Move::Move()
-:   piece(Piece::NoPiece),
-    promotionPiece(Piece::NoPiece),
-    sourceIndex(-1),
-    targetIndex(-1),
-    isCapture(false),
-    isEnPassant(false),
-    isShortCastling(false),
-    isLongCastling(false)
-{
-}
-
-Move::Move (const Move& other)
-:   piece(other.piece),
-    promotionPiece(other.promotionPiece),
-    sourceIndex(other.sourceIndex),
-    targetIndex(other.targetIndex),
-    isCapture(other.isCapture),
-    isEnPassant(other.isEnPassant),
-    isShortCastling(other.isShortCastling),
-    isLongCastling(other.isLongCastling)
-{
-
-}
-
-Move::Move(Piece piece, int fromIndex, int toIndex, bool isCapture)
-:   piece(piece),
-    promotionPiece(Piece::NoPiece),
-    sourceIndex(fromIndex),
-    targetIndex(toIndex),
-    isCapture(isCapture),
-    isEnPassant(false),
-    isShortCastling(false),
-    isLongCastling(false)
-{
-
-}
-
-Move::Move(Piece piece, int fromIndex, int toIndex, bool isCapture, bool isEnPassant, bool isShortCastling, bool isLongCastling, Piece promotionPiece)
-:   piece(piece),
-    promotionPiece(promotionPiece),
-    sourceIndex(fromIndex),
-    targetIndex(toIndex),
-    isCapture(isCapture),
-    isEnPassant(isEnPassant),
-    isShortCastling(isShortCastling),
-    isLongCastling(isLongCastling)
-{
-
-}
-
-
 std::string Move::toString() const {
     std::stringstream move;
 

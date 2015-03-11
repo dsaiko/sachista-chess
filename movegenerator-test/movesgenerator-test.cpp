@@ -80,9 +80,11 @@ TEST(MovesGenerator, BasicTest)
 }
 
 TEST(MovesGenerator, TestPiecePromotion) {
-    Move m(Pawn, BoardIndex::A1, BoardIndex::H8, false, false, false, false, King);
+    MoveArray m;
+    m.setNext(Pawn, BoardIndex::A1, BoardIndex::H8, false, false, false, false, King);
 
-    CHECK("a1h8k" == m.toString());
+    CHECK("a1h8k" == m.first().toString());
+    CHECK(m.size() == 1);
 }
 
 TEST(MovesGenerator, PerfT)

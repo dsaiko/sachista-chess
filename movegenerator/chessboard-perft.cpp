@@ -38,35 +38,26 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
     //TODO: multi thread
     //TODO: cache
 
-    //compute directly
-    if(depth < 1) return 1;
-
     uint64_t count = 0;
 
     MoveArray moves;
     MoveGenerator::moves(board, stats, moves);
 
-
     for(int i=0; i < moves.size(); i++) {
-        Move &move = moves.data[i];
-
-        //TODO: try to move out of the loop
         ChessBoard nextBoard = board;
-        move.applyTo(nextBoard);
+        moves.data[i].applyTo(nextBoard);
 
         ChessBoardStats nextStats(nextBoard);
-
         if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
             count += (depth == 1) ? 1 : minimax(nextBoard, depth -1, nextStats);
         }
     }
-
     return count;
 }
 
 uint64_t ChessBoard::perft(int depth) const
 {
-    if(depth < 1) return 1;
+    if(depth < 1) return 0;
     return minimax(*this, depth, ChessBoardStats(*this));
 }
 
