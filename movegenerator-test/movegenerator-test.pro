@@ -26,7 +26,7 @@ win32-g++:CONFIG(release, debug|release): LIBS += -lCppUTest -lCppUTestExt
 else:win32-g++:CONFIG(debug, debug|release): LIBS += -lCppUTest -lCppUTestExt
 else:win32:!win32-g++:CONFIG(release, debug|release): LIBS += -lCppUTest -lCppUTestExt
 else:win32:!win32-g++:CONFIG(debug, debug|release): LIBS += -lCppUTestd -lCppUTestExtd
-else:unix: PRE_TARGETDEPS += LIBS += -lCppUTest -lCppUTestExt
+else:unix: LIBS += -lCppUTest -lCppUTestExt
 
 win32:!win32-g++: LIBS += -lwinmm
 
