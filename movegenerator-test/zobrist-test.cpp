@@ -30,6 +30,7 @@ TEST_GROUP(ZobristTest)
 TEST(ZobristTest, TestZobrist)
 {
   ChessBoard board;
+  board.clearBoard();
 
   Zobrist zobrist;
   CHECK(zobrist.getKey(board) == 0);

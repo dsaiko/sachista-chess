@@ -26,7 +26,9 @@ TEST_GROUP(ChessBoardTest)
 TEST(ChessBoardTest, TestAssignments)
 {
     ChessBoard board1;
+    board1.clearBoard();
     ChessBoard board2;
+    board2.clearBoard();
 
     CHECK(board1 == board2);
 

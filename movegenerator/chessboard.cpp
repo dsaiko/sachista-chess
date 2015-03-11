@@ -22,14 +22,7 @@
 const Zobrist ChessBoard::zobrist;
 const std::string ChessBoard::STANDARD_BOARD_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-ChessBoard::ChessBoard():
-    nextMove(White),
-    castling{},
-    pieces{},
-    halfMoveClock(0),
-    fullMoveNumber(1),
-    enPassantTargetIndex(0),
-    zobristKey(0)
+ChessBoard::ChessBoard()
 {
     //TODO: Do we need reseting the object in constructor?
 }
