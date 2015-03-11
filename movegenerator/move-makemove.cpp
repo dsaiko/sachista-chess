@@ -42,15 +42,14 @@ void Move::applyTo(ChessBoard &board) const
     if(board.castling[Black])
         board.zobristKey ^= ChessBoard::zobrist.Z_CASTLING[Black][board.castling[Black]];
 
-
     if(piece ==  Knight) {
-        pieces[ Knight] ^= source | target;
+        pieces[Knight] ^= source | target;
         board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
     } else if(piece ==  Bishop) {
         pieces[ Bishop] ^= source | target;
         board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
     } else if(piece ==  Rook) {
-        pieces[ Rook] ^= source | target;
+        pieces[Rook] ^= source | target;
         board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][sourceIndex] ^ ChessBoard::zobrist.Z_PIECES[board.nextMove][piece][targetIndex];
         if(board.castling[board.nextMove]) {
             if(sourceIndex == BoardIndex::A1 && board.nextMove == White)
