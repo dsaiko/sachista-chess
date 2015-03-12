@@ -15,7 +15,6 @@ CONFIG -= qt
 
 
 SOURCES = \
-chessboard-stats.cpp \
 utility.cpp \
 move.cpp \
 move-bishop.cpp \

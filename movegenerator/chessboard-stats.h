@@ -17,16 +17,23 @@
 */
 
 #include "bitboard.h"
+#include "chessboard.h"
 
-class ChessBoard;
 
 class ChessBoardStats
 {
 public:
 
-    ChessBoardStats(const ChessBoard &board);
+    ChessBoardStats(const ChessBoard &board) {
+        allPieces = board.allPieces();
+        opponentPieces = board.nextMove == White ? board.blackPieces() : board.whitePieces();
+        boardAvaliable = board.nextMove == White ? ~board.whitePieces() : ~board.blackPieces();
+        opponentColor = board.nextMove == White ? Black : White;
+    }
 
-    const bitmask allPieces;
-    const bitmask opponentPieces;
-    const bitmask boardAvaliable; //empty or opponent
+    bitmask allPieces;
+    bitmask opponentPieces;
+    bitmask boardAvaliable; //empty or opponent
+    int kingIndex;
+    int opponentColor;
 };
