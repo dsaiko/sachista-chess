@@ -131,7 +131,7 @@ namespace BitBoard {
             __asm__("popcnt %1, %0" : "=r" (b) : "r" (b));
             return (int) b;
     #elif defined(_MSC_VER) && defined(_M_X64)
-        return _mm_popcnt_u64(b);
+        return (int) _mm_popcnt_u64(b);
     #else
         //source: http://chessprogramming.wikispaces.com/Population+Count
         static const uint64_t k1 = 0x5555555555555555ULL; /*  -1/3   */

@@ -31,7 +31,7 @@ void testMoves(const int expectedCount,  const ChessBoard &board)
     LONGS_EQUAL(expectedCount, moves.size());
 }
 
-void testMovesFromString(const uint64_t expectedCount, std::string board)
+void testMovesFromString(const int expectedCount, std::string board)
 {
     ChessBoard b;
     b.setupString(board);
@@ -42,6 +42,8 @@ void testLegalMoves(const int expectedCount, const ChessBoard &board)
 {
     uint64_t count = board.perft(1);
     if((int)count != expectedCount) {
+        std::cout << "---------- BOARD:" << std::endl << board.toString() << std::endl;
+
         MoveArray moves;
         MoveGenerator::moves(board, ChessBoardStats(board), moves);
         for(int i=0; i<moves.size(); i++) {
@@ -50,7 +52,7 @@ void testLegalMoves(const int expectedCount, const ChessBoard &board)
             ChessBoard b = board;
             m.applyTo(b);
             if(MoveGenerator::isOpponentsKingNotUnderCheck(b, ChessBoardStats(b))) {
-                std::cout << "---------- VALID BOARD:" << std::endl << b.toString() << std::endl;
+                std::cout << "---------- VALID MOVE:" << std::endl << b.toString() << std::endl;
             }
         }
 
@@ -58,7 +60,7 @@ void testLegalMoves(const int expectedCount, const ChessBoard &board)
     }
 }
 
-void testLegalMovesFromString(const uint64_t expectedCount, std::string board)
+void testLegalMovesFromString(const int expectedCount, std::string board)
 {
     ChessBoard b;
     b.setupString(board);

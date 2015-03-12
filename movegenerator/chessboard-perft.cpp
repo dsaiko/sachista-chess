@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <vector>
+#include <iostream>
 
 #include "chessboard.h"
 #include "zobrist.h"
@@ -43,13 +44,38 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
     MoveArray moves;
     MoveGenerator::moves(board, stats, moves);
 
-    for(int i=0; i < moves.size(); i++) {
-        ChessBoard nextBoard = board;
-        moves.data[i].applyTo(nextBoard);
+    //maybepins - that include king itself
+    bitmask attacks = MoveGenerator::attacks(board, stats.opponentColor, stats);
 
-        ChessBoardStats nextStats(nextBoard);
-        if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
-            count += (depth == 1) ? 1 : minimax(nextBoard, depth -1, nextStats);
+    for(int i=0; i < moves.size(); i++) {
+        Move &move = moves.data[i];
+        bitmask piece = BitBoard::squareBitmask(move.sourceIndex);
+
+        if(depth == 1) {
+            //we only need to validate the board in following cases
+            if((piece & stats.king) || (attacks & stats.king) || (piece & attacks) || move.isEnPassant) {
+                ChessBoard nextBoard = board;
+                move.applyTo(nextBoard);
+
+                ChessBoardStats nextStats(nextBoard);
+                if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
+                    count += 1;
+                }
+            } else {
+                count += 1;
+            }
+        } else {
+            ChessBoard nextBoard = board;
+            move.applyTo(nextBoard);
+
+            ChessBoardStats nextStats(nextBoard);
+            if((piece & stats.king) || (attacks & stats.king) || (piece & attacks) || move.isEnPassant) {
+                if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
+                    count += minimax(nextBoard, depth -1, nextStats);
+                }
+            } else {
+                count += minimax(nextBoard, depth -1, nextStats);
+            }
         }
     }
     return count;

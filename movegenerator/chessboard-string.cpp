@@ -21,7 +21,7 @@
 
 #include "chessboard.h"
 
-std::string ChessBoard::toString() {
+std::string ChessBoard::toString() const {
     const std::string header = "  a b c d e f g h\n";
     std::string buffer;
 

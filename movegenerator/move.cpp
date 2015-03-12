@@ -60,7 +60,7 @@ bitmask MoveGenerator::shiftBitMask(bitmask b, int up, int right) {
     return b;
 }
 
-inline bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats)
+bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats)
 {
     return
             generatorPawn.generateAttacks(board, color)             |

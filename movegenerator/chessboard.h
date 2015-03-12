@@ -70,7 +70,7 @@ public:
 
 
             void            clearBoard();
-            std::string     toString();
+            std::string     toString() const;
             void            setupString(const std::string &str);
             std::string     toFEN();
             void            setupFEN(const std::string &fen);

@@ -29,11 +29,14 @@ public:
         opponentPieces = board.nextMove == White ? board.blackPieces() : board.whitePieces();
         boardAvaliable = board.nextMove == White ? ~board.whitePieces() : ~board.blackPieces();
         opponentColor = board.nextMove == White ? Black : White;
+        king = board.pieces[board.nextMove][King];
+        kingIndex = BitBoard::bitScan(king);
     }
 
     bitmask allPieces;
     bitmask opponentPieces;
     bitmask boardAvaliable; //empty or opponent
+    Color opponentColor;
+    bitmask king;
     int kingIndex;
-    int opponentColor;
 };

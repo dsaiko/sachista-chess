@@ -32,8 +32,8 @@ void ChessBoard::setupFEN(const std::string &fen_)
 
     std::string fen = Utility::simplified(fen_);
 
-    int pos = 0;
-    const int len = fen.length();
+    size_t pos = 0;
+    const size_t len = fen.length();
 
     while(pos < len) {
         const char c = fen[pos];

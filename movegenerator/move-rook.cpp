@@ -178,7 +178,7 @@ void MoveGeneratorRook::generateMoves(const ChessBoard &board, const ChessBoardS
             //for all moves
             while (movesBoard) {
                 int toIndex = BitBoard::bitPop(movesBoard);
-                bool isCapture = BitBoard::squareBitmask(toIndex) & stats.opponentPieces;
+                bool isCapture = 0 != (BitBoard::squareBitmask(toIndex) & stats.opponentPieces);
                 moves.setNext(movingPiece, fromIndex, toIndex, isCapture);
             }
         }
