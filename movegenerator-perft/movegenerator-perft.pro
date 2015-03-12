@@ -8,6 +8,11 @@ CONFIG -= qt
     QMAKE_CXXFLAGS += -std=c++11
 }
 
+*-clang {
+    QMAKE_CXXFLAGS += -std=c++11
+}
+
+
 SOURCES = main.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../movegenerator/release/ -lmovegenerator

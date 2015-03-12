@@ -9,6 +9,11 @@ CONFIG -= qt
     QMAKE_CXXFLAGS += -std=c++11
 }
 
+*-clang {
+    QMAKE_CXXFLAGS += -std=c++11
+}
+
+
 SOURCES = \
 chessboard-stats.cpp \
 utility.cpp \
