@@ -57,7 +57,7 @@ uint64_t Zobrist::getKey(const ChessBoard &board) const {
         zobristKey ^= Z_ENPASSANT[board.enPassantTargetIndex];
 
     for(int color = 0; color <= 1; color ++) {
-        for(int piece = 1; piece <= 6; piece ++) {
+        for(int piece = 0; piece < 6; piece ++) {
             bitmask pieces = board.pieces[color][piece];
             while(pieces) zobristKey ^= Z_PIECES[color][piece][BitBoard::bitPop(pieces)];
         }

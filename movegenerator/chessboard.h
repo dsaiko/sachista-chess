@@ -30,13 +30,13 @@ enum Castling {
 };
 
 enum Piece {
-    NoPiece     = 0,
-    King        = 1,
-    Queen       = 2,
-    Bishop      = 3,
-    Knight      = 4,
-    Rook        = 5,
-    Pawn        = 6
+    NoPiece     = -1,
+    King        = 0,
+    Queen       = 1,
+    Bishop      = 2,
+    Knight      = 3,
+    Rook        = 4,
+    Pawn        = 5
 };
 
 enum Color {
@@ -52,7 +52,7 @@ public:
 
     Color       nextMove;
     Castling    castling[2];
-    bitmask     pieces[2][7];
+    bitmask     pieces[2][6];
     int         halfMoveClock;
     int         fullMoveNumber;
     int         enPassantTargetIndex;

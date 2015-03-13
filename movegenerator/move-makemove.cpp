@@ -88,7 +88,7 @@ void Move::applyTo(ChessBoard &board) const
         int step = targetIndex - sourceIndex;
         if (abs(step) > 10) {
             board.enPassantTargetIndex = sourceIndex + (board.nextMove == White ? 8 : -8);
-        } else if (promotionPiece) {
+        } else if (promotionPiece != Piece::NoPiece) {
             pieces[Pawn] ^= target;
             board.zobristKey ^= ChessBoard::zobrist.Z_PIECES[board.nextMove][Pawn][targetIndex];
             if (promotionPiece == Queen) {
