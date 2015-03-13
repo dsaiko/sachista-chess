@@ -12,7 +12,6 @@ CONFIG -= qt
     QMAKE_CXXFLAGS += -std=c++11
 }
 
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../movegenerator/release/ -lmovegenerator
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../movegenerator/debug/ -lmovegenerator
 else:unix: LIBS += -L$$OUT_PWD/../movegenerator/ -lmovegenerator

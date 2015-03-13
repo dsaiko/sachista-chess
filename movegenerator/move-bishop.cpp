@@ -17,8 +17,6 @@
 
 #include "move.h"
 #include "movearray.h"
-#include "chessboard-stats.h"
-
 
 const bitmask MAGIC_A8H1[] = {
         0x0ULL,

@@ -16,7 +16,6 @@
 */
 
 #include "move.h"
-#include "chessboard-stats.h"
 #include "movearray.h"
 
 const bitmask MAGIC_FILE[] = {

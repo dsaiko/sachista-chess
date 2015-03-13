@@ -21,7 +21,6 @@
 
 #include "chessboard.h"
 #include "zobrist.h"
-#include "chessboard-stats.h"
 #include "utility.h"
 #include "move.h"
 #include "movearray.h"
@@ -44,8 +43,8 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
     MoveArray moves;
     MoveGenerator::moves(board, stats, moves);
 
-    //maybepins - that include king itself
     bitmask attacks = MoveGenerator::attacks(board, stats.opponentColor, stats);
+    bool    isCheck = 0 != (attacks & stats.king);
 
     for(int i=0; i < moves.size(); i++) {
         Move &move = moves.data[i];
@@ -53,7 +52,7 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
 
         if(depth == 1) {
             //we only need to validate the board in following cases
-            if((piece & stats.king) || (attacks & stats.king) || (piece & attacks) || move.isEnPassant) {
+            if((piece & stats.king) || (isCheck) || (piece & attacks) || move.isEnPassant) {
                 ChessBoard nextBoard = board;
                 move.applyTo(nextBoard);
 
@@ -69,7 +68,7 @@ uint64_t minimax(const ChessBoard &board, const int depth, const ChessBoardStats
             move.applyTo(nextBoard);
 
             ChessBoardStats nextStats(nextBoard);
-            if((piece & stats.king) || (attacks & stats.king) || (piece & attacks) || move.isEnPassant) {
+            if((piece & stats.king) || (isCheck) || (piece & attacks) || move.isEnPassant) {
                 if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
                     count += minimax(nextBoard, depth -1, nextStats);
                 }

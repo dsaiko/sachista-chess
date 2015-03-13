@@ -18,9 +18,6 @@
 
 #include <string>
 #include "chessboard.h"
-#include "chessboard-stats.h"
-
-
 
 class Move {
 public:
@@ -40,6 +37,7 @@ public:
 
 
 class MoveArray;
+class ChessBoardStats;
 
 class MoveGeneratorPawn {
 public:
@@ -131,4 +129,26 @@ public:
 
     static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, bitmask fields);
     static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats);
+};
+
+class ChessBoardStats
+{
+public:
+
+    ChessBoardStats(const ChessBoard &board) {
+        allPieces = board.allPieces();
+        opponentPieces = board.nextMove == White ? board.blackPieces() : board.whitePieces();
+        boardAvaliable = board.nextMove == White ? ~board.whitePieces() : ~board.blackPieces();
+        opponentColor = board.nextMove == White ? Black : White;
+        king = board.pieces[board.nextMove][King];
+        kingIndex = BitBoard::bitScan(king);
+    }
+
+    bitmask allPieces;
+    bitmask opponentPieces;
+    bitmask boardAvaliable; //empty or opponent
+    Color opponentColor;
+    bitmask king;
+    bitmask attacks;
+    int kingIndex;
 };

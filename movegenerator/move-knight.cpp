@@ -16,7 +16,6 @@
 */
 
 #include "move.h"
-#include "chessboard-stats.h"
 #include "movearray.h"
 
 MoveGeneratorKnight::MoveGeneratorKnight() {

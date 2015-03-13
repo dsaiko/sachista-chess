@@ -19,7 +19,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 
 #include "chessboard.h"
-#include "chessboard-stats.h"
+#include "move.h"
 
 
 TEST_GROUP(ChessBoardStats)

@@ -13,7 +13,6 @@ CONFIG -= qt
     QMAKE_CXXFLAGS += -std=c++11
 }
 
-
 SOURCES = \
 utility.cpp \
 move.cpp \
@@ -32,7 +31,6 @@ zobrist.cpp \
 chessboard-fen.cpp
 
 HEADERS = \
-chessboard-stats.h \
 chessboard.h \
 move.h \
 zobrist.h \
