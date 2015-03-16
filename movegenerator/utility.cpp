@@ -137,9 +137,24 @@ uint64_t Utility::getMemorySize()
 #endif /* sysctl and sysconf variants */
 
 #else
-    return 0L;			/* Unknown OS. */
+    #pragma message( "Error - do not know how to get total memory size!" )
 #endif
 }
+
+uint64_t Utility::getAvailMemorySize()
+{
+#if defined(_WIN32)
+    /* Windows. ------------------------------------------------- */
+    /* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx( &status );
+    return (size_t)status.ullAvailPhys;
+#else
+    #pragma message( "Error - do not know how to get available memory size!" )
+#endif
+}
+
 
 StopWatch::StopWatch()
 :

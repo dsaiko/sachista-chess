@@ -23,6 +23,7 @@ namespace Utility {
     //trims the string and replaces all multi spaces (including '\t', '\n', '\v', '\f', '\r', and ' ') by one space
     std::string simplified(const std::string &str);
     uint64_t getMemorySize();
+    uint64_t getAvailMemorySize();
 }
 
 class StopWatch {

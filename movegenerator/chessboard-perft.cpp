@@ -18,12 +18,16 @@
 #include <string.h>
 #include <vector>
 #include <iostream>
+#include <thread>
+#include <atomic>
+#include <new>
 
 #include "chessboard.h"
 #include "zobrist.h"
 #include "utility.h"
 #include "move.h"
 #include "movearray.h"
+
 
 struct CacheEntry {
     uint64_t              hash;
@@ -32,11 +36,25 @@ struct CacheEntry {
 };
 
 struct Cache {
-    const int                       cacheSize;
-    CacheEntry                      *data;
+    int                       cacheSize;
+    CacheEntry                *data;
 
-    Cache(int size): cacheSize(size) {
-        data = new CacheEntry[cacheSize];
+    Cache(int size) {
+
+        cacheSize = size;
+        bool badAlloc = true;
+        while(badAlloc) {
+            badAlloc = false;
+            try
+            {
+                data = new CacheEntry[cacheSize];
+            }
+            catch (std::bad_alloc& )
+            {
+                badAlloc = true;
+                cacheSize = ((cacheSize * 2) / 3);
+            }
+        }
     }
 
     ~Cache() {
@@ -119,7 +137,43 @@ uint64_t ChessBoard::perft(int depth) const
 {
     if(depth < 1) return 0;
 
-    Cache cache(48*1024*1024);
-    return minimax(cache, *this, depth, ChessBoardStats(*this));
+    if(depth == 1) {
+        Cache cache(1024*1024);
+        return minimax(cache, *this, depth, ChessBoardStats(*this));
+    }
+
+    std::vector<std::thread> threads;
+    std::atomic<uint64_t> count(0);
+
+    MoveArray moves;
+    MoveGenerator::moves(*this, ChessBoardStats(*this), moves);
+    int cacheSize = 4*1024*1024;
+    for(int i=0; i<moves.size(); i++) {
+        Move &m = moves.data[i];
+
+        ChessBoard board = *this;
+        m.applyTo(board);
+        if(MoveGenerator::isOpponentsKingNotUnderCheck(board, ChessBoardStats(board))) {
+            threads.push_back(std::thread([board, depth, &count, cacheSize](){
+                Cache cache(cacheSize);
+                count += minimax(cache, board, depth -1, ChessBoardStats(board));
+            }));
+        }
+    }
+
+    //join threads
+    for(auto& thread : threads){
+           thread.join();
+    }
+
+    return count.load();
 }
+
+
+
+
+
+
+
+
 
