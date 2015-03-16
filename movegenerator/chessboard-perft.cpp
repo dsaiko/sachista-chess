@@ -88,7 +88,6 @@ struct Cache {
  */
 uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const ChessBoardStats &stats)
 {
-    //TODO: multi thread
     uint64_t count = cache.get(board.zobristKey, depth);
     if(count) return count;
 
@@ -148,6 +147,10 @@ uint64_t ChessBoard::perft(int depth) const
     MoveArray moves;
     MoveGenerator::moves(*this, ChessBoardStats(*this), moves);
     int cacheSize = 4*1024*1024;
+    if(depth > 7) {
+        cacheSize = 16*1024*1024;
+    }
+
     for(int i=0; i<moves.size(); i++) {
         Move &m = moves.data[i];
 
