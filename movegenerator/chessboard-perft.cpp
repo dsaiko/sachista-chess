@@ -119,7 +119,7 @@ uint64_t ChessBoard::perft(int depth) const
 {
     if(depth < 1) return 0;
 
-    Cache cache(64*1024*1024);
+    Cache cache(48*1024*1024);
     return minimax(cache, *this, depth, ChessBoardStats(*this));
 }
 
