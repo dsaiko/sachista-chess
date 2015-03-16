@@ -47,7 +47,7 @@ int main(int argc, char** args) {
 
     std::cout << "See: http://chessprogramming.wikispaces.com/Perft" << std::endl << std::endl;
 
-    int depth = 6;
+    int depth = 7;
     std::string fen = ChessBoard::STANDARD_BOARD_FEN;
     bool standardBoard = true;
 

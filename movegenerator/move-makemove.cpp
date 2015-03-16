@@ -19,7 +19,6 @@
 #include "chessboard.h"
 #include "move.h"
 
-//TODO: try unMake move
 void Move::applyTo(ChessBoard &board) const
 {
     const bitmask source = BitBoard::squareBitmask(sourceIndex);
