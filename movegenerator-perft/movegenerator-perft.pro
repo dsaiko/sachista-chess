@@ -6,10 +6,12 @@ CONFIG -= qt
 
 *-g++ {
     QMAKE_CXXFLAGS += -std=c++11
+    LIBS += -lpthread
 }
 
 *-clang {
     QMAKE_CXXFLAGS += -std=c++11
+    LIBS += -lpthread
 }
 
 SOURCES = main.cpp

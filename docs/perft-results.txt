@@ -86,3 +86,45 @@ Windows 8.1 x64 MinGW 4.9 x64:
    time : 74 [seconds]
    speed: 1,140,665,605 [/second]   
    
+Linux 3.18.6-1-ARCH x64 GCC:
+   depth: 5
+   count: 4,865,609
+   time : 0 [seconds]
+   speed: 37,142,053 [/second]
+
+   depth: 6
+   count: 119,060,324
+   time : 0 [seconds]
+   speed: 284,153,517 [/second]
+
+   depth: 7
+   count: 3,195,901,860
+   time : 4 [seconds]
+   speed: 744,618,327 [/second]
+
+   depth: 8
+   count: 84,998,978,956
+   time : 68 [seconds]
+   speed: 1,233,513,945 [/second]
+   
+Linux 3.18.6-1-ARCH x64 CLang:   
+   depth: 5
+   count: 4,865,609
+   time : 0 [seconds]
+   speed: 35,776,536 [/second]
+
+   depth: 6
+   count: 119,060,324
+   time : 0 [seconds]
+   speed: 295,435,047 [/second]
+
+   depth: 7
+   count: 3,195,901,860
+   time : 4 [seconds]
+   speed: 762,017,610 [/second]
+
+   depth: 8
+   count: 84,998,978,956
+   time : 66 [seconds]
+   speed: 1,287,551,183 [/second]
+   

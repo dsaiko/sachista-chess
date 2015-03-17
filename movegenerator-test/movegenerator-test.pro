@@ -6,10 +6,12 @@ CONFIG -= qt
 
 *-g++ {
     QMAKE_CXXFLAGS += -std=c++11
+    LIBS += -lpthread
 }
 
 *-clang {
     QMAKE_CXXFLAGS += -std=c++11
+    LIBS += -lpthread
 }
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../movegenerator/release/ -lmovegenerator
