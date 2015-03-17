@@ -16,7 +16,7 @@ uses more functionality from std c++11 library (strings, streams, chrono, collec
 Build system was changed from cmake to qmake (without using any of Qt libs). Reason: better handling of qmake projects inside
 QtCreator (compared to cmake projects), mainly switching the projects target compilers and release / debug versions.
 
-Perft results are quite impressive, see doc/perft-results for details.
+Perft results are quite impressive, see [docs/perft-results.txt](https://github.com/dsaiko/sachista-chess/blob/master/docs/perft-results.txt) for details.
 
 * In short: 
   * 30 000 000 per second with copy/make/validate logic
