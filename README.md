@@ -21,8 +21,8 @@ Perft results are quite impressive, see doc/perft-results for details.
 * In short: 
   * 30 000 000 per second with copy/make/validate logic
   * cca 80 000 000 per second without making end leave move
-  * cca 300 000 000 per second using zobrist hash cache
-  * up to 1 200 000 000 per second adding multi threading
+  * cca 600 000 000 per second using zobrist hash cache
+  * up to 1 200 000 000 per second adding multi threading (on 4 cores)
 
 I was also comparing make/unmake vs copy/make for the chessboard perf test, in contrast to most information at the net,
 I have found copy/make slightly faster.
@@ -34,7 +34,7 @@ I have found copy/make slightly faster.
   * speed: 1,287,551,183 [/second]
 
 
-Vvoilà! :-)
+Voilà! :-)
 
 It was a good excercise to start working again on the engine itself, for now I consider the move generation part to be completed.
 
