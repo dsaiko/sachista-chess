@@ -1,6 +1,43 @@
 sachista-chess
 ==============
 
+2015-03-17: Version 0.2.0 pushed. 
+
+Move generator rewritten from C into C++. Code quality is better, can now be compiled using Microsoft compiler,
+uses more functionality from std c++11 library (strings, streams, chrono, collections ...).
+
+Tested on: 
+MS VC++ 2013 	x86/x64
+MinGW 4.9 	x86/x64
+gcc 4.9 	x32/x64
+CLang 3.6.0 	x32/x64
+
+
+Build system was changed from cmake to qmake (without using any of Qt libs). Reason: better handling of qmake projects inside
+QtCreator (compared to cmake projects), mainly switching the projects target compilers and release / debug versions.
+
+Perft results are quite impressive, see doc/perft-results for details.
+In short: 30 000 000 per second with copy/make/validate logic, cca 80 000 000 per second without making end leave move,
+up to 1 200 000 per second computing perft 8 using multi threading.
+
+I was also comparing make/unmake vs copy/make for the chessboard perf test, in contrast to most information at the net,
+I have found copy/make slightly faster.
+
+Best perft 8 results:
+
+i5-4690s (DDR3 16GB 2100 MHz), Linux 3.18.6-1-ARCH x64 CLang 3.6.0:
+   depth: 8
+   count: 84,998,978,956
+   time : 66 [seconds]
+   speed: 1,287,551,183 [/second]
+
+Vvoilà! :-)
+
+It was a good excercise to start working again on the engine itself, for now I consider the move generation part to be completed.
+
+
+2014: 
+
 Simple and effective chess move generator and possible future chess engine implementation in C
 
 Sachista-chess is a simple and (hopefully) effective implementation of chess move generator.
