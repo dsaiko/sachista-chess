@@ -146,10 +146,16 @@ uint64_t ChessBoard::perft(int depth) const
 
     MoveArray moves;
     MoveGenerator::moves(*this, ChessBoardStats(*this), moves);
+
+    #if defined(__x86_64__) || defined(_M_X64)
     int cacheSize = 4*1024*1024;
     if(depth > 7) {
         cacheSize = 16*1024*1024;
     }
+    #else
+    int cacheSize = 4*1024*1024;
+    #endif
+
 
     for(int i=0; i<moves.size(); i++) {
         Move &m = moves.data[i];

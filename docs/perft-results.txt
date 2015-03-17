@@ -1,0 +1,88 @@
+2015-03-17: i5-4690s DDR3 16GB 2100 MHz
+sachista-chess x86 0.2.0
+
+Windows 8.1 x64 VC++ 2013 x32: 
+   depth: 5
+   count: 4,865,609
+   time : 0 [seconds]
+   speed: 28,453,853 [/second]
+
+   depth: 6
+   count: 119,060,324
+   time : 0 [seconds]
+   speed: 138,603,403 [/second]
+   
+   depth: 7
+   count: 3,195,901,860
+   time : 9 [seconds]
+   speed: 349,050,006 [/second]
+
+   depth: 8
+   count: 84,998,978,956
+   time : 544 [seconds]
+   speed: 156,047,613 [/second]   
+   
+Windows 8.1 x64 VC++ 2013 x64: 
+   depth: 5
+   count: 4,865,609
+   time : 0 [seconds]
+   speed: 34,754,350 [/second]
+
+   depth: 6
+   count: 119,060,324
+   time : 0 [seconds]
+   speed: 190,496,518 [/second]
+
+   depth: 7
+   count: 3,195,901,860
+   time : 4 [seconds]
+   speed: 743,751,887 [/second]
+
+   depth: 8
+   count: 84,998,978,956
+   time : 70 [seconds]
+   speed: 1,202,367,687 [/second]   
+   
+Windows 8.1 x64 MinGW 4.9 x32:   
+   depth: 5
+   count: 4,865,609
+   time : 0 [seconds]
+   speed: 33,788,951 [/second]
+   
+   FEN  : rnbqkbnr/pppppppp/8/8/8/8/P
+   depth: 6
+   count: 119,060,324
+   time : 0 [seconds]
+   speed: 145,018,665 [/second]
+
+   depth: 7
+   count: 3,195,901,860
+   time : 9 [seconds]
+   speed: 321,486,959 [/second]
+
+   depth: 8
+   count: 84,998,978,956
+   time : 242 [seconds]
+   speed: 350,752,802 [/second]
+   
+Windows 8.1 x64 MinGW 4.9 x64:
+   depth: 5
+   count: 4,865,609
+   time : 0 [seconds]
+   speed: 34,507,865 [/second]
+   
+   depth: 6
+   count: 119,060,324
+   time : 0 [seconds]
+   speed: 190,192,210 [/second]
+
+   depth: 7
+   count: 3,195,901,860
+   time : 4 [seconds]
+   speed: 721,259,729 [/second]
+   
+   depth: 8
+   count: 84,998,978,956
+   time : 74 [seconds]
+   speed: 1,140,665,605 [/second]   
+   
