@@ -125,11 +125,9 @@ namespace BitBoard {
         b  &= b - 1;
         return i;
     }
-
     inline  int         popCount            (bitmask b) {
     #if defined(__x86_64__)
-            __asm__("popcnt %1, %0" : "=r" (b) : "r" (b));
-            return (int) b;
+        return __builtin_popcountll(b);
     #elif defined(_MSC_VER) && defined(_M_X64)
         return (int) _mm_popcnt_u64(b);
     #else

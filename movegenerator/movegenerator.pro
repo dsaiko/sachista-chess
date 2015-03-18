@@ -5,15 +5,6 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-*-g++ {
-    QMAKE_CXXFLAGS += -std=c++11
-    LIBS += -lpthread
-}
-
-*-clang {
-    QMAKE_CXXFLAGS += -std=c++11
-    LIBS += -lpthread
-}
 
 SOURCES = \
 utility.cpp \
@@ -41,3 +32,13 @@ bitboard.h \
 rand64.h \
 version.h \
 movearray.h
+
+*-g++ {
+    QMAKE_CXXFLAGS += -std=c++11 -pthread
+    LIBS += -lpthread
+}
+
+*-clang {
+    QMAKE_CXXFLAGS += -std=c++11 -pthread
+    LIBS += -lpthread
+}

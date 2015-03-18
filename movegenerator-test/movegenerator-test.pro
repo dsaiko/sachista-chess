@@ -4,16 +4,6 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-*-g++ {
-    QMAKE_CXXFLAGS += -std=c++11
-    LIBS += -lpthread
-}
-
-*-clang {
-    QMAKE_CXXFLAGS += -std=c++11
-    LIBS += -lpthread
-}
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../movegenerator/release/ -lmovegenerator
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../movegenerator/debug/ -lmovegenerator
 else:unix: LIBS += -L$$OUT_PWD/../movegenerator/ -lmovegenerator
@@ -54,3 +44,13 @@ random64-test.cpp
 
 HEADERS=movesgenerator-test.h
 
+
+*-g++ {
+    QMAKE_CXXFLAGS += -std=c++11 -pthread
+    LIBS += -lpthread
+}
+
+*-clang {
+    QMAKE_CXXFLAGS += -std=c++11 -pthread
+    LIBS += -lpthread
+}

@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define IMPLEMENTATION_VERSION  "0.2.1-SNAPSHOT"
+#define IMPLEMENTATION_VERSION  "0.2.1"
 #define IMPLEMENTATION_DATE     __DATE__ " " __TIME__
 
 
