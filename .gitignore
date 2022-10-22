@@ -1,6 +1,10 @@
 CMakeLists.txt.user
-BUILD-RELEASE
-BUILD-DEBUG
+build-release
+build-debug
+cmake-build-debug
+cmake-build-release
+/movegenerator-perft
+/movegenerator-tests
 .idea
 bin
 *.pro.user

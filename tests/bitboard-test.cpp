@@ -381,7 +381,7 @@ TEST(BitBoardTest, TestBitScan)
     CHECK((int)BoardIndex::A1 == i);
     CHECK( BitMask::H1 == b);
 
-    CHECK(BitBoard::popCount(0) == 0)
+    CHECK(BitBoard::popCount(0) == 0);
 }
 
 

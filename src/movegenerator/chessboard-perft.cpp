@@ -156,7 +156,6 @@ uint64_t ChessBoard::perft(int depth) const
     int cacheSize = 4*1024*1024;
     #endif
 
-
     for(int i=0; i<moves.size(); i++) {
         Move &m = moves.data[i];
 
