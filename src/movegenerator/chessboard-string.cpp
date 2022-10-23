@@ -17,7 +17,6 @@
 
 #include <string>
 #include <regex>
-#include <iostream>
 
 #include "chessboard.h"
 
@@ -44,11 +43,11 @@ std::string ChessBoard::toString() const {
     for (int i = 0; i < 64; i++) {
         if ((i % 8) == 0) {
             if (i > 0) {
-                buffer += '0' + 9 - (i / 8);
+                buffer += (char)('0' + 9 - (i / 8));
                 buffer += '\n';
             }
 
-            buffer += '0' + 8 - (i / 8);
+            buffer += (char)('0' + 8 - (i / 8));
             buffer += ' ';
         }
 
@@ -104,6 +103,8 @@ void ChessBoard::setupString(const std::string &str) {
                 break;
             case '-':
                 fen += '1';
+                break;
+            default:
                 break;
         }
     }

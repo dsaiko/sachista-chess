@@ -31,23 +31,21 @@ public:
     bool    isCapture;
     bool    isEnPassant;
 
-    void            applyTo(ChessBoard &board) const;
+    ChessBoard      applyToBoard(ChessBoard board) const;
     std::string     toString() const;
 };
 
 
 class MoveArray;
-class ChessBoardStats;
 
 class MoveGeneratorPawn {
 public:
     MoveGeneratorPawn();
 
-    bitmask  generateAttacks(const ChessBoard &board, const Color color) const;
-    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
+    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
     bitmask PAWN_MOVES[2][64];
-    bitmask PAWN_DOUBLE_MOVES[2][64];
     bitmask PAWN_ATTACKS[2][64];
 };
 
@@ -56,8 +54,8 @@ class MoveGeneratorKnight {
 public:
     MoveGeneratorKnight();
 
-    bitmask  generateAttacks(const ChessBoard &board, const Color color) const;
-    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
+    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
     bitmask KNIGHT_MOVES[64];
 };
@@ -67,8 +65,8 @@ class MoveGeneratorKing {
 public:
     MoveGeneratorKing();
 
-    bitmask  generateAttacks(const ChessBoard &board, const Color color) const;
-    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
+    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
     bitmask KING_MOVES[64];
 };
@@ -77,8 +75,8 @@ class MoveGeneratorBishop {
 public:
     MoveGeneratorBishop();
 
-    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
+    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
 
     int A1H8_INDEX[64];
@@ -92,7 +90,7 @@ public:
     bitmask MOVE_A1H8_ATTACKS[64][64];
     bitmask MOVE_A8H1_ATTACKS[64][64];
 
-    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces)const ;
+    bitmask onePieceAttacks(int sourceIndex, bitmask allPieces)const ;
 
 };
 
@@ -100,10 +98,10 @@ class MoveGeneratorRook {
 public:
     MoveGeneratorRook();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const;
-    virtual    void generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const;
+    virtual    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    virtual    void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
-    bitmask onePieceAttacks(const int sourceIndex, const bitmask allPieces) const;
+    bitmask onePieceAttacks(int sourceIndex, bitmask allPieces) const;
 
     int     MOVE_RANK_SHIFT[64];
     bitmask MOVE_RANK_MASK[64];
@@ -115,8 +113,8 @@ public:
 
 class MoveGenerator {
 public:
-    static bitmask  attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats);
-    static void     moves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves);
+    static bitmask  attacks(const ChessBoard &board, Color color);
+    static void     moves(const ChessBoard &board, MoveArray &moves);
 
     static bitmask shiftBitMask(bitmask b, int up, int right);
 
@@ -127,28 +125,6 @@ public:
     static const MoveGeneratorBishop    generatorBishop;
 
 
-    static bool    isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, bitmask fields);
-    static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats);
-};
-
-class ChessBoardStats
-{
-public:
-
-    ChessBoardStats(const ChessBoard &board) {
-        allPieces = board.allPieces();
-        opponentPieces = board.nextMove == White ? board.blackPieces() : board.whitePieces();
-        boardAvaliable = board.nextMove == White ? ~board.whitePieces() : ~board.blackPieces();
-        opponentColor = board.nextMove == White ? Black : White;
-        king = board.pieces[board.nextMove][King];
-        kingIndex = BitBoard::bitScan(king);
-    }
-
-    bitmask allPieces;
-    bitmask opponentPieces;
-    bitmask boardAvaliable; //empty or opponent
-    Color opponentColor;
-    bitmask king;
-    bitmask attacks;
-    int kingIndex;
+    static bool    isBitMaskUnderAttack(const ChessBoard &board, Color color, bitmask fields);
+    static bool    isOpponentsKingNotUnderCheck(const ChessBoard &board);
 };

@@ -18,7 +18,6 @@
 #include <string>
 #include <regex>
 #include <iostream>
-#include <sstream>
 
 #include "chessboard.h"
 #include "utility.h"
@@ -32,8 +31,8 @@ void ChessBoard::setupFEN(const std::string &fen_)
 
     std::string fen = Utility::simplified(fen_);
 
-    size_t pos = 0;
-    const size_t len = fen.length();
+    int pos = 0;
+    const int len = (int)fen.length();
 
     while(pos < len) {
         const char c = fen[pos];
@@ -42,7 +41,7 @@ void ChessBoard::setupFEN(const std::string &fen_)
         if(c == '/') {
             //nothing, next group
         } else if (c >= '0' && c <= '9') {
-            const char i = c - '0';
+            const char i = (char)(c - '0');
 
             //output number of empty fields
             for(int color = 0; color <= 1; color ++) {

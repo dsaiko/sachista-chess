@@ -12,7 +12,6 @@ endif()
 set(TEST_APP_NAME movegenerator-tests)
 set(TEST_SOURCES
         bitboard-test.cpp
-        chessboard-stats-test.cpp
         movesgenerator-bishop-test.cpp
         movesgenerator-king-test.cpp
         movesgenerator-knight-test.cpp

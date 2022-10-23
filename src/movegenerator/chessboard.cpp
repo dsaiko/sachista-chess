@@ -16,7 +16,6 @@
 */
 
 #include <string>
-#include <iostream>
 #include "chessboard.h"
 
 const Zobrist ChessBoard::zobrist;
@@ -37,7 +36,7 @@ void ChessBoard::setupStandardBoard() {
     setupFEN(STANDARD_BOARD_FEN);
 }
 
-bool ChessBoard::operator==(const ChessBoard &other)
+bool ChessBoard::operator==(const ChessBoard &other) const
 {
     return this->zobristKey == other.zobristKey;
 }

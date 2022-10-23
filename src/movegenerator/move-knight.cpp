@@ -49,7 +49,7 @@ bitmask MoveGeneratorKnight::generateAttacks(const ChessBoard &board, const Colo
     return attacks;
 }
 
-void MoveGeneratorKnight::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
+void MoveGeneratorKnight::generateMoves(const ChessBoard &board, MoveArray &moves) const
 {
     bitmask knight = board.pieces[board.nextMove][Knight];
 
@@ -58,11 +58,11 @@ void MoveGeneratorKnight::generateMoves(const ChessBoard &board, const ChessBoar
         int fromIndex = BitBoard::bitPop(knight);
 
         // get possible moves - moves minus my onw color
-        bitmask movesBoard = KNIGHT_MOVES[fromIndex] & stats.boardAvaliable;
+        bitmask movesBoard = KNIGHT_MOVES[fromIndex] & board.boardAvaliable();
         // for all moves
         while (movesBoard) {
             int toIndex = BitBoard::bitPop(movesBoard);
-            bool isCapture = (BitBoard::squareBitmask(toIndex) & stats.opponentPieces) != 0;
+            bool isCapture = (BitBoard::squareBitmask(toIndex) & board.opponentPieces()) != 0;
             moves.setNext(Knight, fromIndex, toIndex, isCapture);
         }
     }

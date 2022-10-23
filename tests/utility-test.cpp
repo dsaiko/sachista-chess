@@ -16,23 +16,21 @@
 */
 
 #include <CppUTest/CommandLineTestRunner.h>
-#include <iostream>
 #include "utility.h"
-
 
 TEST_GROUP(UtilityTest) {
 };
 
 TEST(UtilityTest, SimplifiedStringTest) {
-    CHECK(Utility::simplified("") == "");
-    CHECK(Utility::simplified(" ") == "");
-    CHECK(Utility::simplified("\t") == "");
-    CHECK(Utility::simplified("\r") == "");
+    CHECK(Utility::simplified("").empty());
+    CHECK(Utility::simplified(" ").empty());
+    CHECK(Utility::simplified("\t").empty());
+    CHECK(Utility::simplified("\r").empty());
 
     std::string str = R"(
 
             )";
-    CHECK(Utility::simplified(str) == "");
+    CHECK(Utility::simplified(str).empty());
 
     str = R"(
 

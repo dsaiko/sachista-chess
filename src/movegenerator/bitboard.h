@@ -75,14 +75,14 @@ namespace BitBoard {
     inline  int         rankIndex           (const int index)                   { return index / 8; }
     inline  bitmask     squareBitmask       (const int index)                   { return (1ULL << index); }
 
-            bitmask     reverseRanks        (const bitmask b);
-            bitmask     flipDiagA1H8        (const bitmask b);
-            bitmask     mirrorHorizontal    (const bitmask b);
+            bitmask     reverseRanks        (bitmask b);
+            bitmask     flipDiagA1H8        (bitmask b);
+            bitmask     mirrorHorizontal    (bitmask b);
 
             bitmask     bitmaskFromNotation (const std::string &notation);
             int         indexFromNotation   (const std::string &notation);
-            std::string fieldNotation       (const int index);
-            std::string toString            (const bitmask b);
+            std::string fieldNotation       (int index);
+            std::string toString            (bitmask b);
 
     inline  int         bitScan             (bitmask b) {
     #if defined(__x86_64__)

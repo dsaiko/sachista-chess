@@ -25,10 +25,8 @@ MoveGeneratorPawn::MoveGeneratorPawn() {
         bitmask piece = BitBoard::squareBitmask(i);
 
         PAWN_MOVES[White][i]         = MoveGenerator::shiftBitMask(piece, 1, 0);
-        PAWN_DOUBLE_MOVES[White][i]  = MoveGenerator::shiftBitMask(piece, 2, 0);
         PAWN_ATTACKS[White][i]       = MoveGenerator::shiftBitMask(piece, 1, 1) | MoveGenerator::shiftBitMask(piece, 1, -1);
         PAWN_MOVES[Black][i]         = MoveGenerator::shiftBitMask(piece, -1, 0);
-        PAWN_DOUBLE_MOVES[Black][i]  = MoveGenerator::shiftBitMask(piece, -2, 0);
         PAWN_ATTACKS[Black][i]       = MoveGenerator::shiftBitMask(piece, -1, 1) | MoveGenerator::shiftBitMask(piece, -1, -1);
     }
 }
@@ -42,9 +40,9 @@ bitmask MoveGeneratorPawn::generateAttacks(const ChessBoard &board, const Color 
     }
 }
 
-void MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
+void MoveGeneratorPawn::generateMoves(const ChessBoard &board, MoveArray &moves) const
 {
-    const bitmask emptyBoard = ~stats.allPieces;
+    const bitmask emptyBoard = ~board.allPieces();
 
     int whiteBaseRank;
     int blackBaseRank;
@@ -77,7 +75,7 @@ void MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardS
         //one step forward
         bitmask movesBoard = PAWN_MOVES[board.nextMove][sourceIndex] & emptyBoard;
 
-        //if one step forward was successful and we are on base rank, try double move
+        //if one step forward was successful, and we are on base rank, try double move
         if(sourceIndex < whiteBaseRank && movesBoard) {
             movesBoard |=  BitBoard::oneNorth(movesBoard) & emptyBoard;
         } else if(sourceIndex > blackBaseRank && movesBoard) {
@@ -86,13 +84,13 @@ void MoveGeneratorPawn::generateMoves(const ChessBoard &board, const ChessBoardS
 
         //get attacks, only against opponent pieces
         const bitmask attacks = PAWN_ATTACKS[board.nextMove][sourceIndex];
-        movesBoard |=  attacks & stats.opponentPieces;
+        movesBoard |=  attacks & board.opponentPieces();
 
         //for all moves
         while (movesBoard) {
             //get next move
             const int targetIndex = BitBoard::bitPop(movesBoard);
-            bool isCapture = (BitBoard::squareBitmask(targetIndex) & stats.opponentPieces) != 0;
+            bool isCapture = (BitBoard::squareBitmask(targetIndex) & board.opponentPieces()) != 0;
 
             //promotion?
             if (targetIndex > whitePromotionRank || targetIndex < blackPromotionRank) {

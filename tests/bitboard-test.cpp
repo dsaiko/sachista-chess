@@ -15,8 +15,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#include <iostream>
 #include <CppUTest/CommandLineTestRunner.h>
 #include "bitboard.h"
 
@@ -293,7 +291,7 @@ TEST(BitBoardTest, TestFlipDiagA8H1)
     bitmask b1 = BitMask::A1 | BitMask::H1 | BitMask::H8;
     bitmask b2 = BitMask::A1 | BitMask::A8 | BitMask::H8;
 
-    CHECK(b2 = BitBoard::flipDiagA1H8(b1));
+    CHECK(b2 == BitBoard::flipDiagA1H8(b1));
 }
 
 

@@ -15,19 +15,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string.h>
 #include <vector>
-#include <iostream>
 #include <thread>
 #include <atomic>
 #include <new>
+#include <functional>
 
 #include "chessboard.h"
 #include "zobrist.h"
-#include "utility.h"
 #include "move.h"
 #include "movearray.h"
-
 
 struct CacheEntry {
     uint64_t              hash;
@@ -39,7 +36,7 @@ struct Cache {
     int                       cacheSize;
     CacheEntry                *data;
 
-    Cache(int size) {
+    explicit Cache(int size) {
 
         cacheSize = size;
         bool badAlloc = true;
@@ -61,7 +58,7 @@ struct Cache {
         delete[] data;
     }
 
-    uint64_t get(const uint64_t &hash, int depth) {
+    [[nodiscard]] uint64_t get(const uint64_t hash, int depth) const {
         CacheEntry *entry = (data + ((cacheSize - 1) & hash));
 
         if(entry->hash == hash && entry->depth == depth) {
@@ -70,7 +67,7 @@ struct Cache {
         return 0;
     }
 
-    void set(uint64_t hash, int depth, uint64_t count) {
+    void set(uint64_t hash, int depth, uint64_t count) const {
         CacheEntry *entry = (data + ((cacheSize - 1) & hash));
         entry->hash = hash;
         entry->depth = depth;
@@ -86,45 +83,32 @@ struct Cache {
  * @param cache Shared cache, needs OMP synchronization
  * @return number of legal moves
  */
-uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const ChessBoardStats &stats)
+uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth)
 {
     uint64_t count = cache.get(board.zobristKey, depth);
     if(count) return count;
 
-    MoveArray moves;
-    MoveGenerator::moves(board, stats, moves);
+    bitmask attacks = MoveGenerator::attacks(board, board.opponentColor());
+    bool    isCheck = 0 != (attacks & board.king());
 
-    bitmask attacks = MoveGenerator::attacks(board, stats.opponentColor, stats);
-    bool    isCheck = 0 != (attacks & stats.king);
+    MoveArray moves;
+    MoveGenerator::moves(board, moves);
 
     for(int i=0; i < moves.size(); i++) {
         Move &move = moves.data[i];
-        bitmask piece = BitBoard::squareBitmask(move.sourceIndex);
+        bitmask sourceBitBoard = BitBoard::squareBitmask(move.sourceIndex);
+
+        // need to validate legality of move only in following cases
+        bool needToValidate = move.piece == King || isCheck || (sourceBitBoard & attacks) || move.isEnPassant;
 
         if(depth == 1) {
-            //we only need to validate the board in following cases
-            if((piece & stats.king) || (isCheck) || (piece & attacks) || move.isEnPassant) {
-                ChessBoard nextBoard = board;
-                move.applyTo(nextBoard);
-
-                ChessBoardStats nextStats(nextBoard);
-                if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
-                    count += 1;
-                }
-            } else {
-                count += 1;
+            if(!needToValidate || MoveGenerator::isOpponentsKingNotUnderCheck(move.applyToBoard(board))) {
+                count ++;
             }
         } else {
-            ChessBoard nextBoard = board;
-            move.applyTo(nextBoard);
-
-            ChessBoardStats nextStats(nextBoard);
-            if((piece & stats.king) || (isCheck) || (piece & attacks) || move.isEnPassant) {
-                if(MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard, nextStats)) {
-                    count += minimax(cache, nextBoard, depth -1, nextStats);
-                }
-            } else {
-                count += minimax(cache, nextBoard, depth -1, nextStats);
+            ChessBoard nextBoard = move.applyToBoard(board);
+            if(!needToValidate || MoveGenerator::isOpponentsKingNotUnderCheck(nextBoard)) {
+                count += minimax(cache, nextBoard, depth -1);
             }
         }
     }
@@ -132,40 +116,32 @@ uint64_t minimax(Cache &cache, const ChessBoard &board, const int depth, const C
     return count;
 }
 
+const int CACHE_SIZE = 4*1024*1024;
+
 uint64_t ChessBoard::perft(int depth) const
 {
-    if(depth < 1) return 0;
+    if(depth < 1) return 1;
 
     if(depth == 1) {
-        Cache cache(1024*1024);
-        return minimax(cache, *this, depth, ChessBoardStats(*this));
+        Cache cache(1024);
+        return minimax(cache, *this, depth);
     }
 
     std::vector<std::thread> threads;
     std::atomic<uint64_t> count(0);
 
     MoveArray moves;
-    MoveGenerator::moves(*this, ChessBoardStats(*this), moves);
-
-    #if defined(__x86_64__) || defined(_M_X64)
-    int cacheSize = 4*1024*1024;
-    if(depth > 7) {
-        cacheSize = 16*1024*1024;
-    }
-    #else
-    int cacheSize = 4*1024*1024;
-    #endif
+    MoveGenerator::moves(*this,  moves);
 
     for(int i=0; i<moves.size(); i++) {
         Move &m = moves.data[i];
 
-        ChessBoard board = *this;
-        m.applyTo(board);
-        if(MoveGenerator::isOpponentsKingNotUnderCheck(board, ChessBoardStats(board))) {
-            threads.push_back(std::thread([board, depth, &count, cacheSize](){
-                Cache cache(cacheSize);
-                count += minimax(cache, board, depth -1, ChessBoardStats(board));
-            }));
+        ChessBoard board = m.applyToBoard(*this);
+        if(MoveGenerator::isOpponentsKingNotUnderCheck(board)) {
+            threads.emplace_back([board, depth, &count](){
+                Cache cache(CACHE_SIZE);
+                count += minimax(cache, board, depth -1);
+            });
         }
     }
 

@@ -18,8 +18,6 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include <iostream>
 #include "version.h"
-#include "bitboard.h"
-#include "movesgenerator-test.h"
 
 int main(int argc, char** args) {
 

@@ -26,7 +26,6 @@ enum Castling {
     None        = 0,
     KingSide    = 1,
     QueenSide   = 2,
-    BothSides   = 3
 };
 
 enum Piece {
@@ -48,7 +47,7 @@ class ChessBoard {
 
 public:
     ChessBoard();
-    ChessBoard(const std::string &fen);
+    explicit ChessBoard(const std::string &fen);
 
     Color       nextMove;
     Castling    castling[2];
@@ -60,12 +59,18 @@ public:
     //zobrist key is a hashcode of the beard (without halfMoveClock and fullMoveNumber info)
     uint64_t        zobristKey;
 
-    bool operator==(const ChessBoard &other);
-    inline bool operator!=(const ChessBoard &other) {return !(*this==other); }
+    bool operator==(const ChessBoard &other) const;
+    inline bool operator!=(const ChessBoard &other) const {return !(*this==other); }
 
     inline  bitmask         whitePieces() const { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
     inline  bitmask         blackPieces() const { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
     inline  bitmask         allPieces()   const { return whitePieces() | blackPieces(); }
+    inline  bitmask         opponentPieces()   const { return nextMove == White ? blackPieces() : whitePieces(); }
+    inline  bitmask         boardAvaliable()   const { return nextMove == White ? ~whitePieces() : ~blackPieces(); }
+    inline  Color           opponentColor()   const { return nextMove == White ? Black : White; }
+    inline  bitmask         king()   const { return pieces[nextMove][King]; }
+    inline  int             kingIndex()   const { return BitBoard::bitScan(king()); }
+
     inline  void            removeCastling(Color color, Castling remove) { castling[color] = (Castling) (castling[color] & ~remove); }
 
 
@@ -81,6 +86,7 @@ public:
 
     static const Zobrist zobrist;
     static const std::string STANDARD_BOARD_FEN;
+
 };
 
 

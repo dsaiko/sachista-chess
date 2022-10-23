@@ -19,7 +19,7 @@
 #include "chessboard.h"
 #include "move.h"
 
-void Move::applyTo(ChessBoard &board) const
+ChessBoard Move::applyToBoard(ChessBoard board) const
 {
     const bitmask source = BitBoard::squareBitmask(sourceIndex);
     const bitmask target = BitBoard::squareBitmask(targetIndex);
@@ -166,4 +166,5 @@ void Move::applyTo(ChessBoard &board) const
     if(board.enPassantTargetIndex)
         board.zobristKey ^= ChessBoard::zobrist.Z_ENPASSANT[board.enPassantTargetIndex];
 
+    return board;
 }

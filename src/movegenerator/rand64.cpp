@@ -25,8 +25,7 @@ Rand64::Rand64() {
         rnd();
 }
 
-Rand64::~Rand64() {
-}
+Rand64::~Rand64() = default;
 
 uint64_t Rand64::rnd() {
     /* alternative:

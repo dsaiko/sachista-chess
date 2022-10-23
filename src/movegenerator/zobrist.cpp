@@ -14,7 +14,6 @@
 ///
 /// PRNG Inspired by Stockfish GPL source code
 
-#include <iostream>
 #include "zobrist.h"
 #include "chessboard.h"
 #include "rand64.h"

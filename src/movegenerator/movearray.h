@@ -53,10 +53,10 @@ public:
         m.isEnPassant = isEnPassant;
     }
 
-    inline void         clear()     { _size=0; }
-    inline int          size()      { return _size; }
+    inline void         clear()         { _size=0; }
+    inline int          size() const    { return _size; }
 
-    inline Move         &first()    { return data[0]; }
+    inline Move         &first()        { return data[0]; }
 
             int         _size;
             Move        data[MAX_MOVES];

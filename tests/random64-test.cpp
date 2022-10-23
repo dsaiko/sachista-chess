@@ -15,7 +15,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
 #include <set>
 #include <CppUTest/CommandLineTestRunner.h>
 #include "rand64.h"

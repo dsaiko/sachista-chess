@@ -16,20 +16,16 @@
 */
 
 #include <iostream>
-#include <sstream>
-#include <array>
 
 #include "chessboard.h"
 #include "utility.h"
-#include "move.h"
-
 
 struct DecimalSeparators : std::numpunct<char> {
     /* use space as separator */
-    char do_thousands_sep() const { return ','; }
+    char do_thousands_sep() const override { return ','; }
 
     /* digits are grouped by 3 digits each */
-    std::string do_grouping() const { return "\3"; }
+    std::string do_grouping() const override { return "\3"; }
 };
 
 
@@ -45,7 +41,7 @@ int main(int argc, char** args) {
             << std::endl
     ;
 
-    std::cout << "See: http://chessprogramming.wikispaces.com/Perft" << std::endl << std::endl;
+    std::cout << "See: https://chessprogramming.wikispaces.com/Perft" << std::endl << std::endl;
 
     int depth = 7;
     std::string fen = ChessBoard::STANDARD_BOARD_FEN;
@@ -92,7 +88,7 @@ int main(int argc, char** args) {
             << "   FEN  : " << fen << std::endl
             << "   depth: " << depth << std::endl
             << "   count: " << count << std::endl
-            << "   time : " << (duration/1000) << " [seconds]" << std::endl
+            << "   time : " << ((double)duration * 1000)/1000 << " [ms]" << std::endl
             << "   speed: " << speed << " [/second]" << std::endl
     ;
 

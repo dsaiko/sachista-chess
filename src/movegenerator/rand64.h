@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdint.h>
+#include <cstdint>
 
 // 64bit Random number generator Inspired by Stockfish GPL source code
 class Rand64 {
@@ -29,6 +29,6 @@ public:
 
 private:
 
-    uint64_t rotate(const uint64_t x, const uint64_t k);
+    static uint64_t rotate(uint64_t x, uint64_t k);
     uint64_t a, b, c, d;
 };

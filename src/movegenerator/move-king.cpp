@@ -55,46 +55,46 @@ bitmask MoveGeneratorKing::generateAttacks(const ChessBoard &board, const Color 
     return KING_MOVES[BitBoard::bitScan(piece)];
 }
 
-void MoveGeneratorKing::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
+void MoveGeneratorKing::generateMoves(const ChessBoard &board, MoveArray &moves) const
 {
-    if(stats.king == 0) return;
-    bitmask movesBoard = KING_MOVES[stats.kingIndex] & stats.boardAvaliable;
+    if(board.king() == 0) return;
+    bitmask movesBoard = KING_MOVES[board.kingIndex()] & board.boardAvaliable();
 
     //for all moves
     while (movesBoard) {
         int toIndex = BitBoard::bitPop(movesBoard);
-        bool isCapture = (BitBoard::squareBitmask(toIndex) & stats.opponentPieces) != 0;
-        moves.setNext(King, stats.kingIndex, toIndex, isCapture);
+        bool isCapture = (BitBoard::squareBitmask(toIndex) & board.opponentPieces()) != 0;
+        moves.setNext(King, board.kingIndex(), toIndex, isCapture);
     }
 
     if(board.castling[board.nextMove]) {
         if(board.nextMove == White) {
             //if castling available
-            if ((board.castling[White] & KingSide) && ((stats.allPieces & WHITE_CASTLE_OO_EMPTY) == 0)) {
-                if(MoveGenerator::isBitMaskUnderAttack(board, Black, stats, WHITE_CASTLE_OO_ATTACKS) == 0) {
+            if ((board.castling[White] & KingSide) && ((board.allPieces() & WHITE_CASTLE_OO_EMPTY) == 0)) {
+                if(MoveGenerator::isBitMaskUnderAttack(board, Black, WHITE_CASTLE_OO_ATTACKS) == 0) {
                     //add short castling move
-                    moves.setNext(King, stats.kingIndex, BoardIndex::G1, false, false, NoPiece);
+                    moves.setNext(King, board.kingIndex(), BoardIndex::G1, false, false, NoPiece);
                 }
             }
-            if ((board.castling[White] & QueenSide) && ((stats.allPieces & WHITE_CASTLE_OOO_EMPTY) == 0)) {
-                if(MoveGenerator::isBitMaskUnderAttack(board, Black, stats, WHITE_CASTLE_OOO_ATTACKS) == 0) {
+            if ((board.castling[White] & QueenSide) && ((board.allPieces() & WHITE_CASTLE_OOO_EMPTY) == 0)) {
+                if(MoveGenerator::isBitMaskUnderAttack(board, Black, WHITE_CASTLE_OOO_ATTACKS) == 0) {
                     //add long castling move
-                    moves.setNext(King, stats.kingIndex, BoardIndex::C1, false, false, NoPiece);
+                    moves.setNext(King, board.kingIndex(), BoardIndex::C1, false, false, NoPiece);
                 }
             }
 
         } else {
             //if castling available
-            if ((board.castling[Black] & KingSide) && ((stats.allPieces & BLACK_CASTLE_OO_EMPTY) == 0)) {
-                if(MoveGenerator::isBitMaskUnderAttack(board, White, stats, BLACK_CASTLE_OO_ATTACKS) == 0) {
+            if ((board.castling[Black] & KingSide) && ((board.allPieces() & BLACK_CASTLE_OO_EMPTY) == 0)) {
+                if(MoveGenerator::isBitMaskUnderAttack(board, White, BLACK_CASTLE_OO_ATTACKS) == 0) {
                     //add short castling move
-                    moves.setNext(King, stats.kingIndex, BoardIndex::G8, false, false, NoPiece);
+                    moves.setNext(King, board.kingIndex(), BoardIndex::G8, false, false, NoPiece);
                 }
             }
-            if ((board.castling[Black] & QueenSide) && ((stats.allPieces & BLACK_CASTLE_OOO_EMPTY) == 0)) {
-                if(MoveGenerator::isBitMaskUnderAttack(board, White, stats, BLACK_CASTLE_OOO_ATTACKS) == 0) {
+            if ((board.castling[Black] & QueenSide) && ((board.allPieces() & BLACK_CASTLE_OOO_EMPTY) == 0)) {
+                if(MoveGenerator::isBitMaskUnderAttack(board, White, BLACK_CASTLE_OOO_ATTACKS) == 0) {
                     //add long castling move
-                   moves.setNext(King, stats.kingIndex, BoardIndex::C8, false, false, NoPiece);
+                   moves.setNext(King, board.kingIndex(), BoardIndex::C8, false, false, NoPiece);
                 }
             }
         }

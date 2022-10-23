@@ -219,17 +219,17 @@ inline bitmask MoveGeneratorBishop::onePieceAttacks(const int sourceIndex, const
 }
 
 
-bitmask MoveGeneratorBishop::generateAttacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats) const
+bitmask MoveGeneratorBishop::generateAttacks(const ChessBoard &board, const Color color) const
 {
     bitmask pieces = board.pieces[color][Bishop] | board.pieces[color][Queen];
     bitmask attacks = 0;
 
     //for all bishops
-    while (pieces) attacks |= onePieceAttacks(BitBoard::bitPop(pieces), stats.allPieces);
+    while (pieces) attacks |= onePieceAttacks(BitBoard::bitPop(pieces), board.allPieces());
     return attacks;
 }
 
-void MoveGeneratorBishop::generateMoves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves) const
+void MoveGeneratorBishop::generateMoves(const ChessBoard &board, MoveArray &moves) const
 {
     bitmask bishop = board.pieces[board.nextMove][Bishop];
 
@@ -241,12 +241,12 @@ void MoveGeneratorBishop::generateMoves(const ChessBoard &board, const ChessBoar
             int fromIndex = BitBoard::bitPop(bishop);
 
             //get all moves using precomputed values
-            bitmask movesBoard = onePieceAttacks(fromIndex, stats.allPieces) & stats.boardAvaliable;
+            bitmask movesBoard = onePieceAttacks(fromIndex, board.allPieces()) & board.boardAvaliable();
 
             //for all moves
             while (movesBoard) {
                 int toIndex = BitBoard::bitPop(movesBoard);
-                bool isCapture = 0 != (BitBoard::squareBitmask(toIndex) & stats.opponentPieces);
+                bool isCapture = 0 != (BitBoard::squareBitmask(toIndex) & board.opponentPieces());
 
                 moves.setNext(movingPiece, fromIndex, toIndex, isCapture);
             }

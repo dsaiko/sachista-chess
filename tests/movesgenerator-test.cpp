@@ -27,7 +27,7 @@
 void testMoves(const int expectedCount,  const ChessBoard &board)
 {
     MoveArray moves;
-    MoveGenerator::moves(board, ChessBoardStats(board), moves);
+    MoveGenerator::moves(board, moves);
     LONGS_EQUAL(expectedCount, moves.size());
 }
 
@@ -45,13 +45,12 @@ void testLegalMoves(const int expectedCount, const ChessBoard &board)
         std::cout << "---------- BOARD:" << std::endl << board.toString() << std::endl;
 
         MoveArray moves;
-        MoveGenerator::moves(board, ChessBoardStats(board), moves);
+        MoveGenerator::moves(board, moves);
         for(int i=0; i<moves.size(); i++) {
             Move &m = moves.data[i];
 
-            ChessBoard b = board;
-            m.applyTo(b);
-            if(MoveGenerator::isOpponentsKingNotUnderCheck(b, ChessBoardStats(b))) {
+            ChessBoard b = m.applyToBoard(board);
+            if(MoveGenerator::isOpponentsKingNotUnderCheck(b)) {
                 std::cout << "---------- VALID MOVE:" << std::endl << b.toString() << std::endl;
             }
         }

@@ -17,10 +17,8 @@
 
 #include <string>
 #include <sstream>
-#include <iostream>
 #include "chessboard.h"
 #include "move.h"
-
 
 const MoveGeneratorPawn      MoveGenerator::generatorPawn;
 const MoveGeneratorKnight    MoveGenerator::generatorKnight;
@@ -60,34 +58,34 @@ bitmask MoveGenerator::shiftBitMask(bitmask b, int up, int right) {
     return b;
 }
 
-bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color, const ChessBoardStats &stats)
+bitmask MoveGenerator::attacks(const ChessBoard &board, const Color color)
 {
     return
             generatorPawn.generateAttacks(board, color)             |
             generatorKnight.generateAttacks(board, color)           |
             generatorKing.generateAttacks(board, color)             |
-            generatorRook.generateAttacks(board, color, stats)      |
-            generatorBishop.generateAttacks(board, color, stats)
+            generatorRook.generateAttacks(board, color)      |
+            generatorBishop.generateAttacks(board, color)
     ;
 }
 
-void MoveGenerator::moves(const ChessBoard &board, const ChessBoardStats &stats, MoveArray &moves)
+void MoveGenerator::moves(const ChessBoard &board, MoveArray &moves)
 {
-    generatorPawn.generateMoves(board, stats, moves);
-    generatorKnight.generateMoves(board, stats, moves);
-    generatorKing.generateMoves(board, stats, moves);
-    generatorRook.generateMoves(board, stats, moves);
-    generatorBishop.generateMoves(board, stats, moves);
+    generatorPawn.generateMoves(board, moves);
+    generatorKnight.generateMoves(board, moves);
+    generatorKing.generateMoves(board, moves);
+    generatorRook.generateMoves(board, moves);
+    generatorBishop.generateMoves(board, moves);
 }
 
 
 
-bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color color, const ChessBoardStats &stats, bitmask fields)
+bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color color, bitmask fields)
 {
     //this is used only for castling, not much to bother about
-    bitmask attacks = generatorRook.generateAttacks(board, color, stats);
+    bitmask attacks = generatorRook.generateAttacks(board, color);
     if(attacks & fields) return true;
-    attacks  =  generatorBishop.generateAttacks(board, color, stats);
+    attacks  =  generatorBishop.generateAttacks(board, color);
     if(attacks & fields) return true;
     attacks  =  generatorKnight.generateAttacks(board, color);
     if(attacks & fields) return true;
@@ -99,30 +97,30 @@ bool  MoveGenerator::isBitMaskUnderAttack(const ChessBoard &board, const Color c
     return false;
 }
 
-bool MoveGenerator::isOpponentsKingNotUnderCheck(const ChessBoard &board, const ChessBoardStats &stats)
+bool MoveGenerator::isOpponentsKingNotUnderCheck(const ChessBoard &board)
 {
     //check if my king is not under check by opponent pieces
-    const bitmask king = board.pieces[stats.opponentColor][King];
+    const bitmask king = board.pieces[board.opponentColor()][King];
 
     if(king == 0) return false;
     int kingIndex = BitBoard::bitScan(king);
 
     const bitmask *pieces = board.pieces[board.nextMove];
 
-    if (pieces[Pawn]   & generatorPawn.PAWN_ATTACKS[stats.opponentColor][kingIndex]) return false;
+    if (pieces[Pawn]   & generatorPawn.PAWN_ATTACKS[board.opponentColor()][kingIndex]) return false;
     if (pieces[Knight] & generatorKnight.KNIGHT_MOVES[kingIndex])              return false;
     if (pieces[King]   & generatorKing.KING_MOVES[kingIndex])                  return false;
 
     const bitmask rooks = pieces[Queen] | pieces[Rook];
-    if (generatorRook.MOVE_RANK_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorRook.MOVE_RANK_MASK[kingIndex]) >> generatorRook.MOVE_RANK_SHIFT[kingIndex]))] & rooks)
+    if (generatorRook.MOVE_RANK_ATTACKS[kingIndex][(int) (((board.allPieces() & generatorRook.MOVE_RANK_MASK[kingIndex]) >> generatorRook.MOVE_RANK_SHIFT[kingIndex]))] & rooks)
         return false;
-    if (generatorRook.MOVE_FILE_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorRook.MOVE_FILE_MASK[kingIndex]) * generatorRook.MOVE_FILE_MAGIC[kingIndex]) >> 57)] & rooks)
+    if (generatorRook.MOVE_FILE_ATTACKS[kingIndex][(int) (((board.allPieces() & generatorRook.MOVE_FILE_MASK[kingIndex]) * generatorRook.MOVE_FILE_MAGIC[kingIndex]) >> 57)] & rooks)
         return false;
 
     const bitmask bishops = pieces[Queen] | pieces[Bishop];
-    if (generatorBishop.MOVE_A8H1_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorBishop.MOVE_A8H1_MASK[kingIndex]) * generatorBishop.MOVE_A8H1_MAGIC[kingIndex]) >> 57)] & bishops)
+    if (generatorBishop.MOVE_A8H1_ATTACKS[kingIndex][(int) (((board.allPieces() & generatorBishop.MOVE_A8H1_MASK[kingIndex]) * generatorBishop.MOVE_A8H1_MAGIC[kingIndex]) >> 57)] & bishops)
         return false;
-    if (generatorBishop.MOVE_A1H8_ATTACKS[kingIndex][(int) (((stats.allPieces & generatorBishop.MOVE_A1H8_MASK[kingIndex]) * generatorBishop.MOVE_A1H8_MAGIC[kingIndex]) >> 57)] & bishops)
+    if (generatorBishop.MOVE_A1H8_ATTACKS[kingIndex][(int) (((board.allPieces() & generatorBishop.MOVE_A1H8_MASK[kingIndex]) * generatorBishop.MOVE_A1H8_MAGIC[kingIndex]) >> 57)] & bishops)
         return false;
 
     return true;

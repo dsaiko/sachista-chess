@@ -28,13 +28,11 @@ bitmask BitBoard::reverseRanks(const bitmask b) {
             ((b             &  BitMask::RANK_1) << 56ULL);
 }
 
-bitmask BitBoard::flipDiagA1H8(const bitmask b_) {
+bitmask BitBoard::flipDiagA1H8(bitmask b) {
     //Flips around A1H8 diagonal
     static const bitmask k1 = 0x5500550055005500ULL;
     static const bitmask k2 = 0x3333000033330000ULL;
     static const bitmask k4 = 0x0f0f0f0f00000000ULL;
-
-    bitmask b = b_;
 
     bitmask t = k4 & (b ^ (b << 28));
     b ^= t ^ (t >> 28);
@@ -66,15 +64,14 @@ bitmask BitBoard::bitmaskFromNotation(const std::string &notation)
 int BitBoard::indexFromNotation(const std::string &notation)
 {
     if(notation.length() != 2) return 0;
-    int index = ((notation[0] - 'a') + ((notation[1] - '1') << 3));
-    return index;
+    return ((notation[0] - 'a') + ((notation[1] - '1') << 3));
 }
 
 std::string BitBoard::fieldNotation(const int index) {
     std::string notation;
 
-    notation += 'a' + (index % 8);
-    notation += '1' + (index / 8);
+    notation += (char)('a' + (index % 8));
+    notation += (char)('1' + (index / 8));
     return notation;
 }
 
@@ -90,11 +87,11 @@ std::string BitBoard::toString(const bitmask b) {
         if ((i % 8) == 0) {
             if (i > 0) {
                 //print right column digit
-                board += '0' + 9 - (i / 8);
+                board += (char)('0' + 9 - (i / 8));
                 board += '\n';
             }
             //print left column digit
-            board += '0' + 8 - (i / 8);
+            board += (char)('0' + 8 - (i / 8));
             board += ' ';
         }
 

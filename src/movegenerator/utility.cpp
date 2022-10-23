@@ -25,13 +25,10 @@
 
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
   #include <unistd.h>
-  #include <sys/types.h>
-  #include <sys/param.h>
   #if defined(BSD)
     #include <sys/sysctl.h>
   #endif
 #endif
-
 
 inline bool isSpace(const char c) {
     switch(c) {
@@ -163,6 +160,9 @@ void StopWatch::sleep(int milliseconds)
 uint64_t StopWatch::speedInSeconds(uint64_t count)
 {
     uint64_t time = elapsedTimeInMilliseconds();
+    if (time == 0) {
+        return UINT64_MAX;
+    }
 
     return (count * 1000) / time;
 }
