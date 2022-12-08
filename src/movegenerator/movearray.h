@@ -54,7 +54,7 @@ public:
     }
 
     inline void         clear()         { _size=0; }
-    inline int          size() const    { return _size; }
+    [[nodiscard]] inline int          size() const    { return _size; }
 
     inline Move         &first()        { return data[0]; }
 

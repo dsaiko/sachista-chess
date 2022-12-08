@@ -31,8 +31,8 @@ public:
     bool    isCapture;
     bool    isEnPassant;
 
-    ChessBoard      applyToBoard(ChessBoard board) const;
-    std::string     toString() const;
+    [[nodiscard]] ChessBoard      applyToBoard(ChessBoard board) const;
+    [[nodiscard]] std::string     toString() const;
 };
 
 
@@ -42,7 +42,7 @@ class MoveGeneratorPawn {
 public:
     MoveGeneratorPawn();
 
-    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    [[nodiscard]] bitmask  generateAttacks(const ChessBoard &board, Color color) const;
     void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
     bitmask PAWN_MOVES[2][64];
@@ -54,7 +54,7 @@ class MoveGeneratorKnight {
 public:
     MoveGeneratorKnight();
 
-    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    [[nodiscard]] bitmask  generateAttacks(const ChessBoard &board, Color color) const;
     void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
     bitmask KNIGHT_MOVES[64];
@@ -65,7 +65,7 @@ class MoveGeneratorKing {
 public:
     MoveGeneratorKing();
 
-    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    [[nodiscard]] bitmask  generateAttacks(const ChessBoard &board, Color color) const;
     void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
     bitmask KING_MOVES[64];
@@ -75,7 +75,7 @@ class MoveGeneratorBishop {
 public:
     MoveGeneratorBishop();
 
-    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    [[nodiscard]] bitmask  generateAttacks(const ChessBoard &board, Color color) const;
     void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
 
@@ -90,7 +90,7 @@ public:
     bitmask MOVE_A1H8_ATTACKS[64][64];
     bitmask MOVE_A8H1_ATTACKS[64][64];
 
-    bitmask onePieceAttacks(int sourceIndex, bitmask allPieces)const ;
+    [[nodiscard]] bitmask onePieceAttacks(int sourceIndex, bitmask allPieces)const ;
 
 };
 
@@ -98,10 +98,10 @@ class MoveGeneratorRook {
 public:
     MoveGeneratorRook();
 
-    virtual    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
+    [[nodiscard]] virtual    bitmask  generateAttacks(const ChessBoard &board, Color color) const;
     virtual    void generateMoves(const ChessBoard &board, MoveArray &moves) const;
 
-    bitmask onePieceAttacks(int sourceIndex, bitmask allPieces) const;
+    [[nodiscard]] bitmask onePieceAttacks(int sourceIndex, bitmask allPieces) const;
 
     int     MOVE_RANK_SHIFT[64];
     bitmask MOVE_RANK_MASK[64];

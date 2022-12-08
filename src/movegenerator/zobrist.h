@@ -24,11 +24,11 @@ class Zobrist {
 
 public:
     Zobrist();
-    uint64_t getKey(const ChessBoard &board) const;
+    [[nodiscard]] uint64_t getKey(const ChessBoard &board) const;
 
-    uint64_t Z_PIECES[2][7][64];
-    uint64_t Z_CASTLING[2][4];
-    uint64_t Z_ENPASSANT[64];
+    uint64_t Z_PIECES[2][7][64]{};
+    uint64_t Z_CASTLING[2][4]{};
+    uint64_t Z_ENPASSANT[64]{};
     uint64_t Z_SIDE;
 };
 

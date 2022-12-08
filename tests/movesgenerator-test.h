@@ -19,7 +19,7 @@
 #include <string>
 #include "chessboard.h"
 
-void testMovesFromString(int expectedCount, std::string board);
-void testLegalMovesFromString(int expectedCount, std::string board);
+void testMovesFromString(int expectedCount, const std::string& board);
+void testLegalMovesFromString(int expectedCount, const std::string& board);
 void testMoves(int expectedCount, const ChessBoard &board);
 void testLegalMoves(int expectedCount, const ChessBoard &board);

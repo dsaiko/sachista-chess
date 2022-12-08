@@ -62,27 +62,27 @@ public:
     bool operator==(const ChessBoard &other) const;
     inline bool operator!=(const ChessBoard &other) const {return !(*this==other); }
 
-    inline  bitmask         whitePieces() const { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
-    inline  bitmask         blackPieces() const { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
-    inline  bitmask         allPieces()   const { return whitePieces() | blackPieces(); }
-    inline  bitmask         opponentPieces()   const { return nextMove == White ? blackPieces() : whitePieces(); }
-    inline  bitmask         boardAvaliable()   const { return nextMove == White ? ~whitePieces() : ~blackPieces(); }
-    inline  Color           opponentColor()   const { return nextMove == White ? Black : White; }
-    inline  bitmask         king()   const { return pieces[nextMove][King]; }
-    inline  int             kingIndex()   const { return BitBoard::bitScan(king()); }
+    [[nodiscard]] inline  bitmask         whitePieces() const { return pieces[White][Queen] | pieces[White][King] | pieces[White][Rook] | pieces[White][Bishop] | pieces[White][Knight] | pieces[White][Pawn]; }
+    [[nodiscard]] inline  bitmask         blackPieces() const { return pieces[Black][Queen] | pieces[Black][King] | pieces[Black][Rook] | pieces[Black][Bishop] | pieces[Black][Knight] | pieces[Black][Pawn]; }
+    [[nodiscard]] inline  bitmask         allPieces()   const { return whitePieces() | blackPieces(); }
+    [[nodiscard]] inline  bitmask         opponentPieces()   const { return nextMove == White ? blackPieces() : whitePieces(); }
+    [[nodiscard]] inline  bitmask         boardAvaliable()   const { return nextMove == White ? ~whitePieces() : ~blackPieces(); }
+    [[nodiscard]] inline  Color           opponentColor()   const { return nextMove == White ? Black : White; }
+    [[nodiscard]] inline  bitmask         king()   const { return pieces[nextMove][King]; }
+    [[nodiscard]] inline  int             kingIndex()   const { return BitBoard::bitScan(king()); }
 
     inline  void            removeCastling(Color color, Castling remove) { castling[color] = (Castling) (castling[color] & ~remove); }
 
 
             void            clearBoard();
-            std::string     toString() const;
+            [[nodiscard]] std::string     toString() const;
             void            setupString(const std::string &str);
             std::string     toFEN();
             void            setupFEN(const std::string &fen);
 
             void            setupStandardBoard();
     inline  void            updateZobrist() { zobristKey = zobrist.getKey(*this); }
-            uint64_t        perft(int depth) const;
+            [[nodiscard]] uint64_t        perft(int depth) const;
 
     static const Zobrist zobrist;
     static const std::string STANDARD_BOARD_FEN;

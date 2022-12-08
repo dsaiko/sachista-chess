@@ -27,5 +27,5 @@ set(TEST_SOURCES
 
 add_executable(${TEST_APP_NAME} ${TEST_SOURCES})
 target_include_directories(${TEST_APP_NAME} PRIVATE ${CPPUTEST_INCLUDE_DIRS} ../src/movegenerator)
-target_link_libraries(${TEST_APP_NAME} movegenerator ${CPPUTEST_LDFLAGS})
+target_link_libraries(${TEST_APP_NAME} movegenerator ${CPPUTEST_LDFLAGS} atomic)
 

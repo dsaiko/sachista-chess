@@ -31,7 +31,7 @@ void testMoves(const int expectedCount,  const ChessBoard &board)
     LONGS_EQUAL(expectedCount, moves.size());
 }
 
-void testMovesFromString(const int expectedCount, std::string board)
+void testMovesFromString(const int expectedCount, const std::string& board)
 {
     ChessBoard b;
     b.setupString(board);
@@ -59,7 +59,7 @@ void testLegalMoves(const int expectedCount, const ChessBoard &board)
     }
 }
 
-void testLegalMovesFromString(const int expectedCount, std::string board)
+void testLegalMovesFromString(const int expectedCount, const std::string& board)
 {
     ChessBoard b;
     b.setupString(board);
