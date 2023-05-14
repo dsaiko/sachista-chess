@@ -17,6 +17,7 @@
 */
 
 #include <string>
+#include <cstdint>
 
 typedef uint64_t bitmask;
 

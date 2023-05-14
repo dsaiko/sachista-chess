@@ -318,9 +318,9 @@ TEST(BitBoardTest, TestNotation)
 TEST(BitBoardTest, TestRankArray)
 {
     bitmask board = 0;
-    for(int i=0; i<8; i++) {
+    for(auto i : BitMask::RANK) {
         CHECK(board != BitMask::UNIVERSE);
-        board |= BitMask::RANK[i];
+        board |= i;
     }
     CHECK(board == BitMask::UNIVERSE);
 }
@@ -328,9 +328,9 @@ TEST(BitBoardTest, TestRankArray)
 TEST(BitBoardTest, TestFileArray)
 {
     bitmask board = 0;
-    for(int i=0; i<8; i++) {
+    for(auto i : BitMask::FILE) {
         CHECK(board != BitMask::UNIVERSE);
-        board |= BitMask::FILE[i];
+        board |= i;
     }
     CHECK(board == BitMask::UNIVERSE);
 }
@@ -338,9 +338,9 @@ TEST(BitBoardTest, TestFileArray)
 TEST(BitBoardTest, TestA1H8Array)
 {
     bitmask board = 0;
-    for(int i=0; i<15; i++) {
+    for(auto i : BitMask::A1H8) {
         CHECK(board != BitMask::UNIVERSE);
-        board |= BitMask::A1H8[i];
+        board |= i;
     }
     CHECK(board == BitMask::UNIVERSE);
 }
@@ -348,9 +348,9 @@ TEST(BitBoardTest, TestA1H8Array)
 TEST(BitBoardTest, TestA8H1Array)
 {
     bitmask board = 0;
-    for(int i=0; i<15; i++) {
+    for(auto i : BitMask::A8H1) {
         CHECK(board != BitMask::UNIVERSE);
-        board |= BitMask::A8H1[i];
+        board |= i;
     }
     CHECK(board == BitMask::UNIVERSE);
 }

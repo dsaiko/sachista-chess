@@ -23,9 +23,9 @@ Zobrist::Zobrist() {
 
     //Generate random values for all unique states
     for(int square=0; square<64; square++) {
-        for(int side=0; side<2; side++) {
-            for(int piece=0; piece<7; piece++) {
-                Z_PIECES[side][piece][square] = rand64.rnd();
+        for(auto & side : Z_PIECES) {
+            for(auto & piece : side) {
+                piece[square] = rand64.rnd();
             }
         }
         Z_ENPASSANT[square] = rand64.rnd();

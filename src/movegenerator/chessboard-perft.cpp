@@ -19,10 +19,8 @@
 #include <thread>
 #include <atomic>
 #include <new>
-#include <functional>
 
 #include "chessboard.h"
-#include "zobrist.h"
 #include "move.h"
 #include "movearray.h"
 
